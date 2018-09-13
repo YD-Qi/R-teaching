@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536623321911.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3051710483",
+    "id" : "3F85AC2C",
+    "lastKnownWriteTime" : 1536633096,
+    "last_content_update" : 1536713902326,
+    "path" : "~/R Teaching/Intro_R_Book/04-basicGraphs.Rmd",
+    "project_path" : "04-basicGraphs.Rmd",
+    "properties" : {
+        "cursorPosition" : "87,0",
+        "scrollLine" : "81"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

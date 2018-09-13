@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536536733936.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3180533010",
+    "id" : "14854FA4",
+    "lastKnownWriteTime" : 1536434580,
+    "last_content_update" : 1536434580,
+    "path" : "~/R Teaching/Intro_R_Homework/Intro_R_HTML/hw_basics1.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "20,19",
+        "scrollLine" : "6"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

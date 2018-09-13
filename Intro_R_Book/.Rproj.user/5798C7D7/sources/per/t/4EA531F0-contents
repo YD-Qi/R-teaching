@@ -1,0 +1,76 @@
+---
+title: "R 基础练习二"
+author: "Chris Qi"
+date: "9/5/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+这次我们来练习简单的描述统计和基本作图.
+
+
+请使用`str()`函数来观察`airquality`这个数据的变量有那些:
+```{r ex="circle", type="sample-code"}
+str()
+```
+
+```{r ex="circle", type="solution"}
+str(airquality)
+```
+
+
+请用函数计算第三个变量（风速）的平均值，最小值，最大值和标准差:
+```{r ex="airquality", type="sample-code"}
+# choose any functions you like:
+```
+
+```{r ex="airquality", type="solution"}
+summary(airquality$Wind)
+```
+
+
+请用`plot()`函数创建风速与风度的散点图：
+```{r ex="teacher", type="sample-code"}
+plot()
+```
+
+```{r ex="teacher", type="solution"}
+with(airquality,{
+       plot(x=Wind, y=Temp,
+            xlab="wind speed",
+            ylab = "Temperature")
+    })
+```
+
+
+请在上图的基础上，添加回归曲线和标题"Weather in NYC"：
+```{r ex="teacher1", type="sample-code"}
+# in addition, you may try to implement with function:
+```
+
+```{r ex="teacher1", type="solution"}
+with(airquality,{
+       plot(x=Wind, y=Temp,
+            xlab="wind speed",
+            ylab = "Temperature")
+  abline(lm(Wind~Temp))
+  title("Weather in NYC")
+    })
+
+```
+
+最后一题，请使用`pdf("mygraph.pdf")` 和 `pdf("mygraph.pdf")`将上面的图形保存到你的作业文件夹（本地硬盘）。
+
+```{r }
+with(airquality,{
+       plot(x=Wind, y=Temp,
+            xlab="wind speed",
+            ylab = "Temperature")
+  abline(lm(Wind~Temp))
+  title("Weather in NYC")
+    })
+
+```

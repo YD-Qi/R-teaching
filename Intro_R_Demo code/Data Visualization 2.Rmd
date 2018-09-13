@@ -1,0 +1,118 @@
+---
+title: "Data Visualization 2"
+author: "Chris Qi"
+date: "8/5/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 数据可视化第二部分: ggplot2 之 qplot()
+```{r}
+library(ggplot2)
+#最基本的图
+qplot(Wind, Temp, data=airquality)
+```
+
+```{r}
+#添加颜色，每个月一种颜色
+airquality$Month<-as.factor(airquality$Month)
+
+qplot(Wind, Temp, data=airquality, color=Month)
+```
+
+
+```{r}
+#所有数据点统一为一种颜色
+qplot(Wind, Temp, data=airquality, color=I("red"))
+```
+
+```{r}
+#改变数据点的形状，每个月份一种形状
+qplot(Wind, Temp, data=airquality, shape=Month)
+```
+
+```{r}
+qplot(Wind, Temp, data=airquality, size=Month)
+```
+
+```{r}
+qplot(Wind, Temp, data=airquality, size=I(3))
+```
+
+```{r}
+qplot(Wind, Temp, data=airquality, size=I(1),
+      xlab="wind (mph)", ylab="Temp",
+      main="wind vs. temp")
+#在qplot中，很多细节都被固定了
+```
+
+```{r}
+#在当前的图上加入其他重要信息
+qplot(Wind, Temp, data=airquality, 
+      geom = c("point", "smooth")) #几何客体：点，平滑
+```
+
+```{r}
+#加上月份，会发生什么？
+qplot(Wind, Temp, data=airquality,color=Month, 
+      geom = c("point", "smooth"))
+```
+
+```{r}
+qplot(Wind, Temp, data=airquality,
+      facets = Month~.) #加入“面”这个参数
+```
+
+```{r}
+#换一下月份的位置，会发生什么？
+qplot(Wind, Temp, data=airquality,
+      facets = Month~.)
+```
+
+```{r}
+#只使用一个变量，qplot猜测我们想做柱状图
+qplot(airquality$Wind)
+```
+
+```{r}
+qplot(Wind, data=airquality,
+      facets = Month~.)
+```
+
+```{r}
+#还是只看风速，但指明是y轴，得到散点图，最先出现的在最左边
+qplot(y=Wind, data=airquality)
+```
+
+```{r}
+qplot(Wind, data=airquality, fill=Month)
+```
+
+```{r}
+#指定几何客体为密度曲线，得到轮廓线
+qplot(Wind, data=airquality, geom="density")
+```
+
+```{r}
+#按月份画轮廓线
+qplot(data=airquality, Wind, geom="density",
+      color=Month)
+```
+
+```{r}
+#做点图
+qplot(Wind, data=airquality, geom="dotplot")
+```
+
+
+
+
+
+
+
+
+
+

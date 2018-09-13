@@ -1,0 +1,3 @@
+"0","#lattice 绘图实践"
+"0","library(lattice) #需要先安装install.packages(""lattice"")"
+"0","xyplot(Temp~Ozone, data=airquality) #散点图,还没有考察交互关系"

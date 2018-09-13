@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>R 语言入门，给一心只有学习的你</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="R 语言入门，给一心只有学习的你" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="R 语言入门，给一心只有学习的你" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Chris Qi from Data Maniac">
+
+
+<meta name="date" content="2018-09-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="vectors.html">
+<link rel="next" href="-factor.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">零基础学R语言</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> 前言</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#r-"><i class="fa fa-check"></i><b>1.1</b> R 的前世今生</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#r-"><i class="fa fa-check"></i><b>1.2</b> R 的安装</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#rstudio"><i class="fa fa-check"></i><b>1.3</b> RStudio界面</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="-r-basics-1.html"><a href="-r-basics-1.html"><i class="fa fa-check"></i><b>2</b> 新手上路 R Basics 1</a><ul>
+<li class="chapter" data-level="2.1" data-path="-r-basics-1.html"><a href="-r-basics-1.html#r"><i class="fa fa-check"></i><b>2.1</b> R的数学运算：</a></li>
+<li class="chapter" data-level="2.2" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.2"><i class="fa fa-check"></i><b>2.2</b> 赋值</a></li>
+<li class="chapter" data-level="2.3" data-path="-r-basics-1.html"><a href="-r-basics-1.html#-or-help-"><i class="fa fa-check"></i><b>2.3</b> 使用 ? or help() 查询</a></li>
+<li class="chapter" data-level="2.4" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.4"><i class="fa fa-check"></i><b>2.4</b> 功能包</a></li>
+<li class="chapter" data-level="2.5" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.5"><i class="fa fa-check"></i><b>2.5</b> 查看路径和设置路径</a></li>
+<li class="chapter" data-level="2.6" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.6"><i class="fa fa-check"></i><b>2.6</b> 数据类型</a></li>
+<li class="chapter" data-level="2.7" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.7"><i class="fa fa-check"></i><b>2.7</b> 数据结构</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="-r-basics-1.html"><a href="-r-basics-1.html#vector-"><i class="fa fa-check"></i><b>2.7.1</b> vector 向量</a></li>
+<li class="chapter" data-level="2.7.2" data-path="-r-basics-1.html"><a href="-r-basics-1.html#matrix-"><i class="fa fa-check"></i><b>2.7.2</b> matrix 矩阵</a></li>
+<li class="chapter" data-level="2.7.3" data-path="-r-basics-1.html"><a href="-r-basics-1.html#dataframe-"><i class="fa fa-check"></i><b>2.7.3</b> dataframe 数据框</a></li>
+<li class="chapter" data-level="2.7.4" data-path="-r-basics-1.html"><a href="-r-basics-1.html#-factor"><i class="fa fa-check"></i><b>2.7.4</b> 因子 factor</a></li>
+<li class="chapter" data-level="2.7.5" data-path="-r-basics-1.html"><a href="-r-basics-1.html#list-"><i class="fa fa-check"></i><b>2.7.5</b> list 列表</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.8"><i class="fa fa-check"></i><b>2.8</b> 常用函数</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="vectors.html"><a href="vectors.html"><i class="fa fa-check"></i><b>3</b> 向量Vectors</a><ul>
+<li class="chapter" data-level="3.1" data-path="vectors.html"><a href="vectors.html#-create-a-vector-2"><i class="fa fa-check"></i><b>3.1</b> 创建一个向量 Create a vector (2)</a></li>
+<li class="chapter" data-level="3.2" data-path="vectors.html"><a href="vectors.html#create-a-vector-3"><i class="fa fa-check"></i><b>3.2</b> Create a vector (3)</a></li>
+<li class="chapter" data-level="3.3" data-path="vectors.html"><a href="vectors.html#naming-a-vector"><i class="fa fa-check"></i><b>3.3</b> Naming a vector</a></li>
+<li class="chapter" data-level="3.4" data-path="vectors.html"><a href="vectors.html#naming-a-vector-2"><i class="fa fa-check"></i><b>3.4</b> Naming a vector (2)</a></li>
+<li class="chapter" data-level="3.5" data-path="vectors.html"><a href="vectors.html#calculating-total-winnings"><i class="fa fa-check"></i><b>3.5</b> Calculating total winnings</a></li>
+<li class="chapter" data-level="3.6" data-path="vectors.html"><a href="vectors.html#calculating-total-winnings-2"><i class="fa fa-check"></i><b>3.6</b> Calculating total winnings (2)</a></li>
+<li class="chapter" data-level="3.7" data-path="vectors.html"><a href="vectors.html#calculating-total-winnings-3"><i class="fa fa-check"></i><b>3.7</b> Calculating total winnings (3)</a></li>
+<li class="chapter" data-level="3.8" data-path="vectors.html"><a href="vectors.html#comparing-total-winnings"><i class="fa fa-check"></i><b>3.8</b> Comparing total winnings</a></li>
+<li class="chapter" data-level="3.9" data-path="vectors.html"><a href="vectors.html#vector-selection-the-good-times"><i class="fa fa-check"></i><b>3.9</b> Vector selection: the good times</a></li>
+<li class="chapter" data-level="3.10" data-path="vectors.html"><a href="vectors.html#vector-selection-the-good-times-2"><i class="fa fa-check"></i><b>3.10</b> Vector selection: the good times (2)</a></li>
+<li class="chapter" data-level="3.11" data-path="vectors.html"><a href="vectors.html#vector-selection-the-good-times-3"><i class="fa fa-check"></i><b>3.11</b> Vector selection: the good times (3)</a></li>
+<li class="chapter" data-level="3.12" data-path="vectors.html"><a href="vectors.html#vector-selection-the-good-times-4"><i class="fa fa-check"></i><b>3.12</b> Vector selection: the good times (4)</a></li>
+<li class="chapter" data-level="3.13" data-path="vectors.html"><a href="vectors.html#selection-by-comparison---step-1"><i class="fa fa-check"></i><b>3.13</b> Selection by comparison - Step 1</a></li>
+<li class="chapter" data-level="3.14" data-path="vectors.html"><a href="vectors.html#selection-by-comparison---step-2"><i class="fa fa-check"></i><b>3.14</b> Selection by comparison - Step 2</a></li>
+<li class="chapter" data-level="3.15" data-path="vectors.html"><a href="vectors.html#advanced-selection"><i class="fa fa-check"></i><b>3.15</b> Advanced selection</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="-matrices.html"><a href="-matrices.html"><i class="fa fa-check"></i><b>4</b> 矩阵 Matrices</a></li>
+<li class="chapter" data-level="5" data-path="-r-basics-1.html"><a href="-r-basics-1.html#-factor"><i class="fa fa-check"></i><b>5</b> 分类变量 factor</a></li>
+<li class="chapter" data-level="6" data-path="-data-frames.html"><a href="-data-frames.html"><i class="fa fa-check"></i><b>6</b> 数据框 Data frames</a><ul>
+<li class="chapter" data-level="6.1" data-path="-data-frames.html"><a href="-data-frames.html#whats-a-data-frame"><i class="fa fa-check"></i><b>6.1</b> What’s a data frame?</a></li>
+<li class="chapter" data-level="6.2" data-path="-data-frames.html"><a href="-data-frames.html#creating-a-data-frame"><i class="fa fa-check"></i><b>6.2</b> Creating a data frame</a></li>
+<li class="chapter" data-level="6.3" data-path="-data-frames.html"><a href="-data-frames.html#sorting"><i class="fa fa-check"></i><b>6.3</b> Sorting</a></li>
+<li class="chapter" data-level="6.4" data-path="-data-frames.html"><a href="-data-frames.html#sorting-your-data-frame"><i class="fa fa-check"></i><b>6.4</b> Sorting your data frame</a></li>
+<li class="chapter" data-level="6.5" data-path="-data-frames.html"><a href="-data-frames.html#lists-why-would-you-need-them"><i class="fa fa-check"></i><b>6.5</b> Lists, why would you need them?</a></li>
+<li class="chapter" data-level="6.6" data-path="-data-frames.html"><a href="-data-frames.html#lists-why-would-you-need-them-2"><i class="fa fa-check"></i><b>6.6</b> Lists, why would you need them? (2)</a></li>
+<li class="chapter" data-level="6.7" data-path="-data-frames.html"><a href="-data-frames.html#creating-a-list"><i class="fa fa-check"></i><b>6.7</b> Creating a list</a></li>
+<li class="chapter" data-level="6.8" data-path="-data-frames.html"><a href="-data-frames.html#creating-a-named-list"><i class="fa fa-check"></i><b>6.8</b> Creating a named list</a></li>
+<li class="chapter" data-level="6.9" data-path="-data-frames.html"><a href="-data-frames.html#selecting-elements-from-a-list"><i class="fa fa-check"></i><b>6.9</b> Selecting elements from a list</a></li>
+<li class="chapter" data-level="6.10" data-path="-data-frames.html"><a href="-data-frames.html#adding-more-movie-information-to-the-list"><i class="fa fa-check"></i><b>6.10</b> Adding more movie information to the list</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R 语言入门，给一心只有学习的你</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="-matrices" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> 矩阵 Matrices</h1>
+<p>In this chapter you will learn how to work with matrices in R. By the end of the chapter, you will be able to create matrices and to understand how you can do basic computations with them. You will analyze the box office numbers of Star Wars to illustrate the use of matrices in R. May the force be with you!</p>
+<ul>
+<li>What’s a matrix?
+In R, a matrix is a collection of elements of the same data type (numeric, character, or logical) arranged into a fixed number of rows and columns. Since you are only working with rows and columns, a matrix is called two-dimensional.</li>
+</ul>
+<p>You can construct a matrix in R with the matrix() function. Consider the following example:</p>
+<p>matrix(1:9, byrow = TRUE, nrow = 3)
+In the matrix() function:</p>
+<p>The first argument is the collection of elements that R will arrange into the rows and columns of the matrix. Here, we use 1:9 which is a shortcut for c(1, 2, 3, 4, 5, 6, 7, 8, 9).
+The argument byrow indicates that the matrix is filled by the rows. If we want the matrix to be filled by the columns, we just place byrow = FALSE.
+The third argument nrow indicates that the matrix should have three rows.</p>
+<p>Construct a matrix with 3 rows containing the numbers 1 up to 9, filled row-wise.</p>
+<p>Read the assignment carefully, the answer is already given!</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1"><span class="co"># Construct a matrix with 3 rows that contain the numbers 1 up to 9</span></a>
+<a class="sourceLine" id="cb111-2" data-line-number="2"><span class="kw">matrix</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>, <span class="dt">nrow =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    5    6
+## [3,]    7    8    9</code></pre>
+<p>It is now time to get your hands dirty. In the following exercises you will analyze the box office numbers of the Star Wars franchise. May the force be with you!</p>
+<p>In the editor, three vectors are defined. Each one represents the box office numbers from the first three Star Wars movies. The first element of each vector indicates the US box office revenue, the second element refers to the Non-US box office (source: Wikipedia).</p>
+<p>In this exercise, you’ll combine all these figures into a single vector. Next, you’ll build a matrix from this vector.</p>
+<p>Use c(new_hope, empire_strikes, return_jedi) to combine the three vectors into one vector. Call this vector box_office.
+Construct a matrix with 3 rows, where each row represents a movie. Use the matrix() function to do this. The first argument is the vector box_office, containing all box office figures. Next, you’ll have to specify nrow = 3 and byrow = TRUE. Name the resulting matrix star_wars_matrix.</p>
+<p>提示：
+box_office &lt;- c(new_hope, empire_strikes, return_jedi) will combine all numbers in the different vectors into a single vector with 6 elements.
+matrix(box_office, nrow = …, by_row …) is a template for the solution to the second instruction.</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1"><span class="co"># Box office Star Wars (in millions!)</span></a>
+<a class="sourceLine" id="cb113-2" data-line-number="2">new_hope &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">460.998</span>, <span class="fl">314.4</span>)</a>
+<a class="sourceLine" id="cb113-3" data-line-number="3">empire_strikes &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">290.475</span>, <span class="fl">247.900</span>)</a>
+<a class="sourceLine" id="cb113-4" data-line-number="4">return_jedi &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">309.306</span>, <span class="fl">165.8</span>)</a>
+<a class="sourceLine" id="cb113-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb113-6" data-line-number="6"><span class="co"># Create box_office</span></a>
+<a class="sourceLine" id="cb113-7" data-line-number="7">box_office &lt;-<span class="st"> </span><span class="kw">c</span>(new_hope, empire_strikes, return_jedi)</a>
+<a class="sourceLine" id="cb113-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb113-9" data-line-number="9"><span class="co"># Construct star_wars_matrix</span></a>
+<a class="sourceLine" id="cb113-10" data-line-number="10">star_wars_matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(box_office, <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
+<ul>
+<li>Naming a matrix
+To help you remember what is stored in star_wars_matrix, you would like to add the names of the movies for the rows. Not only does this help you to read the data, but it is also useful to select certain elements from the matrix.</li>
+</ul>
+<p>Similar to vectors, you can add names for the rows and the columns of a matrix</p>
+<p>rownames(my_matrix) &lt;- row_names_vector
+colnames(my_matrix) &lt;- col_names_vector
+We went ahead and prepared two vectors for you: region, and titles. You will need these vectors to name the columns and rows of star_wars_matrix, respectively.</p>
+<p>Use colnames() to name the columns of star_wars_matrix with the region vector.
+Use rownames() to name the rows of star_wars_matrix with the titles vector.
+Print out star_wars_matrix to see the result of your work.</p>
+<p>You can use colnames(star_wars_matrix) &lt;- region to name the columns of star_wars_matrix. Do a similar thing to name the rows.</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1"><span class="co"># Box office Star Wars (in millions!)</span></a>
+<a class="sourceLine" id="cb114-2" data-line-number="2">new_hope &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">460.998</span>, <span class="fl">314.4</span>)</a>
+<a class="sourceLine" id="cb114-3" data-line-number="3">empire_strikes &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">290.475</span>, <span class="fl">247.900</span>)</a>
+<a class="sourceLine" id="cb114-4" data-line-number="4">return_jedi &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">309.306</span>, <span class="fl">165.8</span>)</a>
+<a class="sourceLine" id="cb114-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb114-6" data-line-number="6"><span class="co"># Construct matrix</span></a>
+<a class="sourceLine" id="cb114-7" data-line-number="7">star_wars_matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(new_hope, empire_strikes, return_jedi), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb114-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb114-9" data-line-number="9"><span class="co"># Vectors region and titles, used for naming</span></a>
+<a class="sourceLine" id="cb114-10" data-line-number="10">region &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;US&quot;</span>, <span class="st">&quot;non-US&quot;</span>)</a>
+<a class="sourceLine" id="cb114-11" data-line-number="11">titles &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A New Hope&quot;</span>, <span class="st">&quot;The Empire Strikes Back&quot;</span>, <span class="st">&quot;Return of the Jedi&quot;</span>)</a>
+<a class="sourceLine" id="cb114-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb114-13" data-line-number="13"><span class="co"># Name the columns with region</span></a>
+<a class="sourceLine" id="cb114-14" data-line-number="14"><span class="kw">colnames</span>(star_wars_matrix) &lt;-<span class="st"> </span>region</a>
+<a class="sourceLine" id="cb114-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb114-16" data-line-number="16"><span class="co"># Name the rows with titles</span></a>
+<a class="sourceLine" id="cb114-17" data-line-number="17"><span class="kw">rownames</span>(star_wars_matrix) &lt;-<span class="st"> </span>titles</a>
+<a class="sourceLine" id="cb114-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb114-19" data-line-number="19"><span class="co"># Print out star_wars_matrix</span></a>
+<a class="sourceLine" id="cb114-20" data-line-number="20">star_wars_matrix</a></code></pre></div>
+<pre><code>##                              US non-US
+## A New Hope              460.998  314.4
+## The Empire Strikes Back 290.475  247.9
+## Return of the Jedi      309.306  165.8</code></pre>
+<ul>
+<li>Calculating the worldwide box office
+The single most important thing for a movie in order to become an instant legend in Tinseltown is its worldwide box office figures.</li>
+</ul>
+<p>To calculate the total box office revenue for the three Star Wars movies, you have to take the sum of the US revenue column and the non-US revenue column.</p>
+<p>In R, the function rowSums() conveniently calculates the totals for each row of a matrix. This function creates a new vector:</p>
+<p>rowSums(my_matrix)</p>
+<p>Calculate the worldwide box office figures for the three movies and put these in the vector named worldwide_vector.</p>
+<p>rowSums(star_wars_matrix) will calculate the sum of every row, so the total box office for each movie.</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="co"># Construct star_wars_matrix</span></a>
+<a class="sourceLine" id="cb116-2" data-line-number="2">box_office &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">460.998</span>, <span class="fl">314.4</span>, <span class="fl">290.475</span>, <span class="fl">247.900</span>, <span class="fl">309.306</span>, <span class="fl">165.8</span>)</a>
+<a class="sourceLine" id="cb116-3" data-line-number="3">star_wars_matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(box_office, <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb116-4" data-line-number="4">                           <span class="dt">dimnames =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;A New Hope&quot;</span>, <span class="st">&quot;The Empire Strikes Back&quot;</span>, <span class="st">&quot;Return of the Jedi&quot;</span>), </a>
+<a class="sourceLine" id="cb116-5" data-line-number="5">                                           <span class="kw">c</span>(<span class="st">&quot;US&quot;</span>, <span class="st">&quot;non-US&quot;</span>)))</a>
+<a class="sourceLine" id="cb116-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb116-7" data-line-number="7"><span class="co"># Calculate worldwide box office figures</span></a>
+<a class="sourceLine" id="cb116-8" data-line-number="8">worldwide_vector &lt;-<span class="st"> </span><span class="kw">rowSums</span>(star_wars_matrix)</a></code></pre></div>
+<ul>
+<li>Adding a column for the Worldwide box office
+In the previous exercise you calculated the vector that contained the worldwide box office receipt for each of the three Star Wars movies. However, this vector is not yet part of star_wars_matrix.</li>
+</ul>
+<p>You can add a column or multiple columns to a matrix with the cbind() function, which merges matrices and/or vectors together by column. For example:</p>
+<p>big_matrix &lt;- cbind(matrix1, matrix2, vector1 …)</p>
+<ul>
+<li>Add worldwide_vector as a new column to the star_wars_matrix and assign the result to all_wars_matrix. Use the cbind() function.</li>
+</ul>
+<p>In this exercise, you should pass two variables to cbind(): star_wars_matrix and worldwide_vector, in this order. Assign the result to all_wars_matrix.</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1"><span class="co"># Construct star_wars_matrix</span></a>
+<a class="sourceLine" id="cb117-2" data-line-number="2">box_office &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">460.998</span>, <span class="fl">314.4</span>, <span class="fl">290.475</span>, <span class="fl">247.900</span>, <span class="fl">309.306</span>, <span class="fl">165.8</span>)</a>
+<a class="sourceLine" id="cb117-3" data-line-number="3">star_wars_matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(box_office, <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb117-4" data-line-number="4">                           <span class="dt">dimnames =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;A New Hope&quot;</span>, <span class="st">&quot;The Empire Strikes Back&quot;</span>, <span class="st">&quot;Return of the Jedi&quot;</span>), </a>
+<a class="sourceLine" id="cb117-5" data-line-number="5">                                           <span class="kw">c</span>(<span class="st">&quot;US&quot;</span>, <span class="st">&quot;non-US&quot;</span>)))</a>
+<a class="sourceLine" id="cb117-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb117-7" data-line-number="7"><span class="co"># The worldwide box office figures</span></a>
+<a class="sourceLine" id="cb117-8" data-line-number="8">worldwide_vector &lt;-<span class="st"> </span><span class="kw">rowSums</span>(star_wars_matrix)</a>
+<a class="sourceLine" id="cb117-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb117-10" data-line-number="10"><span class="co"># Bind the new variable worldwide_vector as a column to star_wars_matrix</span></a>
+<a class="sourceLine" id="cb117-11" data-line-number="11">all_wars_matrix &lt;-<span class="st"> </span><span class="kw">cbind</span>(star_wars_matrix, worldwide_vector)</a></code></pre></div>
+<ul>
+<li>Adding a row
+Just like every action has a reaction, every cbind() has an rbind(). (We admit, we are pretty bad with metaphors.)</li>
+</ul>
+<p>Your R workspace, where all variables you defined ‘live’ (check out what a workspace is), has already been initialized and contains two matrices:</p>
+<p>star_wars_matrix that we have used all along, with data on the original trilogy,
+star_wars_matrix2, with similar data for the prequels trilogy.
+Type the name of these matrices in the console and hit Enter if you want to have a closer look. If you want to check out the contents of the workspace, you can type ls() in the console.</p>
+<p>Use rbind() to paste together star_wars_matrix and star_wars_matrix2, in this order. Assign the resulting matrix to all_wars_matrix.</p>
+<p>Bind the two matrices together like this:</p>
+<p>rbind(matrix1, matrix2)
+Assign the result to all_wars_matrix.</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1"><span class="co"># star_wars_matrix and star_wars_matrix2 are available in your workspace</span></a>
+<a class="sourceLine" id="cb118-2" data-line-number="2">star_wars_matrix  </a>
+<a class="sourceLine" id="cb118-3" data-line-number="3">star_wars_matrix2 </a>
+<a class="sourceLine" id="cb118-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb118-5" data-line-number="5"><span class="co"># Combine both Star Wars trilogies in one matrix</span></a>
+<a class="sourceLine" id="cb118-6" data-line-number="6">all_wars_matrix &lt;-<span class="st"> </span><span class="kw">rbind</span>(star_wars_matrix, star_wars_matrix2)</a></code></pre></div>
+<ul>
+<li><p>The total box office revenue for the entire saga
+Just like cbind() has rbind(), colSums() has rowSums(). Your R workspace already contains the all_wars_matrix that you constructed in the previous exercise; type all_wars_matrix to have another look. Let’s now calculate the total box office revenue for the entire saga.</p></li>
+<li><p>Calculate the total revenue for the US and the non-US region and assign total_revenue_vector. You can use the colSums() function.
+Print out total_revenue_vector to have a look at the results.</p></li>
+</ul>
+<p>You should use the colSums() function with star_wars_matrix as the argument to find the total box office per region.</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1"><span class="co"># all_wars_matrix is available in your workspace</span></a>
+<a class="sourceLine" id="cb119-2" data-line-number="2">all_wars_matrix</a>
+<a class="sourceLine" id="cb119-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb119-4" data-line-number="4"><span class="co"># Total revenue for US and non-US</span></a>
+<a class="sourceLine" id="cb119-5" data-line-number="5">total_revenue_vector &lt;-<span class="st"> </span><span class="kw">colSums</span>(all_wars_matrix)</a>
+<a class="sourceLine" id="cb119-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb119-7" data-line-number="7"><span class="co"># Print out total_revenue_vector</span></a>
+<a class="sourceLine" id="cb119-8" data-line-number="8">total_revenue_vector</a></code></pre></div>
+<ul>
+<li>Selection of matrix elements
+Similar to vectors, you can use the square brackets [ ] to select one or multiple elements from a matrix. Whereas vectors have one dimension, matrices have two dimensions. You should therefore use a comma to separate the rows you want to select from the columns. For example:</li>
+</ul>
+<p>my_matrix[1,2] selects the element at the first row and second column.
+my_matrix[1:3,2:4] results in a matrix with the data on the rows 1, 2, 3 and columns 2, 3, 4.
+If you want to select all elements of a row or a column, no number is needed before or after the comma, respectively:</p>
+<p>my_matrix[,1] selects all elements of the first column.
+my_matrix[1,] selects all elements of the first row.
+Back to Star Wars with this newly acquired knowledge! As in the previous exercise, all_wars_matrix is already available in your workspace.</p>
+<ul>
+<li>Select the non-US revenue for all movies (the entire second column of all_wars_matrix), store the result as non_us_all.
+Use mean() on non_us_all to calculate the average non-US revenue for all movies. Simply print out the result.
+This time, select the non-US revenue for the first two movies in all_wars_matrix. Store the result as non_us_some.
+Use mean() again to print out the average of the values in non_us_some.</li>
+</ul>
+<p>You can select the entire second column of a matrix my_matrix with my_matrix[,2].</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="co"># all_wars_matrix is available in your workspace</span></a>
+<a class="sourceLine" id="cb120-2" data-line-number="2">all_wars_matrix</a>
+<a class="sourceLine" id="cb120-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb120-4" data-line-number="4"><span class="co"># Select the non-US revenue for all movies</span></a>
+<a class="sourceLine" id="cb120-5" data-line-number="5">non_us_all &lt;-<span class="st"> </span>all_wars_matrix[,<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb120-6" data-line-number="6">  </a>
+<a class="sourceLine" id="cb120-7" data-line-number="7"><span class="co"># Average non-US revenue</span></a>
+<a class="sourceLine" id="cb120-8" data-line-number="8"><span class="kw">mean</span>(non_us_all)</a>
+<a class="sourceLine" id="cb120-9" data-line-number="9">  </a>
+<a class="sourceLine" id="cb120-10" data-line-number="10"><span class="co"># Select the non-US revenue for first two movies</span></a>
+<a class="sourceLine" id="cb120-11" data-line-number="11">non_us_some &lt;-<span class="st"> </span>all_wars_matrix[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>,<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb120-12" data-line-number="12">  </a>
+<a class="sourceLine" id="cb120-13" data-line-number="13"><span class="co"># Average non-US revenue for first two movies</span></a>
+<a class="sourceLine" id="cb120-14" data-line-number="14"><span class="kw">mean</span>(non_us_some)</a></code></pre></div>
+<ul>
+<li>A little arithmetic with matrices
+Similar to what you have learned with vectors, the standard operators like +, -, /, *, etc. work in an element-wise way on matrices in R.</li>
+</ul>
+<p>For example, 2 * my_matrix multiplies each element of my_matrix by two.</p>
+<p>As a newly-hired data analyst for Lucasfilm, it is your job to find out how many visitors went to each movie for each geographical area. You already have the total revenue figures in all_wars_matrix. Assume that the price of a ticket was 5 dollars. Simply dividing the box office numbers by this ticket price gives you the number of visitors.</p>
+<p>Divide all_wars_matrix by 5, giving you the number of visitors in millions. Assign the resulting matrix to visitors.
+Print out visitors so you can have a look.
+Show Answer (-70 XP)
+HINT
+The number of visitors is equal to all_wars_matrix divided by 5.</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1"><span class="co"># all_wars_matrix is available in your workspace</span></a>
+<a class="sourceLine" id="cb121-2" data-line-number="2">all_wars_matrix</a>
+<a class="sourceLine" id="cb121-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb121-4" data-line-number="4"><span class="co"># Estimate the visitors</span></a>
+<a class="sourceLine" id="cb121-5" data-line-number="5">visitors &lt;-<span class="st"> </span>all_wars_matrix <span class="op">/</span><span class="st"> </span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb121-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb121-7" data-line-number="7"><span class="co"># Print the estimate to the console</span></a>
+<a class="sourceLine" id="cb121-8" data-line-number="8">visitors</a></code></pre></div>
+<ul>
+<li>A little arithmetic with matrices (2)
+Just like 2 * my_matrix multiplied every element of my_matrix by two, my_matrix1 * my_matrix2 creates a matrix where each element is the product of the corresponding elements in my_matrix1 and my_matrix2.</li>
+</ul>
+<p>After looking at the result of the previous exercise, big boss Lucas points out that the ticket prices went up over time. He asks to redo the analysis based on the prices you can find in ticket_prices_matrix (source: imagination).</p>
+<p>Those who are familiar with matrices should note that this is not the standard matrix multiplication for which you should use %*% in R.</p>
+<p>Divide all_wars_matrix by ticket_prices_matrix to get the estimated number of US and non-US visitors for the six movies. Assign the result to visitors.
+From the visitors matrix, select the entire first column, representing the number of visitors in the US. Store this selection as us_visitors.
+Calculate the average number of US visitors; print out the result.</p>
+<p>You can use the function mean() to calculate the average of the inputs to the function.
+To get the number of visitors in the US, select the first column from visitors using visitors[ ,1].</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1"><span class="co"># all_wars_matrix and ticket_prices_matrix are available in your workspace</span></a>
+<a class="sourceLine" id="cb122-2" data-line-number="2">all_wars_matrix</a>
+<a class="sourceLine" id="cb122-3" data-line-number="3">ticket_prices_matrix</a>
+<a class="sourceLine" id="cb122-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb122-5" data-line-number="5"><span class="co"># Estimated number of visitors</span></a>
+<a class="sourceLine" id="cb122-6" data-line-number="6">visitors &lt;-<span class="st"> </span>all_wars_matrix <span class="op">/</span><span class="st"> </span>ticket_prices_matrix</a>
+<a class="sourceLine" id="cb122-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb122-8" data-line-number="8"><span class="co"># US visitors</span></a>
+<a class="sourceLine" id="cb122-9" data-line-number="9">us_visitors &lt;-<span class="st"> </span>visitors[ ,<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb122-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb122-11" data-line-number="11"><span class="co"># Average number of US visitors</span></a>
+<a class="sourceLine" id="cb122-12" data-line-number="12"><span class="kw">mean</span>(us_visitors)</a></code></pre></div>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="vectors.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="-factor.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-matrices.Rmd",
+"text": "Edit"
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

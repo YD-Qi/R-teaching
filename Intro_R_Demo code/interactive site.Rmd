@@ -1,0 +1,99 @@
+---
+title: "Data Maniac 1"
+author: "Chris Qi"
+output:
+  html_document:
+  header-includes:
+    self_contained: false
+---
+
+```{r, include=FALSE}
+tutorial::go_interactive()
+```
+###Data Maniac 第一期课程，在线互动练习测试：
+测试中...
+问题总结：
+1. "pre-exercise-code"中的包只能被最后一个chunk引用
+2. 无法预先加载数据
+```{r ex="play_around", type="pre-exercise-code"}
+if(!require(ggplot2)) {
+  install.packages("ggplot2")
+}
+
+if(!require(MASS)) {
+  install.packages("MASS")
+}
+
+if(!require(dplyr)) {
+  install.packages("dplyr")
+}
+
+```
+
+```{r ex="play_around", type="pre-exercise-code"}
+library(ggplot2)
+library(MASS)
+library(dplyr)
+```
+
+```{r ex="play_around", type="sample-code"}
+library(ggplot2)
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month),group=1))+
+  geom_point()+ 
+  stat_smooth(method="lm", se=FALSE)
+```
+
+```{r ex="play_around", type="sample-code"}
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month)))+
+  geom_point()+   
+  stat_smooth(method="lm", se=FALSE,aes(group=1))
+```
+
+```{r ex="play_around", type="sample-code"}
+#first one:
+ggplot(data = mammals, aes(x = body, y = brain)) +
+  geom_point()
+```
+
+
+请使用 `<-`来创建变量a和b:
+```{r}
+a
+b
+```
+
+请完成下面代码来绘制散点图：
+```{r}
+plot(airquality)
+```
+
+温度是数值型变量,可以绘柱状图:
+```{r}
+hist(airquality$Temp)
+```
+
+```{r ex="create_a", type="pre-exercise-code"}
+b <- 5
+```
+
+```{r ex="create_a", type="sample-code"}
+# Create a variable a, equal to 5
+
+# Print out a
+```
+
+```{r ex="create_a", type="solution"}
+# Create a variable a, equal to 5
+a <- 5
+
+# Print out a
+a
+```
+
+```{r ex="create_a", type="sct"}
+test_object("a")
+test_output_contains("a", incorrect_msg = "incorrect!")
+success_msg("great!")
+```

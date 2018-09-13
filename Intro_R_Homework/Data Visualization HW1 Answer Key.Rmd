@@ -1,0 +1,212 @@
+---
+title: "Data Visualization 1 Exercise"
+author: "Chris Qi"
+date: "8/5/2018"
+output: html_document
+---
+## R 基础作图，base R plots
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+请在Console（工作台）单独运行下面的代码以安装我们后面要用的包
+```{r}
+install.packages("insuranceData")
+install.packages("MASS")
+install.packages("robustbase")
+install.packages("car")
+install.packages("aplpack")
+install.packages("corrplot")
+install.packages("rpart")
+```
+
+加载包
+```{r}
+# Load MASS package
+library(dplyr)
+library(MASS)
+library(robustbase)
+library(insuranceData)
+library(car)
+```
+
+Apply the plot() function to the whiteside data frame.
+```{r}
+# 探索性绘图，方便自己理解变量之间的大概关系
+# plot(数据)，得到数据里面每两个变量之间的散点图
+plot(airquality)
+```
+
+
+使用 plot() 函数和数据“whiteside”， 绘制散点图来展示Temp与Gas之间的关系，并使用xlab, ylab添加坐标标示 "Outside temperature" and "Heating gas consumption"。
+```{r}
+plot(whiteside$Temp,whiteside$Gas,
+     xlab="Outside temperature",
+     ylab= "Heating gas consumption")
+```
+
+plot() 是一个一般化的函数，它可以根据不同的数据作出不同的图，例如：
+```{r}
+plot(whiteside$Insul)
+```
+
+###V2
+
+Adding details to a plot using point shapes, color, and reference lines
+为绘图添加细节，例如数据点的形状，颜色以及参照线。
+使用数据“Cars93”来练习：
+
+Price: the average sale price for a car
+Max.Price: the highest recorded price for that car
+Min.Price: the lowest recorded price for that car
+
+Use the abline() function to add a dashed equality reference line (i.e., a line with y-intercept 0 and slope 1). See abline() to learn what arguments a and b refer to.
+
+查看数据：
+```{r}
+glimpse(Cars93)
+```
+
+探索最高价和价格之间的关系：
+Use the plot() function to create a scatterplot of the Max.Price variable versus the Price variable, specifying the pch and col parameters so the data points are represented as red solid triangles. The pch value to plot solid triangles is 17.
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+```
+
+添加最低价与价格的散点图：
+Use the points() function to add a second set of points to your scatterplot, representing Min.Price versus Price, where the new data points are represented as blue solid circles. The pch value for solid circles is 16.
+
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+points(Cars93$Min.Price,Cars93$Price,col="blue",pch=16)
+```
+
+添加一条0为截距，1为斜率的参照线
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+points(Cars93$Min.Price,Cars93$Price,col="blue",pch=16)
+abline(a = 0, b = 1, lty = 2)
+```
+
+
+使用数据Animals2来练习全局设置面板par()，照例先查看一下
+```{r}
+glimpse(Animals2)
+```
+# 设置一行两列的面板
+```{r}
+par(mfrow = c(1,2))
+
+# First plot: brain vs. body in its original form
+
+plot(Animals2$brain, Animals2$body)
+# Add the first title
+title("Original representation")
+
+plot(log(Animals2$brain), log(Animals2$body))
+# Add the first title
+title("Log-log plot")
+```
+
+### v3
+柱状图经常使用。
+来，我们认识一下这两个 hist()，truehist() 函数。
+一个自带，一个来自 MASS package。
+运行下面的函数，看看它们有什么相同和不同之处？
+```{r}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create a histogram of counts with hist()
+hist(Cars93$Horsepower,main="hist() plot")
+
+# Create a normalized histogram with truehist()
+truehist(Cars93$Horsepower,main="hist() plot")
+```
+
+
+两个变量的散点图中，如果某对或者多对数值多次重复出现，散点图无法显示数据的这一特点。
+花瓣图让你看到更大的世界...
+
+```{r}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create the standard scatterplot
+plot(rad~zn,data=Boston)
+
+# Add the title
+title("Standard scatterplot")
+
+# Create the sunflowerplot
+sunflowerplot(rad~zn,data=Boston)
+
+# Add the title
+title("Sunflower plot")
+```
+
+探索一下箱图的其他特点
+```{r}
+#普通箱图
+par(mfrow=c(1,2))
+# Create a variable-width boxplot with log y-axis & horizontal labels
+boxplot(crim~rad, data=Boston)
+# Add a title
+title("Crime rate vs. radial highway index")
+
+#将y值取对数
+boxplot(crim~rad, data=Boston, log="y")
+```
+
+
+使用 corrplot() function绘制相关矩阵图形
+```{r}
+# Load the corrplot library for the corrplot() function
+library(corrplot)
+
+# Extract the numerical variables from UScereal
+numericalVars <- UScereal[, 2:10]
+
+# Compute the correlation matrix for these variables
+corrMat <- cor(numericalVars)
+
+# Generate the correlation ellipse plot
+corrplot(corrMat, method = "ellipse")
+
+```
+
+最后，我们练习 plot() 函数里, type这个参数的取值，不同的type代表不同的形状：
+
+"p" for "points"
+"l" for "lines"
+"o" for "overlaid" (i.e., lines overlaid with points)
+"s" for "steps"
+```{r}
+# Set up a 2-by-2 plot array
+par(mfrow = c(2, 2))
+
+# Plot the Animals2 brain weight data as points
+plot(Animals2$brain, type = "p")
+
+# Add the title
+title("points")
+
+# Plot the brain weights with lines
+plot(Animals2$brain, type = "l")
+
+# Add the title
+title("lines")
+
+# Plot the brain weights with overlaid
+plot(Animals2$brain, type = "o")
+
+# Add the title
+title("overlaid")
+
+# Plot the brain weights with lines
+plot(Animals2$brain, type = "s")
+
+# Add the title
+title("steps")
+```
+

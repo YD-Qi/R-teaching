@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>R 语言入门，给一心只有学习的你</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="R 语言入门，给一心只有学习的你" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="R 语言入门，给一心只有学习的你" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Chris Qi from Data Maniac">
+
+
+<meta name="date" content="2018-09-11">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="section-4.html">
+<link rel="next" href="r-base-graphics-in-r.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">零基础学R语言</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> 前言</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#r-"><i class="fa fa-check"></i><b>1.1</b> R 的前世今生</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#r-"><i class="fa fa-check"></i><b>1.2</b> R 的安装</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#rstudio"><i class="fa fa-check"></i><b>1.3</b> RStudio界面</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="-r-basics-1.html"><a href="-r-basics-1.html"><i class="fa fa-check"></i><b>2</b> 新手上路 R Basics 1</a><ul>
+<li class="chapter" data-level="2.1" data-path="-r-basics-1.html"><a href="-r-basics-1.html#r"><i class="fa fa-check"></i><b>2.1</b> R的数学运算：</a></li>
+<li class="chapter" data-level="2.2" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.2"><i class="fa fa-check"></i><b>2.2</b> 赋值</a></li>
+<li class="chapter" data-level="2.3" data-path="-r-basics-1.html"><a href="-r-basics-1.html#-or-help-"><i class="fa fa-check"></i><b>2.3</b> 使用 ? or help() 查询</a></li>
+<li class="chapter" data-level="2.4" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.4"><i class="fa fa-check"></i><b>2.4</b> 功能包</a></li>
+<li class="chapter" data-level="2.5" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.5"><i class="fa fa-check"></i><b>2.5</b> 查看路径和设置路径</a></li>
+<li class="chapter" data-level="2.6" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.6"><i class="fa fa-check"></i><b>2.6</b> 数据类型</a></li>
+<li class="chapter" data-level="2.7" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.7"><i class="fa fa-check"></i><b>2.7</b> 数据结构</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="-r-basics-1.html"><a href="-r-basics-1.html#vector-"><i class="fa fa-check"></i><b>2.7.1</b> vector 向量</a></li>
+<li class="chapter" data-level="2.7.2" data-path="-r-basics-1.html"><a href="-r-basics-1.html#matrix-"><i class="fa fa-check"></i><b>2.7.2</b> matrix 矩阵</a></li>
+<li class="chapter" data-level="2.7.3" data-path="-r-basics-1.html"><a href="-r-basics-1.html#dataframe-"><i class="fa fa-check"></i><b>2.7.3</b> dataframe 数据框</a></li>
+<li class="chapter" data-level="2.7.4" data-path="-r-basics-1.html"><a href="-r-basics-1.html#-factor"><i class="fa fa-check"></i><b>2.7.4</b> 因子 factor</a></li>
+<li class="chapter" data-level="2.7.5" data-path="-r-basics-1.html"><a href="-r-basics-1.html#list-"><i class="fa fa-check"></i><b>2.7.5</b> list 列表</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="-r-basics-1.html"><a href="-r-basics-1.html#section-2.8"><i class="fa fa-check"></i><b>2.8</b> 常用函数</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="-r-basics-2.html"><a href="-r-basics-2.html"><i class="fa fa-check"></i><b>3</b> 新手上路 R Basics 2</a><ul>
+<li class="chapter" data-level="3.1" data-path="-r-basics-2.html"><a href="-r-basics-2.html#section-3.1"><i class="fa fa-check"></i><b>3.1</b> 为什么要学统计？</a></li>
+<li class="chapter" data-level="3.2" data-path="-r-basics-2.html"><a href="-r-basics-2.html#section-3.2"><i class="fa fa-check"></i><b>3.2</b> 补一点统计知识</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="-r-basics-2.html"><a href="-r-basics-2.html#-meanmedianmodepercentile"><i class="fa fa-check"></i><b>3.2.1</b> 集中趋势统计量: 均值（Mean)、中位数(Median)、众数(Mode)、百分位数(percentile)</a></li>
+<li class="chapter" data-level="3.2.2" data-path="-r-basics-2.html"><a href="-r-basics-2.html#varrange"><i class="fa fa-check"></i><b>3.2.2</b> 离散趋势统计量：方差（var)、极差（range)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="-r-basics-2.html"><a href="-r-basics-2.html#section-3.3"><i class="fa fa-check"></i><b>3.3</b> 基本作图</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="section-4.html"><a href="section-4.html"><i class="fa fa-check"></i><b>4</b> 数据管理</a><ul>
+<li class="chapter" data-level="4.1" data-path="section-4.html"><a href="section-4.html#section-4.1"><i class="fa fa-check"></i><b>4.1</b> 添加变量</a></li>
+<li class="chapter" data-level="4.2" data-path="section-4.html"><a href="section-4.html#section-4.2"><i class="fa fa-check"></i><b>4.2</b> 缺失值处理</a></li>
+<li class="chapter" data-level="4.3" data-path="section-4.html"><a href="section-4.html#section-4.3"><i class="fa fa-check"></i><b>4.3</b> 导入输入</a></li>
+<li class="chapter" data-level="4.4" data-path="section-4.html"><a href="section-4.html#section-4.4"><i class="fa fa-check"></i><b>4.4</b> 脚本</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rapply.html"><a href="rapply.html"><i class="fa fa-check"></i><b>5</b> 掌握R语言中的apply函数族</a><ul>
+<li class="chapter" data-level="5.1" data-path="rapply.html"><a href="rapply.html#apply"><i class="fa fa-check"></i><b>5.1</b> apply的家族函数</a></li>
+<li class="chapter" data-level="5.2" data-path="rapply.html"><a href="rapply.html#apply"><i class="fa fa-check"></i><b>5.2</b> apply函数</a></li>
+<li class="chapter" data-level="5.3" data-path="rapply.html"><a href="rapply.html#lapply"><i class="fa fa-check"></i><b>5.3</b> lapply函数</a></li>
+<li class="chapter" data-level="5.4" data-path="rapply.html"><a href="rapply.html#dplyr-package"><i class="fa fa-check"></i><b>5.4</b> dplyr package</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="r-base-graphics-in-r.html"><a href="r-base-graphics-in-r.html"><i class="fa fa-check"></i><b>6</b> R 基础作图快速入门 base graphics in R</a></li>
+<li class="chapter" data-level="7" data-path="section-7.html"><a href="section-7.html"><i class="fa fa-check"></i><b>7</b> 数据可视化第二课：</a><ul>
+<li class="chapter" data-level="7.1" data-path="section-7.html"><a href="section-7.html#ggplot2-"><i class="fa fa-check"></i><b>7.1</b> ggplot2 绘图包介绍</a></li>
+<li class="chapter" data-level="7.2" data-path="section-7.html"><a href="section-7.html#section-7.2"><i class="fa fa-check"></i><b>7.2</b> 用几何函数指定图形类型</a></li>
+<li class="chapter" data-level="7.3" data-path="section-7.html"><a href="section-7.html#section-7.3"><i class="fa fa-check"></i><b>7.3</b> 分组</a></li>
+<li class="chapter" data-level="7.4" data-path="section-7.html"><a href="section-7.html#section-7.4"><i class="fa fa-check"></i><b>7.4</b> 刻面</a></li>
+<li class="chapter" data-level="7.5" data-path="section-7.html"><a href="section-7.html#section-7.5"><i class="fa fa-check"></i><b>7.5</b> 添加光滑曲线</a></li>
+<li class="chapter" data-level="7.6" data-path="section-7.html"><a href="section-7.html#section-7.6"><i class="fa fa-check"></i><b>7.6</b> 保存图</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="section-8.html"><a href="section-8.html"><i class="fa fa-check"></i><b>8</b> 数据可视化第三课：案例</a><ul>
+<li class="chapter" data-level="8.1" data-path="section-8.html"><a href="section-8.html#section-8.1"><i class="fa fa-check"></i><b>8.1</b> 泰坦尼克号生还者分析</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="section-9.html"><a href="section-9.html"><i class="fa fa-check"></i><b>9</b> 线性回归第一课</a><ul>
+<li class="chapter" data-level="9.1" data-path="section-9.html"><a href="section-9.html#section-9.1"><i class="fa fa-check"></i><b>9.1</b> 相关性</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="section-9.html"><a href="section-9.html#section-9.1.1"><i class="fa fa-check"></i><b>9.1.1</b> 散点图</a></li>
+<li class="chapter" data-level="9.1.2" data-path="section-9.html"><a href="section-9.html#section-9.1.2"><i class="fa fa-check"></i><b>9.1.2</b> 相关系数</a></li>
+<li class="chapter" data-level="9.1.3" data-path="section-9.html"><a href="section-9.html#section-9.1.3"><i class="fa fa-check"></i><b>9.1.3</b> 线性关系</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="section-9.html"><a href="section-9.html#section-9.2"><i class="fa fa-check"></i><b>9.2</b> 回归模型</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="section-9.html"><a href="section-9.html#section-9.2.1"><i class="fa fa-check"></i><b>9.2.1</b> 模型理解</a></li>
+<li class="chapter" data-level="9.2.2" data-path="section-9.html"><a href="section-9.html#section-9.2.2"><i class="fa fa-check"></i><b>9.2.2</b> 模型推导</a></li>
+<li class="chapter" data-level="9.2.3" data-path="section-9.html"><a href="section-9.html#section-9.2.3"><i class="fa fa-check"></i><b>9.2.3</b> 系数含义</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="section-10.html"><a href="section-10.html"><i class="fa fa-check"></i><b>10</b> 回归分析第二课</a><ul>
+<li class="chapter" data-level="10.1" data-path="-r-basics-1.html"><a href="-r-basics-1.html#r"><i class="fa fa-check"></i><b>10.1</b> 如何用R做线性回归</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="section-10.html"><a href="section-10.html#section-10.1.1"><i class="fa fa-check"></i><b>10.1.1</b> 数据导入</a></li>
+<li class="chapter" data-level="10.1.2" data-path="section-10.html"><a href="section-10.html#section-10.1.2"><i class="fa fa-check"></i><b>10.1.2</b> 前期清理</a></li>
+<li class="chapter" data-level="10.1.3" data-path="section-10.html"><a href="section-10.html#section-10.1.3"><i class="fa fa-check"></i><b>10.1.3</b> 基本观察</a></li>
+<li class="chapter" data-level="10.1.4" data-path="section-10.html"><a href="section-10.html#section-10.1.4"><i class="fa fa-check"></i><b>10.1.4</b> 建立模型</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="section-10.html"><a href="section-10.html#section-10.2"><i class="fa fa-check"></i><b>10.2</b> 线性回归结果的理解</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="section-10.html"><a href="section-10.html#section-10.2.1"><i class="fa fa-check"></i><b>10.2.1</b> 系数</a></li>
+<li class="chapter" data-level="10.2.2" data-path="index.html"><a href="index.html#r-"><i class="fa fa-check"></i><b>10.2.2</b> R 方</a></li>
+<li class="chapter" data-level="10.2.3" data-path="section-10.html"><a href="section-10.html#section-10.2.3"><i class="fa fa-check"></i><b>10.2.3</b> 显著度</a></li>
+<li class="chapter" data-level="10.2.4" data-path="section-10.html"><a href="section-10.html#section-10.2.4"><i class="fa fa-check"></i><b>10.2.4</b> 模型评估</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="section-11.html"><a href="section-11.html"><i class="fa fa-check"></i><b>11</b> 回归分析第三课</a><ul>
+<li class="chapter" data-level="11.1" data-path="section-11.html"><a href="section-11.html#section-11.1"><i class="fa fa-check"></i><b>11.1</b> 大学教授收入分析</a></li>
+<li class="chapter" data-level="11.2" data-path="section-11.html"><a href="section-11.html#section-11.2"><i class="fa fa-check"></i><b>11.2</b> 广告投入与销售额分析</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="dplyr.html"><a href="dplyr.html"><i class="fa fa-check"></i><b>12</b> dplyr包</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R 语言入门，给一心只有学习的你</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="rapply" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> 掌握R语言中的apply函数族</h1>
+<p><a href="http://blog.fens.me/r-apply/" class="uri">http://blog.fens.me/r-apply/</a></p>
+<p>刚开始接触R语言时，会听到各种的R语言使用技巧，其中最重要的一条就是不要用循环，效率特别低，要用向量计算代替循环计算。</p>
+<p>那么，这是为什么呢？原因在于R的循环操作for和while，都是基于R语言本身来实现的，而向量操作是基于底层的C语言函数实现的，从性能上来看，就会有比较明显的差距了。那么如何使用C的函数来实现向量计算呢，就是要用到apply的家族函数，包括apply, sapply, tapply, mapply, lapply, rapply, vapply, eapply等。</p>
+<div id="apply" class="section level2">
+<h2><span class="header-section-number">5.1</span> apply的家族函数</h2>
+<p>apply函数族是R语言中数据处理的一组核心函数，通过使用apply函数，我们可以实现对数据的循环、分组、过滤、类型控制等操作。但是，由于在R语言中apply函数与其他语言循环体的处理思路是完全不一样的，所以apply函数族一直是使用者玩不转一类核心函数。</p>
+<p>很多R语言新手，写了很多的for循环代码，也不愿意多花点时间把apply函数的使用方法了解清楚，最后把R代码写的跟C似得，我严重鄙视只会写for的R程序员。</p>
+<p>apply函数本身就是解决数据循环处理的问题，为了面向不同的数据类型，不同的返回值，apply函数组成了一个函数族，包括了8个功能类似的函数。这其中有些函数很相似，有些也不是太一样的。</p>
+<p>最常用的函数为apply和sapply，下面将分别介绍这8个函数的定义和使用方法。</p>
+</div>
+<div id="apply" class="section level2">
+<h2><span class="header-section-number">5.2</span> apply函数</h2>
+<p>apply函数是最常用的代替for循环的函数。apply函数可以对矩阵、数据框、数组(二维、多维)，按行或列进行循环计算，对子元素进行迭代，并把子元素以参数传递的形式给自定义的FUN函数中，并以返回计算结果。</p>
+<p>函数定义：</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1"><span class="kw">apply</span>(X, MARGIN, FUN, ...)</a></code></pre></div>
+<p>参数列表：</p>
+<ul>
+<li>X:数组、矩阵、数据框</li>
+<li>MARGIN: 按行计算或按按列计算，1表示按行，2表示按列</li>
+<li>FUN: 自定义的调用函数</li>
+<li>…: 更多参数，可选</li>
+</ul>
+<p>比如，对一个矩阵的每一行求和，下面就要用到apply做循环了。</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1">x&lt;-<span class="kw">matrix</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">12</span>,<span class="dt">ncol=</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb118-2" data-line-number="2"><span class="kw">apply</span>(x,<span class="dv">1</span>,sum)</a></code></pre></div>
+<pre><code>## [1] 15 18 21 24</code></pre>
+<p>下面计算一个稍微复杂点的例子，按行循环，让数据框的x1列加1，并计算出x1,x2列的均值。</p>
+<p>生成data.frame</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="dt">x1 =</span> <span class="dv">3</span>, <span class="dt">x2 =</span> <span class="kw">c</span>(<span class="dv">4</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb120-2" data-line-number="2">x</a></code></pre></div>
+<pre><code>##      x1 x2
+## [1,]  3  4
+## [2,]  3  3
+## [3,]  3  2
+## [4,]  3  1
+## [5,]  3  2
+## [6,]  3  3
+## [7,]  3  4
+## [8,]  3  5</code></pre>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1"><span class="co"># 自定义函数myFUN，第一个参数x为数据</span></a>
+<a class="sourceLine" id="cb122-2" data-line-number="2"><span class="co"># 第二、三个参数为自定义参数，可以通过apply的&#39;...&#39;进行传入。</span></a>
+<a class="sourceLine" id="cb122-3" data-line-number="3">myFUN&lt;-<span class="st"> </span><span class="cf">function</span>(x, c1, c2) {</a>
+<a class="sourceLine" id="cb122-4" data-line-number="4"><span class="kw">c</span>(<span class="kw">sum</span>(x[c1],<span class="dv">1</span>), <span class="kw">mean</span>(x[c2])) </a>
+<a class="sourceLine" id="cb122-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb122-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb122-7" data-line-number="7"><span class="co"># 把数据框按行做循环，每行分别传递给myFUN函数，设置c1,c2对应myFUN的第二、三个参数</span></a>
+<a class="sourceLine" id="cb122-8" data-line-number="8"><span class="kw">apply</span>(x,<span class="dv">1</span>,myFUN,<span class="dt">c1=</span><span class="st">&#39;x1&#39;</span>,<span class="dt">c2=</span><span class="kw">c</span>(<span class="st">&#39;x1&#39;</span>,<span class="st">&#39;x2&#39;</span>))</a></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+## [1,]  4.0    4  4.0    4  4.0    4  4.0    4
+## [2,]  3.5    3  2.5    2  2.5    3  3.5    4</code></pre>
+<p>通过这个上面的自定义函数myFUN就实现了，一个常用的循环计算。</p>
+<p>如果直接用for循环来实现，那么代码如下：</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1"><span class="co"># 定义一个结果的数据框</span></a>
+<a class="sourceLine" id="cb124-2" data-line-number="2">df&lt;-<span class="kw">data.frame</span>()</a>
+<a class="sourceLine" id="cb124-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb124-4" data-line-number="4"><span class="co"># 定义for循环</span></a>
+<a class="sourceLine" id="cb124-5" data-line-number="5"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(x)){</a>
+<a class="sourceLine" id="cb124-6" data-line-number="6">  row&lt;-x[i,]                                         <span class="co"># 每行的值</span></a>
+<a class="sourceLine" id="cb124-7" data-line-number="7">  df&lt;-<span class="kw">rbind</span>(df,<span class="kw">rbind</span>(<span class="kw">c</span>(<span class="kw">sum</span>(row[<span class="dv">1</span>],<span class="dv">1</span>), <span class="kw">mean</span>(row))))    <span class="co">#计算，并赋值到结果数据框</span></a>
+<a class="sourceLine" id="cb124-8" data-line-number="8">  }</a>
+<a class="sourceLine" id="cb124-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb124-10" data-line-number="10"><span class="co"># 打印结果数据框</span></a>
+<a class="sourceLine" id="cb124-11" data-line-number="11">df</a></code></pre></div>
+<p>通过for循环的方式，也可以很容易的实现上面计算过程，但是这里还有一些额外的操作需要自己处理，比如构建循环体、定义结果数据集、并合每次循环的结果到结果数据集。</p>
+<p>对于上面的需求，还有第三种实现方法，那就是完成利用了R的特性，通过向量化计算来完成的。</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="kw">data.frame</span>(<span class="dt">x1=</span>x[,<span class="dv">1</span>] <span class="dv">1</span>,<span class="dt">x2=</span><span class="kw">rowMeans</span>(x))</a></code></pre></div>
+<p>那么，一行就可以完成整个计算过程了。</p>
+<p>接下来，我们需要再比较一下3种操作上面性能上的消耗。</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1"><span class="co"># 清空环境变量</span></a>
+<a class="sourceLine" id="cb126-2" data-line-number="2"> <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())</a>
+<a class="sourceLine" id="cb126-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb126-4" data-line-number="4"><span class="co"># 封装fun1</span></a>
+<a class="sourceLine" id="cb126-5" data-line-number="5"> fun1&lt;-<span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb126-6" data-line-number="6">   myFUN&lt;-<span class="st"> </span><span class="cf">function</span>(x, c1, c2) {</a>
+<a class="sourceLine" id="cb126-7" data-line-number="7">     <span class="kw">c</span>(<span class="kw">sum</span>(x[c1],<span class="dv">1</span>), <span class="kw">mean</span>(x[c2])) </a>
+<a class="sourceLine" id="cb126-8" data-line-number="8">   }</a>
+<a class="sourceLine" id="cb126-9" data-line-number="9">   <span class="kw">apply</span>(x,<span class="dv">1</span>,myFUN,<span class="dt">c1=</span><span class="st">&#39;x1&#39;</span>,<span class="dt">c2=</span><span class="kw">c</span>(<span class="st">&#39;x1&#39;</span>,<span class="st">&#39;x2&#39;</span>))</a>
+<a class="sourceLine" id="cb126-10" data-line-number="10"> }</a>
+<a class="sourceLine" id="cb126-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb126-12" data-line-number="12"><span class="co"># 封装fun2</span></a>
+<a class="sourceLine" id="cb126-13" data-line-number="13"> fun2&lt;-<span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb126-14" data-line-number="14">   df&lt;-<span class="kw">data.frame</span>()</a>
+<a class="sourceLine" id="cb126-15" data-line-number="15">   <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(x)){</a>
+<a class="sourceLine" id="cb126-16" data-line-number="16">     row&lt;-x[i,]</a>
+<a class="sourceLine" id="cb126-17" data-line-number="17">     df&lt;-<span class="kw">rbind</span>(df,<span class="kw">rbind</span>(<span class="kw">c</span>(<span class="kw">sum</span>(row[<span class="dv">1</span>],<span class="dv">1</span>), <span class="kw">mean</span>(row))))</a>
+<a class="sourceLine" id="cb126-18" data-line-number="18">   }</a>
+<a class="sourceLine" id="cb126-19" data-line-number="19"> }</a>
+<a class="sourceLine" id="cb126-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb126-21" data-line-number="21"><span class="co"># 封装fun3</span></a>
+<a class="sourceLine" id="cb126-22" data-line-number="22"> fun3&lt;-<span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb126-23" data-line-number="23">   <span class="kw">data.frame</span>(<span class="dt">x1=</span>x[,<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>,<span class="dt">x2=</span><span class="kw">rowMeans</span>(x))</a>
+<a class="sourceLine" id="cb126-24" data-line-number="24"> }</a>
+<a class="sourceLine" id="cb126-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb126-26" data-line-number="26"><span class="co"># 生成数据集</span></a>
+<a class="sourceLine" id="cb126-27" data-line-number="27">x &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="dt">x1=</span><span class="dv">3</span>, <span class="dt">x2 =</span> <span class="kw">c</span>(<span class="dv">400</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">500</span>))</a>
+<a class="sourceLine" id="cb126-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb126-29" data-line-number="29"><span class="co"># 分别统计3种方法的CPU耗时。</span></a>
+<a class="sourceLine" id="cb126-30" data-line-number="30"> <span class="kw">system.time</span>(<span class="kw">fun1</span>(x))</a></code></pre></div>
+<pre><code>##    user  system elapsed 
+##   0.008   0.000   0.007</code></pre>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1"><span class="kw">system.time</span>(<span class="kw">fun2</span>(x))</a></code></pre></div>
+<pre><code>##    user  system elapsed 
+##   0.175   0.009   0.187</code></pre>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1"><span class="kw">system.time</span>(<span class="kw">fun3</span>(x))</a></code></pre></div>
+<pre><code>##    user  system elapsed 
+##   0.001   0.000   0.002</code></pre>
+<p>从CPU的耗时来看，用for循环实现的计算是耗时最长的，apply实现的循环耗时很短，而直接使用R语言内置的向量计算的操作几乎不耗时。通过上面的测试，对同一个计算来说，优先考虑R语言内置的向量计算，必须要用到循环时则使用apply函数，应该尽量避免显示的使用for,while等操作方法。</p>
+</div>
+<div id="lapply" class="section level2">
+<h2><span class="header-section-number">5.3</span> lapply函数</h2>
+<p>lapply函数是一个最基础循环操作函数之一，用来对list、data.frame数据集进行循环，并返回和X长度同样的list结构作为结果集，通过lapply的开头的第一个字母’l’就可以判断返回结果集的类型。</p>
+<p>函数定义：</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1"><span class="kw">lapply</span>(X, FUN, ...)</a></code></pre></div>
+</div>
+<div id="dplyr-package" class="section level2">
+<h2><span class="header-section-number">5.4</span> dplyr package</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="section-4.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="r-base-graphics-in-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/03-basics2.Rmd",
+"text": "Edit"
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+---
+title: "regression3"
+author: "Chris Qi"
+date: "8/22/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###CASE STUDY 案例分析
+前期准备
+install.packages("tidyverse")
+install.packages("modelr")
+install.packages("broom")
+install.packages("DAAG")
+```{r}
+# Packages
+library(tidyverse)  # data manipulation and visualization
+library(modelr)     # provides easy pipeline modeling functions
+library(broom)      # helps to tidy up model outputs
+library(DAAG)
+```
+
+读取数据
+```{r message = FALSE}
+advertising <- read.csv("~/R Teaching/demo code/regression3/advertising.csv")
+
+#advertising
+```
+
+```{r}
+colSums(is.na(advertising))
+```
+
+```{r}
+summary(advertising)
+```
+
+```{r}
+par(mfrow=c(1, 2))  # it divides graph area in two parts
+
+boxplot(advertising$sales, col = "yellow", border="blue",
+        main = "SALES boxplot",
+        ylab = "g per decaliter")
+
+boxplot(advertising$TV, col = "orange", border="blue",
+        main = "TV boxplot",
+        ylab = "percent values")
+```
+
+找出异常值
+```{r}
+# sales outliers
+boxplot.stats(advertising$sales)$out 
+```
+
+sales直方图
+```{r}
+qplot(sales, data = advertising, geom="histogram", binwidth=1, 
+      fill=I("azure4"), col=I("azure3")) +
+  labs(title = "sales") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x ="sales (units)") +
+  labs(y = "Frequency") +
+  scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+  scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+  geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+             ="red", labels="Average") +
+  geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+             ="blue", labels="Median")
+```
+TV 直方图
+```{r}
+qplot(TV, data = advertising, geom="histogram", binwidth=5, 
+      fill=I("azure4"), col=I("azure3")) +
+  labs(title = "TV") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x ="AD budget in TV (in ten thousand dollars)") +
+  labs(y = "Frequency") +
+  scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+  scale_x_continuous(limits = c(0, 300)) +
+  geom_vline(xintercept = mean(advertising$TV), show_guide=TRUE, color
+             ="red", labels="Average") +
+  geom_vline(xintercept = median(advertising$TV), show_guide=TRUE, color
+             ="blue", labels="Median")
+```
+
+散点图
+```{r}
+ggplot(advertising, aes(x=TV, y=sales))+
+  geom_point(colour = "blue", size = 1.5)+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("TV ad budget and sales relationship")
+```
+
+在散点图基础上添加线性回归拟合线
+```{r}
+ggplot(advertising, aes(x=TV, y=sales))+
+  geom_point(colour = "blue", size = 1.5)+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("TV ad budget and sales relationship")+
+  geom_smooth(method="lm", color="red")
+```
+
+建立模型
+```{r}
+model1 <- lm(sales ~ TV, data = advertising)
+```
+
+```{r}
+summary(model1)
+```
+
+理解模型：
+1. 残差 （Residuals）：
+Residuals show if the predicted response values are close or not to the response values that the model predicts. 
+
+2. 系数估计 （Estimate coefficient）
+
+3. 系数估计的标准差（Standard error）：
+Standard error measures how the coefficient estimates can vary from the actual average value of the response variable (i.e. if the model is run more times). In the current case, it’s like to say that estimated 
+
+4. 显著度与P值 （Significance and P value）：
+Test of significance of the model shows that there is strong evidence of a linear relationship between the variables. This is visually interpreted by the significance stars *** at the end of the row. This level is a threshold that is used to indicate real findings, and not the ones by chance alone.
+
+For each estimated regression coefficient, the variable’s p-Value Pr(>|t|) provides an estimate of the probability that the true coefficient is zero given the value of the estimate. More the number of stars near the p-Value are, more significant is the variable.
+
+With the presence of the p-value, there is a test of hypothesis associated with it. In Linear Regression, the Null Hypothesis is that the coefficient associated with the variables is equal to zero. Instead, the alternative hypothesis is that the coefficient is not equal to zero and then exists a relationship between the independent variable and the dependent variable.
+
+So, if p-values are less than significance level (typically, a p-value < 0.05 is a good cut-off point), null hypothesis can be safely rejected. In the current case, p-values are well below the 0.05 threshold, so the model is indeed statistically significant.
+
+5. R-squared 以及 adjusted R-squared
+For the simple linear regression, R-squared is the square of the correlation between two variables. Its value can vary between 0 and 1: a value close to 0 means that the regression model does not explain the variance in the response variable, while a number close to 1 that the observed variance in the response variable is well explained. In the current case, R-squared suggests the linear model fit explains a 80.1% of the variance observed in the data.
+
+6.F statistic
+Basically, F-test compares the model with zero predictor variables (the intercept only mod1el), and suggests whether the added coefficients improve the model. If a significant result is obtained, then the coefficients (in the current case, being a simple regression, only one predictor is entered) included in the model improve the model’s fit.
+So, F statistic defines the collective effect of all predictor variables on the response variable. In this model, F=119.8 is far greater than 1.
+
+回归诊断作图
+
+```{r}
+#Residuals vs Fitted values
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=1)
+```
+
+```{r}
+#Normal Q-Q
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=2)
+```
+
+```{r}
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=4)
+```
+
+模型改进，标记异常值
+```{r}
+advertising$outlier = ifelse(advertising$sales>40,"Y","N") # create condition Yes/No if outlier
+```
+
+```{r}
+ggplot(data=advertising, aes(x=TV, y=sales, col=as.factor(outlier)))+
+  geom_point()+
+  ggtitle("TV ads and sales")+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+剔除异常值，创建新数据
+```{r}
+ad_new<-subset(advertising, sales<40)
+```
+
+用新数据从新估计模型
+```{r}
+model2 <- lm(sales ~ TV, data = ad_new)
+```
+
+新模型完爆旧模型
+```{r}
+summary(model2)
+summary(model1)
+```
+
+```{r}
+AIC(model2)
+AIC(model1)
+
+BIC(model2)
+BIC(model1)
+
+```
+
+
+```{r}
+set.seed(100) # 设置种子点，以便重复再现同样的结果
+trainingRowIndex <- sample(1:nrow(ad_new), 0.7*nrow(ad_new)) 
+# 将数据七三分，training vs. testing
+train <- ad_new[trainingRowIndex, ] # model training data
+test <- ad_new[-trainingRowIndex, ] # test data
+```
+
+用训练数据建模，将得到的模型运用到测试数据来做预测
+```{r}
+modTrain <- lm(sales ~ TV, data=train)  # build the model
+predict <- predict(modTrain, test)  # predicted values
+summary(modTrain)
+```
+
+将预测数据和实际数据放在一起（针对测试数据而言），计算相关系数，来衡量模型
+```{r}
+act_pred <- data.frame(cbind(actuals=test$sales, predicteds=predict)) # actuals_predicteds 
+cor(act_pred) # correlation_accuracy
+```
+实际对比一下原始数据和预测数据
+```{r}
+head(act_pred, n=10)
+```
+
+还可以再进一步，交叉验证：从上面6，4分的训练测试数据得到的模型表现不错，这是不是偶然碰巧的结果？
+随机把数据分成K等份，K-1做训练，1做测试。得到k种结果，看看预测结果之间偏差如何？
+k- Fold Cross validation
+曲线是否平行
+```{r}
+kfold <- CVlm(data = ad_new, form.lm = formula(sales ~ TV), m=5, 
+                   dots = FALSE, seed=123, legend.pos="topleft",
+                   main="Cross Validation; k=5",
+                   plotit=TRUE, printit=FALSE)
+```
+

@@ -1,0 +1,624 @@
+---
+title: "认识美好的 R"
+subtitle: "基础作图"
+author: "Chris Qi"
+date: "2018"
+output:
+  xaringan::moon_reader:
+    css: [default, zh-CN.css]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 700px
+background-position: 50% 50%
+
+---
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 200px
+background-position: 95% 3%
+
+
+---
+# R 基础作图快速入门
+
+导语：用数据说话的今天，随着数据量的不断增加，数据可视化成为将数字变成可用的信息的一个重要方式。
+
+--
+* Base graphics: 最容易上手, 同时也非常有用的绘图技巧, 是这一节课的主要内容。
+
+
+--
+* Grid graphics: 开发其它作图工具的强大工具
+
+
+--
+* Lattice graphics: 基于 grid graphics的一般作图系统
+
+
+--
+* ggplot2: 有语法，用写作的方式作图，非常炫酷，可视化必备
+
+---
+Base graphics:
+```{r}
+ library(MASS)
+plot(UScereal$sugars, UScereal$calories)
+title("plot(UScereal$sugars, UScereal$calories)")
+```
+
+---
+Grid graphics，非人类的语言，不适用于一般的数据可视化:
+```{r eval=FALSE}
+# Get the data and load the grid package
+library(MASS)
+x <- UScereal$sugars
+y <- UScereal$calories
+library(grid)
+# This is the grid code required to generate the plot
+pushViewport(plotViewport())
+pushViewport(dataViewport(x, y))
+grid.rect()
+grid.xaxis()
+grid.yaxis()
+grid.points(x, y)
+grid.text("UScereal$calories", x = unit(-3, "lines"), rot = 90)
+grid.text("UScereal$sugars", y = unit(-3, "lines"), rot = 0)
+popViewport(2)
+```
+
+---
+Grid graphics，非人类的语言，不适用于一般的数据可视化:
+```{r echo=FALSE}
+# Get the data and load the grid package
+library(MASS)
+x <- UScereal$sugars
+y <- UScereal$calories
+library(grid)
+# This is the grid code required to generate the plot
+pushViewport(plotViewport())
+pushViewport(dataViewport(x, y))
+grid.rect()
+grid.xaxis()
+grid.yaxis()
+grid.points(x, y)
+grid.text("UScereal$calories", x = unit(-3, "lines"), rot = 90)
+grid.text("UScereal$sugars", y = unit(-3, "lines"), rot = 0)
+popViewport(2)
+```
+
+---
+Lattice graphics:
+```{r}
+library(MASS)
+library(lattice)
+xyplot(MPG.city ~ Horsepower | Cylinders, data = Cars93)
+```
+
+---
+ggplot2:
+```{r eval=FALSE}
+library(MASS)
+library(ggplot2)
+title <-
+ "ggplot2 plot of \n UScereal$calories vs. \n UScereal$sugars"
+basePlot <- ggplot(UScereal, aes(x = sugars, y = calories))
+basePlot +
+ geom_point(shape = as.character(UScereal$shelf), size = 3) +
+ annotate("text", label = title, x = 3, y = 400,
+ colour = "red")
+```
+
+---
+ggplot2:
+```{r ECHO=FALSE}
+library(MASS)
+library(ggplot2)
+title <-
+ "ggplot2 plot of \n UScereal$calories vs. \n UScereal$sugars"
+basePlot <- ggplot(UScereal, aes(x = sugars, y = calories))
+basePlot +
+ geom_point(shape = as.character(UScereal$shelf), size = 3) +
+ annotate("text", label = title, x = 3, y = 400,
+ colour = "red")
+```
+
+---
+## 探索性数据可视化:
+帮助你看一看数据里都有什么，注意尽量多地保留细节，便于进一步分析
+
+---
+探索小鸡的成长之路：ChickWeight数据集
+```{r}
+plot(ChickWeight)
+```
+
+---
+* 解释性数据可视化：让别人明白数据，便于交流信息，呈现你的数据发现
+
+---
+请在下面的练习开始前，安装下面这些包 并载入：
+```{r eval=FALSE}
+install.packages("insuranceData")
+install.packages("MASS")
+install.packages("robustbase")
+install.packages("car")
+install.packages("aplpack")
+install.packages("corrplot")
+install.packages("rpart")
+```
+
+```{r eval=FALSE}
+# Load MASS package
+library(dplyr)
+library(MASS)
+library(robustbase)
+library(insuranceData)
+library(car)
+```
+
+```{r echo=FALSE}
+# Load MASS package
+library(dplyr)
+library(MASS)
+library(robustbase)
+library(insuranceData)
+library(car)
+```
+
+---
+我们用一个简单的冬季取暖数据来建构一个简单的分析图：
+
+
+--
+* Temp: 一周的室外气温
+
+
+--
+* Gas: 该周的天然气用量
+
+
+--
+* Insul: 有两个值的分类变量，分别代表房子升级改造前后
+
+
+---
+简单绘图看一下：
+```{r}
+# Plot whiteside data
+plot(whiteside)
+```
+
+---
+简单的探索性散点图：
+不要完全依赖默认设置，适当修改，让图更有意义容易理解
+做一个气温与天然气用量的散点图，加上轴标签：
+
+--
+```{r eval=FALSE}
+plot(whiteside$Temp,whiteside$Gas,
+     xlab="Outside temperature",
+     ylab= "Heating gas consumption")
+```
+
+---
+简单的探索性散点图：
+不要完全依赖默认设置，适当修改，让图更有意义容易理解
+做一个气温与天然气用量的散点图，加上轴标签：
+
+```{r echo=FALSE}
+plot(whiteside$Temp,whiteside$Gas,
+     xlab="Outside temperature",
+     ylab= "Heating gas consumption")
+```
+
+---
+`plot()`是一个一般性的函数，会根据数据类型的不同而作出不同的图，例如下面，我们把它用在`whiteside$Insul`上，得到一个完全不一样的图
+```{r}
+plot(whiteside$Insul)
+```
+
+---
+使用形状，颜色和参考线来增加细节，我们用Cars93这个数据集来做一个高级一点的图来展示三个变量间的关系：
+
+
+--
+* Price: 某款车的平均售价
+
+
+--
+* Max.Price: 该款车的最高售价
+
+
+--
+* Min.Price: 该款车的最低售价
+
+
+---
+使用 `glimpse()` 来看看这个Cars93 都有什么变量
+```{r}
+glimpse(Cars93)
+```
+
+---
+最高价vs.平均价，红色三角
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+```
+
+---
+添加最高价vs. 平均价，蓝色，圆点
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+points(Cars93$Min.Price,Cars93$Price,col="blue",pch=16)
+```
+
+---
+添加一条参考线，0为截距，1为斜率，虚线
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+points(Cars93$Min.Price,Cars93$Price,col="blue",pch=16)
+abline(a = 0, b = 1, lty = 2)
+```
+
+---
+通过改变全局参数，使用`par()`在一个面板上画出多幅图并可修改细节：
+
+```{r}
+?par
+par("mfrow") #默认一行一列
+par("bg") #背景颜色，默认白色
+par("col") # 作图颜色，默认黑色
+par("mar") #(bottom, left, top, right) 图片边距
+
+```
+
+---
+直方图（频率图与频数图）
+truehist()频率直方图的函数，来自MASS这个包：
+```{r eval=FALSE}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create a histogram of counts with hist()
+hist(Cars93$Horsepower,main="hist() plot")
+
+# Create a normalized histogram with truehist()
+truehist(Cars93$Horsepower,main="hist() plot")
+```
+
+---
+直方图（频率图与频数图）
+truehist()频率直方图的函数，来自MASS这个包：
+```{r echo=FALSE}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create a histogram of counts with hist()
+hist(Cars93$Horsepower,main="hist() plot")
+
+# Create a normalized histogram with truehist()
+truehist(Cars93$Horsepower,main="hist() plot")
+```
+
+
+---
+还记得前面的鸡吗？我们来做个直方图，频率的，加一条密度曲线。
+```{r eval=FALSE}
+# Create index16, pointing to 16-week chicks
+index16 <- which(ChickWeight$Time == 16)
+
+# Get the 16-week chick weights
+weights <- ChickWeight$weight[index16]
+
+# Plot the normalized histogram
+truehist(weights)
+
+# Add the density curve to the histogram
+lines(density(weights))
+```
+
+---
+还记得前面的鸡吗？我们来做个直方图，频率的，加一条密度曲线。
+```{r echo=FALSE}
+# Create index16, pointing to 16-week chicks
+index16 <- which(ChickWeight$Time == 16)
+
+# Get the 16-week chick weights
+weights <- ChickWeight$weight[index16]
+
+# Plot the normalized histogram
+truehist(weights)
+
+# Add the density curve to the histogram
+lines(density(weights))
+```
+
+
+---
+散点图中的菊花图，让你更懂数据
+
+```{r eval=FALSE}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create the standard scatterplot
+plot(rad~zn,data=Boston)
+
+# Add the title
+title("Standard scatterplot")
+
+# Create the sunflowerplot
+sunflowerplot(rad~zn,data=Boston)
+
+# Add the title
+title("Sunflower plot")
+```
+
+---
+散点图中的菊花图，让你更懂数据
+
+```{r echo=FALSE}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create the standard scatterplot
+plot(rad~zn,data=Boston)
+
+# Add the title
+title("Standard scatterplot")
+
+# Create the sunflowerplot
+sunflowerplot(rad~zn,data=Boston)
+
+# Add the title
+title("Sunflower plot")
+```
+
+---
+```{r}
+#按月份，给每一个月的温度绘箱图
+#month是分类变量
+boxplot(Temp~Month,airquality,xlab="month", 
+        ylab="Temperature (F)")
+```
+
+---
+with() 更简便的绘图函数，再不用每个变量都引用数据集。
+```{r}
+with(airquality, plot(Wind~Temp))
+title(main="wind and temp in NYC") #使用title进行修饰
+```
+
+---
+```{r}
+#另外一种方式添加标题，一样的结果
+with(airquality, plot(Wind, Temp,
+     main="wind and temp in NYC")) 
+```
+
+---
+```{r}
+#有用的 type="n"
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+```
+
+---
+```{r}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+```
+
+
+---
+```{r}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+```
+
+---
+```{r eval=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+#完成了用不同的颜色表示不同的月份的点
+```
+
+---
+```{r echo=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+#完成了用不同的颜色表示不同的月份的点
+```
+
+---
+```{r eval=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+```
+
+---
+```{r echo=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+```
+
+---
+```{r eval=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+
+fit<-lm(Temp~Wind, airquality) #拟合一个回归模型
+abline(fit,lwd=2) #把回归线加进去
+
+#加入图例，说明颜色含义
+legend("topright", pch=1, #右上角，空心圆点
+       col=c("red","blue","green","black"),
+       legend=c("Sep","August","July","Other"))
+#使用基本函数绘图，需要事先计划，运行很多函数，
+#可以直观的反映我们绘图的逻辑
+#图例要仔细一一对应
+```
+
+---
+```{r echo=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+
+fit<-lm(Temp~Wind, airquality) #拟合一个回归模型
+abline(fit,lwd=2) #把回归线加进去
+
+#加入图例，说明颜色含义
+legend("topright", pch=1, #右上角，空心圆点
+       col=c("red","blue","green","black"),
+       legend=c("Sep","August","July","Other"))
+#使用基本函数绘图，需要事先计划，运行很多函数，
+#可以直观的反映我们绘图的逻辑
+#图例要仔细一一对应
+```
+
+---
+lattice 绘图实践
+```{r}
+library(lattice) #需要先安装install.packages("lattice")
+xyplot(Temp~Ozone, data=airquality) #散点图,还没有考察交互关系
+airquality$Month<-factor(airquality$Month)
+```
+
+---
+使用
+```{r}
+#查看不同月份下，前面两个变量的关系
+xyplot(Temp~Ozone|Month, data=airquality,
+       layout=c(5,1)) #画1行5列
+```
+
+
+---
+绘制表示相关性的椭圆图
+
+越椭圆相关性越高，高到变成一条线。越接近圆相关性越低，直到标准圆。颜色越深相关性越大，最大是1,最小的是0（绝对值），蓝色为正相关，红色为负相关。
+
+
+```{r eval=FALSE}
+# Load the corrplot library for the corrplot() function
+library(corrplot)
+
+# Extract the numerical variables from UScereal
+numericalVars <- UScereal[, 2:10]
+
+# Compute the correlation matrix for these variables
+corrMat <- cor(numericalVars)
+
+# Generate the correlation ellipse plot
+corrplot(corrMat, method = "ellipse")
+
+```
+
+---
+```{r echo=FALSE}
+# Load the corrplot library for the corrplot() function
+library(corrplot)
+
+# Extract the numerical variables from UScereal
+numericalVars <- UScereal[, 2:10]
+
+# Compute the correlation matrix for these variables
+corrMat <- cor(numericalVars)
+
+# Generate the correlation ellipse plot
+corrplot(corrMat, method = "ellipse")
+
+```
+
+---
+
+完结撒花
+
+
+.center[![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)]
+
+

@@ -1,0 +1,103 @@
+---
+title: "交互练习测试"
+author: "Chris Qi"
+date: "9/5/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+You can create variables with `<-`:
+
+```{r}
+a <- 2
+b <- 3
+```
+```{r ex="play_around", type="pre-exercise-code"}
+c <- 4
+library(stringr)
+```
+
+```{r ex="play_around", type="sample-code"}
+a <- 2
+b <- 3
+```
+
+```{r ex="create_a", type="pre-exercise-code"}
+b <- 5
+```
+
+```{r ex="create_a", type="sample-code"}
+# Create a variable a, equal to 5
+
+
+# Print out a
+
+```
+
+```{r ex="create_a", type="solution"}
+# Create a variable a, equal to 5
+a <- 5
+
+# Print out a
+a
+```
+
+```{r ex="create_a", type="sct"}
+test_object("a")
+test_output_contains("a", incorrect_msg = "Make sure to print out `a`.")
+success_msg("Great!")
+```
+
+
+
+```{r ex="pk", type="pre-exercise-code"}
+library(ggplot2)
+```
+
+```{r ex="pk", type="sample-code"}
+# Figure 1
+ggplot(mtcars, aes(x=mpg, y=wt, col=factor(cyl)))+
+  geom_point()
+
+```
+
+```{r ex="pk1", type="pre-exercise-code"}
+library(ggplot2)
+```
+
+```{r ex="pk1", type="sample-code"}
+# Figure 2
+ggplot(mtcars, aes(x=mpg, y=drat, col=factor(cyl)))+
+  geom_point()
+```
+
+Here is an example:
+
+https://www.dropbox.com/s/exh4iobbm2p5p1v/fin_research_note.csv
+
+The file name is at the very end (fin_research_note.csv) and the key is the string of letters and numbers in the middle (exh4iobbm2p5p1v). Now we have all of the information we need for source_DropboxData:
+
+FinDataFull <- repmis::source_DropboxData("fin_research_note.csv",
+                                  "exh4iobbm2p5p1v",
+                                  sep = ",",
+                                  header = TRUE)
+                                  
+```{r ex="ex1", type="pre-exercise-code"}
+advertising <- read.csv('https://www.dropbox.com/s/m6jh5kspianm215/advertising.csv?dl=1')
+library(data.table)
+library(ggplot2)
+#advertising
+```
+
+```{r ex="ex1", type="sample-code"}
+ggplot(advertising, aes(x=radio, y=sales))+
+  geom_point(colour = "blue", size = 1.5)+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("radio ad budget and sales relationship")
+```
+

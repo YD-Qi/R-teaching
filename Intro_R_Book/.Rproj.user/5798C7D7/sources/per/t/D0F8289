@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536693939731.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3152034323",
+    "id" : "D0F8289",
+    "lastKnownWriteTime" : 1536696154,
+    "last_content_update" : 1536696154243,
+    "path" : "~/R Teaching/Intro_R_Slides/html_slides/graphs1/slides_basicGraphs.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "280,0",
+        "scrollLine" : "271"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

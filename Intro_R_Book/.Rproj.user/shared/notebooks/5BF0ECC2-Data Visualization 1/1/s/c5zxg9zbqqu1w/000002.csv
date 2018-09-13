@@ -1,0 +1,1 @@
+"0","q<-xyplot(Temp~Ozone, data=airquality)"

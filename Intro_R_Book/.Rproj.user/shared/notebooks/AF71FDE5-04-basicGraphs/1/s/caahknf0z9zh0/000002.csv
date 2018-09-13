@@ -1,0 +1,1 @@
+"0","plot(Cars93$Max.Price, Cars93$Price,col=""red"",pch=17)"

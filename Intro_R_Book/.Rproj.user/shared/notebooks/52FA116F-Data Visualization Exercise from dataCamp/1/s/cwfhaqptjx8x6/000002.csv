@@ -1,0 +1,4 @@
+"0","# Set up a side-by-side plot array"
+"0","par(mfrow=c(1,2))"
+"0","# Create a histogram of counts with hist()"
+"0","hist(Cars93$Horsepower,main=""hist() plot"")"
