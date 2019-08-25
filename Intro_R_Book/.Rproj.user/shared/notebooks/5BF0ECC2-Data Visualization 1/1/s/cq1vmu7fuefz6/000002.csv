@@ -1,3 +1,0 @@
-"0","#查看不同月份下，前面两个变量的关系"
-"0","xyplot(Temp~Ozone|Month, data=airquality,"
-"0","       layout=c(5,1)) #画1行5列"

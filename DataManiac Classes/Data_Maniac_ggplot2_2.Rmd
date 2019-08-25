@@ -1,0 +1,551 @@
+---
+title: "R ggplot2 作图进阶"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+![](/Users/yuandong/Dropbox/Public/logo.png){width=500px}
+
+课程回放：(https://www.cctalk.com/v/15400405056217?xh_fshareuid=87b7f11f-6ceb-c339-6ae2-1632fe5f61ea&xh_preshareid=0429dbb8-5632-4004-a49a-8e87446dda4f)
+
+钻石恒久远，一颗永流传
+
+![](/Users/yuandong/Dropbox/Public/flawless-diamond.png){width=300px}
+
+Explore the diamonds data frame with str()
+```{r}
+library(ggplot2)
+str(diamonds)
+```
+
+* 使用 `geom_point()` 添加散点
+* 使用 `geom_smooth()` 添加拟合曲线
+
+```{r}
+library(ggplot2)
+
+ggplot(diamonds, aes(x = carat, y = price))+
+geom_point()
+
+
+ggplot(diamonds, aes(x = carat, y = price)) + 
+geom_point() + 
+geom_smooth()
+```
+
+只要平滑曲线图：
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x = carat, y = price))  +
+  geom_smooth()
+```
+
+按钻石透明度（类型）来绘制平滑曲线：
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x = carat, y = price, color = clarity))  +
+  geom_smooth()
+```
+
+进一步理解ggplot的语法，作出精致的图
+
+* 先画一个底图，命名为dia_plot
+* 用 geom_point()加一层点
+  * 以颜色区分不同透明度的钻石
+  * 修改点的透明度，以展现数据点的密度分布
+
+```{r}
+library(ggplot2)
+#
+dia_plot <- ggplot(diamonds, aes(x = carat, y = price))
+
+# 
+dia_plot + geom_point()
+
+# 
+dia_plot + geom_point(aes(color = clarity), alpha=0.2)
+```
+
+继续探索：
+
+  * 添加拟合曲线geom_smooth()，关闭置信区间
+  
+```{r}
+library(ggplot2)
+
+dia_plot <- ggplot(diamonds, aes(x = carat, y = price))
+
+dia_plot <- dia_plot + geom_point(alpha=0.2)
+
+dia_plot + geom_smooth()
+
+dia_plot + geom_smooth(se = FALSE)
+
+dia_plot + geom_smooth(aes(col = clarity), se = FALSE)
+```
+
+
+```{r}
+
+ggplot(diamonds, aes(x = carat, y = price)) + 
+  geom_smooth(aes(col = clarity), se = FALSE)
+
+```
+
+`position = "jitter"`的用法：
+
+```{r}
+library(ggplot2)
+
+# Scatter plot: clarity (x), carat (y), price (color)
+ggplot(diamonds,aes(x=clarity,y=carat,col=price))+
+geom_point(alpha=0.5)
+
+ggplot(diamonds,aes(x=clarity,y=carat,col=price))+
+geom_point(alpha=0.5,position = "jitter")
+```
+
+小试牛刀，用`mtcars`数据做几个图，底图长这个样子：
+`ggplot(mtcars, aes(x = wt, y = mpg, col = cyl))`。
+作图要求如下：
+
+* Plot 1: add geom_point() to this command to create a scatter plot
+
+* Plot 2: include the lines of the linear models, per cyl
+
+* Plot 3: include a lm for the entire dataset in its whole
+
+  
+```{r ex="ex1", type="sample-code"}
+library(ggplot2)
+
+```
+
+```{r ex="ex1", type="solution"}
+library(ggplot2)
+
+mtcars$cyl=factor(mtcars$cyl)
+# Plot 1: add geom_point() to this command to create a scatter plot
+ggplot(mtcars, aes(x = wt, y = mpg, col = cyl)) +
+  geom_point()  # Fill in using instructions Plot 1
+
+# Plot 2: include the lines of the linear models, per cyl
+ggplot(mtcars, aes(x = wt, y = mpg, col = cyl)) +
+  geom_point() + # Copy from Plot 1
+  geom_smooth(method = "lm", se = FALSE)  # Fill in using instructions Plot 2
+
+# Plot 3: include a lm for the entire dataset in its whole
+ggplot(mtcars, aes(x = wt, y = mpg, col = cyl)) +
+  geom_point() + # Copy from Plot 2
+  geom_smooth(aes(col = cyl), method = "lm", se = FALSE)+ # Copy from Plot 2
+  geom_smooth(aes(group = 1), method = "lm", se = FALSE, linetype = 2)   # Fill in using instructions Plot 3
+```
+
+
+小试牛刀：
+
+使用`airquality`，来探索`ggplot()`的散点图玩法儿：
+
+* 先传入数据集，然后是美学相关的层
+
+* 再加几何客体层中的散点 `geom_point()`
+
+* 进一步修饰散点，颜色color="steelblue", 透明度`alpha=0.4`, 大小`size=3`
+
+* 每个月用不同的颜色来表示
+
+```{r ex="ex2", type="sample-code"}
+library(ggplot2)
+ggplot(airquality, aes(y=Wind, x=Temp))
+
+```
+
+```{r ex="ex2", type="solution"}
+library(ggplot2)
+
+ggplot(airquality, aes(y=Wind, x=Temp))+
+  geom_point()
+
+plot(airquality$Wind, airquality$Temp)
+
+
+ggplot(airquality, aes(Wind, Temp))+
+  geom_point(color="steelblue",alpha=0.4, size=3)
+
+ggplot(airquality, aes(Wind, Temp))+
+  geom_point(aes(color=factor(Month)),alpha=0.4, size=2)
+```
+
+添加统计信息层中的拟合曲线：
+`stat_smooth()`与`geom_smooth()`等效：
+
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Ozone, Temp))+
+  geom_point()+
+  stat_smooth()
+
+ggplot(airquality, aes(Ozone, Temp))+
+  geom_point()+
+  geom_smooth()
+
+```
+
+可以没有点层，只留曲线：
+
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Wind, Temp))+
+  stat_smooth()
+```
+
+将曲线规定为直线(线性回归)：
+
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Wind, Temp))+
+  stat_smooth(method="lm")              
+```
+
+去掉置信区间：
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Wind, Temp))+
+  stat_smooth(method="lm", se=FALSE)               
+```
+
+给每个月份拟合一条回归线：
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Wind, Temp))+
+  stat_smooth(method="lm", se=FALSE, aes(color=factor(Month)))
+
+# Equal expression:
+
+ggplot(airquality, aes(Wind, Temp,col=factor(Month)))+
+  stat_smooth(method="lm", se=FALSE)
+```
+
+
+基于整体数据进行拟合，group=1
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month),group=1))+
+  stat_smooth(method="lm", se=FALSE)
+```
+
+颜色还是在起作用，在点层
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month),group=1))+
+  geom_point()+   
+  stat_smooth(method="lm", se=FALSE)
+
+#Equal Expression
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month)))+
+  geom_point()+   
+  stat_smooth(method="lm", se=FALSE,aes(group=1))
+```
+
+group 在统计层，允许我们继续添加统计层，并且按每个月拟合
+```{r}
+library(ggplot2)
+
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month)))+
+  geom_point()+   
+  stat_smooth(method="lm", se=FALSE,aes(group=1))+
+  stat_smooth(method="lm", se=FALSE)  
+```
+
+
+玩转调色板：
+
+* 加载颜色包 `library(RColorBrewer)`
+* 从Dark2中选5个颜色，外加黑色赋值为`myColors`
+* 看一看dark2是哪5种颜色 `display.brewer.pal(5,"Dark2")`
+
+（在自己电脑上记得安装`RColorBrewer`这个包）
+```{r}
+#
+library(RColorBrewer)
+#
+myColors<-c(brewer.pal(5,"Dark2"), "black")
+#
+display.brewer.pal(5,"Dark2")
+```
+
+复制前一幅图的代码，添加` scale_color_manual("Month", values=myColors)`
+```{r}
+library(ggplot2)
+library(RColorBrewer)
+#
+myColors<-c(brewer.pal(5,"Dark2"), "black")
+
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month)))+
+  geom_point()+   
+  stat_smooth(method="lm", se=FALSE,aes(group=1,col="all"))+
+  stat_smooth(method="lm", se=FALSE)+
+  scale_color_manual("Month", values=myColors)
+```
+
+不同月份画在不同面板上，`facet_grid(.~Month)`
+```{r}
+library(ggplot2)
+library(RColorBrewer)
+#
+myColors<-c(brewer.pal(5,"Dark2"), "black")
+
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month)))+
+  geom_point()+ 
+  stat_smooth(method="lm", se=FALSE)+
+  scale_color_manual("Month", values=myColors)+
+  facet_grid(.~Month)
+```
+
+改变与数据无关的主题背景:
+```{r}
+library(ggplot2)
+library(RColorBrewer)
+#
+myColors<-c(brewer.pal(5,"Dark2"), "black")
+
+ggplot(airquality, aes(Wind, Temp,
+                       col=factor(Month)))+
+  geom_point()+   
+  stat_smooth(method="lm", se=FALSE)+
+  scale_color_manual("Month", values=myColors)+
+  facet_grid(.~Month)+
+  theme_classic()
+```
+
+
+继续颜色的故事：
+下面的图，默认颜色太跳跃鲜艳
+
+（在自己电脑上记得安装`car`这个包）
+```{r}
+library(ggplot2)
+library(car)
+library(RColorBrewer)
+
+ggplot(Vocab, aes(x = education, fill = factor(vocabulary))) +
+  geom_bar(position = "fill") 
+```
+
+我只想要一种颜色的渐变色，怎么破？
+
+`scale_fill_brewer`来帮忙：
+（在自己电脑上记得安装`colorRampPalette`这个包）
+```{r}
+library(ggplot2)
+library(car)
+library(colorRampPalette)
+library(RColorBrewer)
+
+ggplot(Vocab, aes(x = education, fill = factor(vocabulary))) +
+  geom_bar(position = "fill") +
+  scale_fill_brewer()  
+```
+
+`scale_fill_brewer`虽好，可是默认只有就种颜色，而我们的`vocabulary`这个变量有11类！
+又该如何是好？
+`colorRampPalette` 来救场，借鸡生蛋，变出更多的颜色：
+```{r}
+library(ggplot2)
+library(car)
+library(colorRampPalette)
+library(RColorBrewer)
+
+# Definition of a set of blue colors
+blues <- brewer.pal(9, "Blues") # from the RColorBrewer package
+
+# 1 - Make a color range using colorRampPalette() and the set of blues
+blue_range <- colorRampPalette(blues)
+
+# 2 - Use blue_range to adjust the color of the bars, use scale_fill_manual()
+ggplot(Vocab, aes(x = education, fill = factor(vocabulary))) +
+  geom_bar(position = "fill") +
+  scale_fill_manual(values = blue_range(11))
+```
+
+
+
+案例分析：
+泰坦尼克生还者数据
+（若在自己本地硬盘上操作，请下载数据(https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1)）
+
+看一看有多少幸存者，有多少遇难者？
+```{r ex="test1", type="pre-exercise-code"}
+library(ggplot2)
+titanic <- read.csv('https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1')
+titanic<-as.data.frame(titanic)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Survived=factor(titanic$Survived)
+```
+
+先看看都有写什么变量
+```{r ex="test1", type="sample-code"}
+str(titanic)
+#
+```
+
+```{r ex="test1", type="solution"}
+ggplot(titanic, aes(x = Survived)) +
+  geom_bar(position = "dodge")
+
+```
+
+男女分布, 看着该船上性别比例？
+```{r ex="test2", type="pre-exercise-code"}
+library(ggplot2)
+titanic <- read.csv('https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1')
+titanic<-as.data.frame(titanic)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Survived=factor(titanic$Survived)
+```
+
+```{r ex="test2", type="sample-code"}
+library(ggplot2)
+#
+
+```
+
+
+```{r ex="test2", type="solution"}
+ggplot(titanic, aes(x = Sex)) +
+  geom_bar(position = "dodge")
+
+```
+
+船舱分布，看一看每一个等级的船舱分别有多少人
+```{r ex="test3", type="pre-exercise-code"}
+library(ggplot2)
+titanic <- read.csv('https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1')
+titanic<-as.data.frame(titanic)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Survived=factor(titanic$Survived)
+```
+
+```{r ex="test3", type="sample-code"}
+library(ggplot2)
+
+```
+
+```{r ex="test3", type="solution"}
+library(ggplot2)
+
+ggplot(titanic, aes(x = Pclass)) +
+  geom_bar(position = "dodge")
+
+```
+
+
+看一看，不同性别的乘客在不同船舱的分布是否平均？
+```{r ex="test4", type="pre-exercise-code"}
+library(ggplot2)
+titanic <- read.csv('https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1')
+titanic<-as.data.frame(titanic)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Survived=factor(titanic$Survived)
+```
+
+```{r ex="test4", type="sample-code"}
+library(ggplot2)
+ggplot()
+```
+
+```{r ex="test4", type="solution"}
+
+ggplot(titanic, aes(x = Pclass, fill = Sex)) +
+  geom_bar(position = "dodge")
+
+```
+
+生还者特征描述
+谁更容易生还，男士，女士？
+```{r ex="test5", type="pre-exercise-code"}
+library(ggplot2)
+titanic <- read.csv('https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1')
+titanic<-as.data.frame(titanic)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Survived=factor(titanic$Survived)
+```
+
+```{r ex="test5", type="sample-code"}
+#
+```
+
+```{r ex="test5", type="solution"}
+ggplot(titanic, aes(x = Sex, fill = Survived )) +
+  geom_bar(position = "fill")
+```
+
+谁更容易生还，头等舱的？
+```{r ex="test6", type="pre-exercise-code"}
+library(ggplot2)
+titanic <- read.csv('https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1')
+titanic<-as.data.frame(titanic)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Survived=factor(titanic$Survived)
+```
+
+```{r ex="test6", type="sample-code"}
+#
+```
+
+```{r ex="test6", type="solution"}
+ggplot(titanic, aes(x = Pclass, fill = Survived)) +
+  geom_bar(position = "fill")
+
+```
+
+综合上面的信息，是不是头等舱的女士更容易生还？我们来验证一下：
+```{r ex="test7", type="pre-exercise-code"}
+library(ggplot2)
+titanic <- read.csv('https://www.dropbox.com/s/8ow74rzp6rka8q9/titanic.csv?dl=1')
+titanic<-as.data.frame(titanic)
+titanic$Sex=factor(titanic$Sex)
+titanic$Pclass=factor(titanic$Pclass)
+titanic$Survived=factor(titanic$Survived)
+```
+
+```{r ex="test7", type="sample-code"}
+#
+```
+
+```{r ex="test7", type="solution"}
+library(ggplot2)
+ggplot(titanic, aes(x = Sex, fill = Survived)) +
+  geom_bar(position = "fill")+
+  facet_grid(.~Pclass)  
+```
+

@@ -1,0 +1,126 @@
+---
+title: "R 第6次课作业"
+author: "Chris Qi"
+date: "10/13/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+澳大利亚某气象局的神秘任务续集。
+
+恭喜你顺利通过第一关，数据管理与清洗。
+
+现在我们来做一下回归分析的前期工作：
+
+Q1：
+
+我们已经在后台加载了这个名为 'weather' 的数据。用'dplyr'程序包里的'glimpse()'；
+来快速的了解数据结构（观测值/变量个数，变量性质等），看一看与'str', 'names'的结果有什么差异，你更喜欢哪一个？
+
+```{r ex="ex1", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex1", type="sample-code"}
+# you can do it!
+
+```
+
+```{r ex="ex1", type="solution"}
+glimpse(weather)
+str(weather)
+names(weather)
+```
+
+Q2：
+
+
+
+```{r ex="ex2", type="pre-exercise-code"}
+
+```
+
+```{r ex="ex2", type="sample-code"}
+
+
+```
+
+```{r ex="ex2", type="solution"}
+
+```
+
+Q3：
+
+```{r ex="ex3", type="pre-exercise-code"}
+
+```
+
+```{r ex="ex3", type="sample-code"}
+
+```
+
+```{r ex="ex3", type="solution"}
+
+```
+
+Q4: 
+
+```{r ex="ex4", type="pre-exercise-code"}
+
+```
+
+```{r ex="ex4", type="sample-code"}
+
+```
+
+```{r ex="ex4", type="solution"}
+
+```
+
+
+Q5：你发现weather_forecast数据集中有很多的NA，你需要用课上学习的方法（any(is.na())找到‘Yes‘和’No’两个变量中确认是否有NA，并且用summary函数找到这两个变量中的NA的数量；
+
+```{r ex="ex5", type="pre-exercise-code"}
+
+```
+
+```{r ex="ex5", type="sample-code"}
+
+```
+
+```{r ex="ex5", type="solution"}
+
+
+```
+
+Q6. 
+
+```{r ex="ex6", type="pre-exercise-code"}
+
+```
+
+```{r ex="ex6", type="sample-code"}
+
+```
+
+```{r ex="ex6", type="solution"}
+
+```
+
+```{r ex="ex7", type="pre-exercise-code"}
+
+```
+
+```{r ex="ex7", type="sample-code"}
+
+
+```
+
+```{r ex="ex7", type="solution"}
+
+```
+
+

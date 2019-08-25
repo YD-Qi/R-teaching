@@ -1,9 +1,0 @@
-"0","# 定义一个结果的数据框"
-"0","df<-data.frame()"
-"0","# 定义for循环"
-"0","for(i in 1:nrow(x)){"
-"0","  row<-x[i,]                                         # 每行的值"
-"0","  df<-rbind(df,rbind(c(sum(row[1],1), mean(row))))    #计算，并赋值到结果数据框"
-"0","  }"
-"2","Error in 1:nrow(x) : argument of length 0
-"

@@ -1,0 +1,217 @@
+#options(htmltools.dir.version = FALSE)
+library(MASS)
+library(ggplot2)
+title <-
+"ggplot2 plot of \n UScereal$calories vs. \n UScereal$sugars"
+basePlot <- ggplot(UScereal, aes(x = sugars, y = calories))
+basePlot +
+geom_point(shape = as.character(UScereal$shelf), size = 3) +
+annotate("text", label = title, x = 3, y = 400,
+colour = "red")
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/R Teaching/demo code/regression2/data/")
+setwd("~/R_Teaching/Intro_R_Demo code/regression2/data/")
+SalariesIn <- read.table("Salaries.txt" )
+setwd("~/R_Teaching/Intro_R_Demo code/regression2/data/")
+SalariesIn <- read.table("Salaries.txt" )
+setwd("~/R_Teaching/Intro_R_Demo code/regression2/data/")
+SalariesIn <- read.table("Salaries.txt" )
+setwd("~/R_Teaching/Intro_R_Demo code/regression2/data/")
+SalariesIn <- read.table("Salaries.txt" )
+setwd("~/R_Teaching/Intro_R_Demo code/regression2/data/")
+SalariesIn <- read.table("Salaries.txt")
+str(mpg)
+demo(persp)
+library(ggplot2)
+p <- ggplot(data=mpg, mapping=aes(x=cty, y=hwy))
+p
+summary(p)
+library(ggplot2)
+p <- ggplot(data=mpg, mapping=aes(x=cty, y=hwy))
+p
+summary(p)
+summary(p)
+summary(p+geom_point())
+p + geom_point()
+d <- ggplot() +
+geom_point(data=mpg, aes(x=cty, y=hwy, colour=factor(year)))+ stat_smooth(data=mpg, aes(x=cty, y=hwy))
+print(d)
+p <- ggplot(mpg, aes(x=cty,y=hwy))
+p + geom_point(aes(colour=factor(year)))+
+stat_smooth()
+p + geom_point(aes(colour=factor(year),size=displ))+ stat_smooth()+
+scale_color_manual(values =c('blue2','red4'))
+p + geom_point(aes(colour=factor(year),size=displ), alpha=0.5,position = "jitter") + stat_smooth()+
+scale_color_manual(values =c('blue2','red4'))+ scale_size_continuous(range = c(4, 10))
+p + geom_point(aes(colour=factor(year),size=displ), alpha=0.5,position = "jitter") +
+stat_smooth()+
+scale_color_manual(values =c('blue2','red4'))
+p + geom_point(aes(colour=factor(year),size=displ), alpha=0.5,position = "jitter")+
+stat_smooth()+
+scale_color_manual(values =c('blue2','red4'))+
+coord_cartesian(xlim = c(15, 25),ylim=c(15,40))
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+scale_size_continuous(range = c(4, 10))+
+facet_wrap(~ year,ncol=1)+
+opts(title='汽车油耗与型号')+
+labs(y='每加仑高速公路行驶距离',x='每加仑城市公路行驶距离')+
+guides(size=guide_legend(title='排量'),colour = guide_legend(title='车型', override.aes=list(size=5)))
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+facet_wrap(~ year,ncol=1)+
+labs(y='每加仑高速公路行驶距离',x='每加仑城市公路行驶距离')+
+guides(size=guide_legend(title='排量'),colour = guide_legend(title='车型', override.aes=list(size=5)))
+par(family='STKaiti')
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+facet_wrap(~ year,ncol=1)+
+labs(y='每加仑高速公路行驶距离',x='每加仑城市公路行驶距离')+
+guides(size=guide_legend(title='排量'),colour = guide_legend(title='车型', override.aes=list(size=5)))
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+facet_wrap(~ year,ncol=1)
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+facet_wrap(~ year)
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+facet_wrap(~ year,ncol=1)
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+facet_wrap(~ year,ncol=1)
+P <- ggplot(mpg,aes(x=hwy)) p + geom_histogram()
+P <- ggplot(mpg,aes(x=hwy))
+p + geom_histogram()
+P <- ggplot(mpg,aes(y=hwy))
+p + geom_histogram()
+P <- ggplot(mpg,aes(x=hwy))
+p + geom_histogram()
+P <- ggplot(mpg,aes(hwy))
+p + geom_histogram()
+p <- ggplot(mpg,aes(hwy))
+p + geom_histogram()
+p + geom_histogram(aes(fill=factor(year),y=..density..), alpha=0.3,colour='black')+
+stat_density(geom='line',position='identity',size=1.5, aes(colour=factor(year)))+
+facet_wrap(~year,ncol=1)
+ggplot(mpg, aes(x=class))+
+geom_bar()
+ggplot(mpg, aes(x=class))+
+geom_histogram()
+ggplot(mpg, aes(x=class))+
+geom_histogram()
+ggplot(mpg, aes(x=class))+
+geom_histogram()
+ggplot(mpg, aes(x=class))+
+geom_bar()
+ggplot(mpg, aes(class2,fill=factor(year)))+
+geom_bar(position='identity',alpha=0.5)
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(position='identity',alpha=0.5)
+ggplot(mpg, aes(class,hwy,fill=class)) +
+geom_boxplot()+
+ggplot(mpg, aes(class,hwy,fill=class)) +
+geom_boxplot()
+ggplot(mpg, aes(x = factor(1), fill = factor(class))) +
+geom_bar(width = 1) +
+coord_polar(theta = "y")
+geom_bar(aes(fill=class2))+facet_wrap(~year)
+ggplot(mpg, aes(x = factor(1), fill = factor(class)))+
+geom_bar(aes(fill=class2))+facet_wrap(~year)
+ggplot(mpg, aes(x = factor(1), fill = factor(class)))+
+geom_bar(aes(fill=class))+facet_wrap(~year)
+ggplot(mpg, aes(x = factor(1), fill = factor(class)))+
+geom_bar(position='fill')
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(position='stack')
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(position='fill')
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(aes(fill=class))+facet_wrap(~year)
+ggplot(diamonds,aes(carat,price)) +
+geom_point()
+#添加颜色，每个月一种颜色
+airquality$Month<-as.factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, color=Month)
+library(ggplot2)
+qplot(Wind, Temp, data=airquality)
+#添加颜色，每个月一种颜色
+airquality$Month<-as.factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, color=Month)
+#所有数据点统一为一种颜色
+qplot(Wind, Temp, data=airquality, color=I("red"))
+#改变数据点的形状，每个月份一种形状
+qplot(Wind, Temp, data=airquality, shape=Month)
+#加上月份，会发生什么？
+qplot(Wind, Temp, data=airquality,color=Month,
+geom = c("point", "smooth"))
+qplot(airquality$Wind)
+qplot(Wind, data=airquality,
+facets = Month~.)
+#还是只看风速，但指明是y轴，得到散点图，最先出现的在最左边
+qplot(y=Wind, data=airquality)
+#做点图
+qplot(Wind, data=airquality, geom="dotplot")
+qplot(data=airquality, Wind, geom="density",
+color=Month)
+qplot(data=airquality, Wind, geom="bar",
+color=Month)
+#options(htmltools.dir.version = FALSE)
+qplot(airquality$Wind)
+qplot(Wind, data=airquality,
+facets = Month~.)
+class2 <- mpg$class;
+class2 <- reorder(class2,class2,length)
+mpg$class2 <- class2
+P <- ggplot(mpg, aes(x=class2))
+p + geom_bar(aes(fill=class2))
+class2 <- mpg$class;
+class2 <- reorder(class2,length)
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(position='identity',alpha=0.5)
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(position='dodge')
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(position='stack')
+ggplot(mpg, aes(class,fill=factor(year)))+
+geom_bar(position='fill')
+p + geom_point(aes(colour=class, size=displ), alpha=0.5, position = "jitter")+
+stat_smooth()+
+scale_size_continuous(range = c(4, 10))+
+facet_wrap(~ year, ncol=1)
+p <- ggplot(mpg, aes(x=cty, y=hwy))
+p + geom_point(aes(colour=class,size=displ),alpha=0.5,position = "jitter")+
+stat_smooth()+
+facet_wrap(~ year,ncol=1)
+p + geom_point(aes(colour=factor(year),size=displ), alpha=0.5,position = "jitter")+
+stat_smooth()+
+scale_color_manual(values =c('blue2','red4'))+
+coord_cartesian(xlim = c(15, 25),ylim=c(15,40))
+p + geom_point(aes(colour=factor(year),size=displ), alpha=0.5,position = "jitter")+
+stat_smooth()+
+scale_color_manual(values =c('blue2','red4'))+
+coord_cartesian(xlim = c(15, 25),ylim=c(15,40))
+p + geom_point(aes(colour=factor(year),size=displ), alpha=0.5,position = "jitter")+
+stat_smooth()+
+scale_color_manual(values =c('blue2','red4'))+
+coord_cartesian(xlim = c(15, 25),ylim=c(15,40))
+library(ggplot2)
+p <- ggplot(data=mpg, mapping=aes(x=cty, y=hwy))
+p
+p +
+geom_point()
+p <- ggplot(mpg,aes(x=cty, y=hwy, colour=factor(year)))
+p + geom_point()
+p <- ggplot(mpg,aes(x=cty, y=hwy, colour=factor(year)))
+p + geom_point()
+library(ggplot2)
+ggplot(mpg, aes(x=cty, y=hwy))
+library(ggplot2)
+ggplot(mpg, aes(x=cty, y=hwy))

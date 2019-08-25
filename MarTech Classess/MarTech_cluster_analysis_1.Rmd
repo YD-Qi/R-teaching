@@ -1,0 +1,217 @@
+---
+title: "聚类分析 Cluster Analysis"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+![](https://www.dropbox.com/s/27bwzajlvqz3wdx/3d_cluster_cover.png?dl=1){width=600px}
+
+# 聚类分析 Cluster Analysis:
+
+机器学习当中的无监督学习，没有明确的预测对象。
+
+Clustering is an unsupervised learning algorithm that tries to cluster data based on their similarity. Thus, there is no outcome to be predicted, and the algorithm just tries to find patterns in the data.
+
+为什么要做聚类分析？
+
+Customer segmentation, targeted marketing 
+
+
+根据相似度把样本分成不同的组，组内成员具有相似性，组间成员具有差异性。
+
+Market segmentation is the activity of dividing a broad consumer or business market, normally consisting of existing and potential customers, into sub-groups of consumers based on some type of shared characteristics.
+
+或者说，
+Customer segmentation is the process of dividing customers into groups based upon certain boundaries; clustering is one way to generate these boundaries. 
+
+相似度，用距离来度量。
+
+欧几里得距离 Euclidean distance formula：
+
+$$d(x, y) = \sqrt{(x_1-y_1)^2+(x_2-y_2)^2}$$
+
+例如有两个运动员，我们要计算他们之间的空间距离，使用函数`dist()`：
+```{r}
+players<-matrix(rbind(c(0,0), c(3,4)), nrow = 2,
+                dimnames = list(c("red", "blue"),
+                               c("x", "y")))
+players
+
+dist(players)
+```
+
+推而广之，如果我们要计算两个观测样本彼此之间的特征距离（不仅是空间上的x，y轴，还包括其它特征，速度，年龄，进球次数等），欧几里得距离的一般公式：
+
+$$d(x, y) = \sqrt{(x_1-y_1)^2+(x_2-y_2)^2+...+(x_n-y_n)^2}$$
+
+度量单位与变量的标准化：
+
+身高与体重，厘米与米或者，怎么样他们之间的距离才有意义？
+
+$$X_{scaled}=\frac{X-mean(X)}{sd(X)}$$
+
+这样所有变量的均值是0，标准差是1.
+
+
+# Hierachical Clustering
+
+重要概念：
+  linkage - 计算某一个样本与其它群组的距离。例如在一群球员在场上，已知其中两名球员距离最近，那剩下的球员里，谁离他们俩最近？找出他！以此类推，把更多的人一层一层圈进来，就像一个石头扔进水里泛出的涟漪，或者金字塔的自上而下。
+
+![](https://www.dropbox.com/s/usu2tvym5ijzzkz/hrk.png?dl=1)
+
+
+# Hierachical Clustering 原理
+
+1. 找到两个距离最近的样本，将他们归为一组
+
+2. 计算其它样本与该组的距离，最近的样本与该组划在一起（linkage）
+  * 如何确定第三个样本与该组（组里有两个及以上样本）的距离：有 max, min, average三种方法，可以是第三者与两个的平均距离，最短距离，最大距离。不同的方法出来的聚类分析会有差异。
+  
+3. 如此不断推进，直到所有样本形成一个大组（类）。
+
+4. 根据我们的专业经验，确定要分几个组。
+
+5. 每个样本依据上一步的模型，被分配到不同的组。
+
+# Hierachical Clustering 实操步骤
+
+1. 预备数据，使用`dist()`函数得到distance_matrix。
+
+2. 将得到的函数得到distance_matrix传入hclust(distance_matrix, method = "complete")，并选定linkage的方式(complete, single, average)。
+
+  * 如果事先知道要分几个组，例如k=2，将从上述步骤得到的模型传入cutree(hc_players, k = 2)得到每个样本的分组。
+  
+  * 如果事先不知道要分几个组，我们就把上述结果plot()出来，然后选取一个高度，例如, h=40, 将从上述步骤得到的模型传入cutree(hc_players, h = 40)得到每个样本的分组
+
+4. 将分组结果与原数据合并。
+
+5. 分析聚类结果
+
+# Hierachical Clustering 实操
+
+install.packages("mclust")
+
+使用`hclust()`来计算linkage 与 使用`cutree`提取预测的分类结果：
+在后台，我们已经载入`lineup`的数据，是两队各6名球员在球场上的首发位置，我们来根据他们彼此间的距离来给他们分队，看看我们的分队（分类）结果与实际的分队有什么差距。
+
+我们已知是两个队在场上，所以K=2。
+
+`hclust()`的具体使用方法：
+ hclust(distance_matrix, method = "complete")。还可以是single, average。
+
+由上面的函数可知，我们还需要distance_matrix。我们之前讲到距离，每一个人与其它所有人的距离，由这些距离组成的矩阵就是distance_matrix。
+
+下面我们来实际操作：
+
+1. 计算场上运动员之间的distance matrix，命名为dist_players
+
+2. 使用`hclust`中的`complete` method 来做hierarchical clustering 并把结果命名为 hc_players。
+
+3. 将上面的结果按照k=2,也就是有两个组的情况，使用`cutree()`, 将得到的结果命名为 `clusters_k2`, 然后将其合并到原来的数据`lineup`中，形成新的数据框 lineup_k2_complete
+
+```{r ex="ex1", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+```
+
+```{r ex="ex1", type="sample-code"}
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- ___
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- ___
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- ___
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = ___)
+```
+
+```{r ex="ex1", type="solution"}
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- cutree(hc_players, k = 2)
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = clusters_k2)
+```
+
+# 检查我们的分类结果
+
+1. 数一下每一个cluster各有几名球员
+
+2. 将球员的位置绘制在图上，并用颜色区分两个cluster
+
+```{r ex="ex2", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- cutree(hc_players, k = 2)
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = clusters_k2)
+```
+
+```{r ex="ex2", type="sample-code"}
+library(ggplot2)
+library(dplyr)
+
+# Count the cluster assignments
+count(lineup_k2_complete, ___)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_k2_complete, aes(x = ___, y = ___, color = factor(___))) +
+  geom_point()
+```
+
+```{r ex="ex2", type="solution"}
+library(ggplot2)
+library(dplyr)
+# Count the cluster assignments
+table(lineup_k2_complete$cluster)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_k2_complete, aes(x = x, y = y, color = factor(cluster))) +
+  geom_point()
+```
+
+
+注意，不同的linkage方法可能会产生不同的结果，试一试更改下面的method:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+plot(hc_players)
+
+```

@@ -1,0 +1,129 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# cutting the tree!
+
+如果事先不知道几个组合适，怎么办？
+
+根据dendrogram的高度来砍一刀，确定我们得到几个组？
+
+先安装这个
+install.packages("dendextend") 
+
+这里我们来借用dendrogram，确定一个最高的高度(h)，砍一刀，在这一刀下面，我们得以把观测样本分成不同的组。
+
+我们会使用`dendextend`包里的`color_branches()`函数来将分组涂色。
+
+* 注意：这个练习需要在本地电脑上完成！
+
+```{r}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(dplyr)
+library(dendextend)
+
+dist_players <- dist(lineup, method = 'euclidean')
+hc_players <- hclust(dist_players, method = "complete")
+plot(hc_players)
+```
+
+```{r}
+# Create a dendrogram object from the hclust variable
+dend_players <- as.dendrogram(hc_players)
+
+# Plot the dendrogram
+plot(dend_players)
+
+```
+
+```{r}
+# Color branches by cluster formed from the cut at a height of 20 & plot
+dend_20 <- color_branches(dend_players, h = 20)
+
+# Plot the dendrogram with clusters colored below height 20
+plot(dend_20)
+
+```
+
+在h = 40处来一刀？
+```{r}
+
+# Color branches by cluster formed from the cut at a height of 40 & plot
+dend_40 <- color_branches(dend_players, h = 40)
+
+# Plot the dendrogram with clusters colored below height 40
+plot(dend_40)
+```
+
+
+# 用k means 做聚类分析的原理：
+
+1. 确定 k 个中心点。
+
+2. 计算每个样本与中心点的距离。
+
+3. 样本与哪个中心点距离近就被分配到哪个组。
+
+4. 如此这般，我们把所有的样本分成了k组。
+
+5. 然后我们找到每一个组的中心点。
+
+6. 然后，我们再次计算每个样本与新的中心点的距离。
+
+7. 根据每个样本点与新的中心点的距离，再次把样本分组。
+
+8. 如此循环往复，直到再没有点改变它的分组。
+
+
+# 用k means 做聚类分析的步骤：
+
+1. 确定分组数量
+
+  * 如果事先知道要分几个组，例如k=2, 我们将数据传入 kmeans(lineup, centers = 2)，。
+  
+  * 如果事先不知道要分几个组，我们可以从1到n（样本总量）都试一下，当然太大太接近n也没意义。一般地，我们可以使用 肘子法则（elbow rule: k 从小到大，依次取值，计算组内的方差的平均值，组分得越多，这个方差就越小，我们取那个使得组内方差急剧坠落的k值。然后将数据和得到的k值传入 kmeans(lineup, centers = 2)。
+
+2. 从上述模型提取聚类结果。
+
+3. 将该结果与原数据合并。
+
+4. 分析每个组的特征。
+
+# k means 实操练习1：
+
+跟之前一样，我们用`lineup` 这个数据，里面是开场前两个球队球员的场中位置。
+因为我们知道这是两个队的比赛，所以我们的K=2，没毛病。
+
+我们的目标是，把球员各归各队各找各妈。
+
+我们在`kmeans()` 这个函数中，将参数k的取值规定为2.
+
+```{r}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+```
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Build a kmeans model
+model_km2 <- kmeans(lineup, centers = 2)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km2 <- model_km2$cluster
+
+# Create a new dataframe appending the cluster assignment
+lineup_km2 <- mutate(lineup, cluster = clust_km2)
+```
+
+```{r}
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_km2, aes(x = x, y = y, color = factor(cluster))) +
+  geom_point()
+```

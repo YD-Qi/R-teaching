@@ -1,6 +1,0 @@
-"0","# Set up a 2-by-2 plot array"
-"0","par(mfrow = c(2, 2))"
-"0","# Plot the Animals2 brain weight data as points"
-"0","plot(Animals2$brain, type = ""p"")"
-"2","Error in plot(Animals2$brain, type = ""p"") : object 'Animals2' not found
-"

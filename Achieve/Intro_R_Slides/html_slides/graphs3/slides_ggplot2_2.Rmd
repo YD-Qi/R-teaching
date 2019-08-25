@@ -1,0 +1,17 @@
+---
+title: "R 数据可视化"
+subtitle: "ggplot2 功能包"
+author: "Chris Qi"
+date: "2018"
+output:
+  xaringan::moon_reader:
+    css: [default, zh-CN.css]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+---
+#案例分析：

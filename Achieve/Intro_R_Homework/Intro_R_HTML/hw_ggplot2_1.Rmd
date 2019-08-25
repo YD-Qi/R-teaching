@@ -1,0 +1,290 @@
+---
+title: "R ggplot2 作图"
+author: "Chris Qi"
+date: "9/5/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+![](/Users/yuandong/Dropbox/Public/logo.png){width=500px}
+
+数据可视化2课件: <http://rpubs.com/Chris7/420140>
+
+数据可视化2视频: <https://www.cctalk.com/v/15395147047212?xh_fshareuid=87b7f11f-6ceb-c339-6ae2-1632fe5f61ea&xh_preshareid=b838a009-5a73-4cda-bd51-c3780e2e082e>
+
+
+
+## qplot() 作图
+
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality)
+```
+
+用数据点的形状来区分月份：
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, shape=Month)
+```
+
+用数据点的大小来区分月份：
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, size=Month)
+```
+
+统一数据点的大小：
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, size=I(3))
+```
+
+统一数据点的颜色：
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, color=I("red"))
+```
+
+在qplot中，很多细节都被固定了, 不过我们可以手动修改
+
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, size=I(1),
+      xlab="wind (mph)", ylab="Temp",
+      main="wind vs. temp")
+```
+
+在当前的图上加入其他重要信息
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, 
+      xlab="wind (mph)", ylab="Temp",
+      main="wind vs. temp",      
+      geom = c("point", "smooth"))
+```
+
+将月份涂上颜色，会发生什么？
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, 
+      color=Month, 
+      geom = c("point", "smooth"))
+```
+
+加入“面”这个参数
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, Temp, data=airquality,
+      facets = Month~.)
+```
+
+调整月份的位置，会发生什么？
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, Temp, data=airquality,
+      facets = .~Month)
+```
+
+只使用一个变量，qplot猜测我们想做柱状图
+```{r}
+library(ggplot2)
+qplot(airquality$Wind)
+```
+
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, data=airquality,
+      facets = Month~.)
+```
+
+还是只看风速，但指明是y轴，得到散点图，最先出现的在最左边
+```{r}
+library(ggplot2)
+qplot(y=Wind, data=airquality)
+```
+
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, data=airquality, fill=Month)
+```
+
+指定几何客体为密度曲线，得到轮廓线
+
+```{r}
+library(ggplot2)
+qplot(Wind, data=airquality, geom="density")
+```
+
+按月份画轮廓线
+```{r}
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(data=airquality, Wind, geom="density",
+      color=Month)
+```
+
+做点图
+```{r}
+library(ggplot2)
+qplot(Wind, data=airquality, geom="dotplot")
+```
+
+qplot() with x and y, 自动为我们选择散点图，但是...
+```{r}
+library(ggplot2)
+qplot(factor(cyl), factor(vs), data = mtcars)
+```
+
+所以我们用jitter 来错位一下
+```{r}
+library(ggplot2)
+qplot(factor(cyl), factor(vs), data = mtcars, geom = "jitter")
+```
+
+
+
+## 使用函数ggplot()作图
+
+使用R自带数据集 `mtcars`绘制以下图形：
+
+散点图：x = wt, y = disp
+```{r ex="4", type="sample-code"}
+library(ggplot2)
+ggplot()
+```
+
+```{r ex="4", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = disp)) +
+  geom_point()
+
+```
+
+散点图：x = wt, y = mpg， 用颜色区分不同气缸数量的车
+```{r ex="5", type="sample-code"}
+library(ggplot2)
+ggplot(mtcars)
+```
+
+```{r ex="5", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg, col = factor(cyl))) +
+  geom_point()
+```
+
+添加平滑曲线
+```{r ex="6", type="sample-code"}
+library(ggplot2)
+ggplot(mtcars)
+```
+
+```{r ex="6", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()+
+  geom_smooth()
+```
+
+在上图基础上，修改`xlab`, `ylab`的名称并添加标题 `relationship between weights and mpg` petal`:
+```{r ex="7", type="sample-code"}
+library(ggplot2)
+ggplot()
+```
+
+```{r ex="7", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()+
+  geom_smooth()+
+  xlab("car weights")+
+  ylab("miles per gallon")+
+  ggtitle("relationship between weights and mpg")
+```
+
+
+直方图（频率）`mpg`:
+```{r ex="8", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="8", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram()
+  
+```
+
+直方图（频率）`mpg`，改变直方宽度为3:
+```{r ex="9", type="sample-code"}
+library(ggplot2)
+```
+
+```{r ex="9", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 3)
+```
+
+直方图（频率）`mpg`，添加黑色边框，填充绿色, 注意是在geom_histogram里面进行
+```{r ex="10", type="sample-code"}
+#
+library(ggplot2)
+
+```
+
+```{r ex="10", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 3, color="black", fill="green")
+```
+
+使用geom_bar()绘制柱状图，调用position的三种不同参数。
+绘制每一种气缸数量里手动挡与自动挡(变量 `am`)的数量的直方图：
+```{r ex="11", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="11", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = factor(cyl), fill = factor(am)))+
+  geom_bar()
+```
+
+修改上面的图，从叠加改为并列直方图
+```{r ex="13", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="13", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = factor(cyl), fill = factor(am)))+
+  geom_bar(position = "dodge") 
+```
+
+修改上面的图，从手动挡自动挡的数量，改为二者的比例
+```{r ex="12", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="12", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = factor(cyl), fill = factor(am)))+
+  geom_bar(position="fill")
+```
+
+

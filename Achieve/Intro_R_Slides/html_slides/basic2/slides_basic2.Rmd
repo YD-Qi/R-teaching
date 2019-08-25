@@ -1,0 +1,445 @@
+---
+title: "认识美好的 R"
+subtitle: "R basics 2"
+author: "Chris Qi"
+date: "2018"
+output:
+  xaringan::moon_reader:
+    css: [default, zh-CN.css]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 700px
+background-position: 50% 50%
+
+???
+
+* 幸存者偏差，二战盟军统计学家沃尔德
+* 老物件、双盲实验、成功者的故事（从大学退学的特征）
+* 不能只看贼吃肉，不看贼挨揍
+
+---
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 200px
+background-position: 95% 3%
+
+---
+### 活着就要弄明白的一些事情：
+
+* 幸存者偏差，二战盟军统计学家沃尔德
+
+.center[![](https://www.dropbox.com/s/iekp7f934wmjiy0/survivalshipbias.png?dl=1)]
+
+---
+
+* 老物件、双盲实验
+.center[![](https://www.dropbox.com/s/24pdj45dxzw5uve/laozixingche.jpg?dl=1)]
+
+---
+
+成功者的故事（从大学退学的特征）
+.center[![](https://www.dropbox.com/s/2dps6t18ohxoz5z/gateszuckburg.jpeg?dl=1)]
+
+--
+* 不能只看贼吃肉，不看贼挨揍
+
+
+---
+### 描述性统计：Summary statistics
+
+--
+* 集中趋势统计量:  均值（Mean)、中位数(Median)、众数(Mode)、百分位数(percentile)
+
+
+--
+* 离散趋势统计量：方差（var)、极差（range)
+
+---
+# 集中趋势统计量:  均值（Mean)
+
+
+--
+* 均值（Mean): 描述数据取值的平均位置，指一组数据的平均数
+```{r}
+mean(mtcars$mpg)
+```
+
+---
+# 集中趋势统计量:  中位数(Median)
+
+
+--
+* 中位数(Median): 定义为数据排序位于中间位置的值
+```{r}
+median(mtcars$mpg)
+```
+
+---
+# 集中趋势统计量: 众数(Mode)
+
+
+--
+* 众数(Mode): 就是一组数据中占比例最多的那个数， R中未提供直接调用的函数
+```{r}
+table(mtcars$mpg)
+which.max(table(mtcars$mpg))
+```
+
+---
+# 集中趋势统计量:  百分位数 (percentile)
+
+
+--
+* 百分位数 (percentile): 
+```{r}
+quantile(mtcars$mpg)
+```
+
+---
+# 离散趋势统计量：方差（var)
+
+
+* 方差（Variance): 是描述数据取值分散性的一个度量.样本方差(sample variance)是样本相对于均值的偏差平方和的平均,记为s2:
+
+--
+$$s2=\frac{1}{n-1}\sum ^n _{i=1} (x_i-\bar{x})^2$$
+
+--
+* 标准差就是方差开方：
+
+--
+$$s=\sqrt{\frac{1}{n-1}\sum ^n _{i=1} (x_i-\bar{x})^2}$$
+
+---
+# 离散趋势统计量：方差（var)
+
+```{r}
+var(mtcars$mpg)
+```
+
+---
+# 离散趋势统计量：方差（var)
+
+* 极差（Range): 描述样本分散性的数字特征.当数据越分散,其极差越大
+```{r}
+range(mtcars$mpg)
+```
+
+---
+```{r}
+summary(mtcars$mpg)
+```
+
+---
+```{r}
+summary(mtcars)
+```
+
+
+---
+# 基本作图
+
+```{r include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+
+
+一图胜千言
+
+--
+* 人类非常善于从视觉呈现中洞察关系。
+
+
+--
+* 一幅精心绘制的图形能够帮助你在数以千计的零散信 息中做出有意义的比较，提炼出使用其他方法时不那么容易发现的模式。
+
+
+--
+* plot()是R中为对象作图的一个泛型函数(它的输出将根据所绘制对象类型的不同而变化)。 
+
+--
+* R是一个惊艳的图形构建平台。在通常的交互式会话中，我们可 以通过逐条输入语句构建图形，逐渐完善图形特征，直至得到想要的效果。
+
+---
+
+```{r eval=FALSE}
+plot(x, y)
+```
+将x置于横轴，将y置于纵轴，绘制点集(x, y)，散点图。使用help(plot)可以查看其他选项。
+
+---
+
+第一条语句打开一个图形窗口并生成了一幅散点图，横轴表 示车身重量，纵轴为每加仑汽油行驶的英里数。
+```{r}
+plot(mtcars$wt, mtcars$mpg)
+```
+
+
+
+
+---
+
+添加横坐标标签，添加纵坐标标签
+
+--
+```{r eval=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+```
+
+
+---
+
+添加横坐标标签，添加纵坐标标签
+
+```{r echo=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+```
+
+
+---
+
+添加回归曲线
+
+--
+```{r eval=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+```
+
+
+---
+
+添加回归曲线
+
+```{r echo=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+```
+
+---
+
+添加标题
+
+--
+```{r eval=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+---
+
+添加标题
+
+```{r echo=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+---
+
+改变点的颜色
+
+--
+```{r eval=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+         xlab="Miles Per Gallon",
+         ylab="Car Weight",
+     col=4)
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+---
+
+改变点的颜色
+
+```{r echo=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+         xlab="Miles Per Gallon",
+         ylab="Car Weight",
+     col=4)
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+---
+
+改变点的形状
+
+--
+```{r eval=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+         xlab="Miles Per Gallon",
+         ylab="Car Weight",
+     col=4,
+     pch=16)
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+---
+
+改变点的形状
+
+```{r echo=FALSE}
+plot(mtcars$wt, mtcars$mpg,
+         xlab="Miles Per Gallon",
+         ylab="Car Weight",
+     col=4,
+     pch=16)
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+---
+有这些形状可以选择：
+![](https://www.dropbox.com/s/d8dz3hhq36wx1es/r-basic-plotting-tools-pch-1.png?dl=1)
+
+---
+
+总是用美元符号，是不是太麻烦？换一种方式：
+
+```{r eval=FALSE}
+with(mtcars,{
+plot(wt, mpg)
+abline(lm(mpg~wt))
+title("Regression of MPG on Weight")
+}
+)
+```
+
+---
+
+总是用美元符号，是不是太麻烦？换一种方式：
+
+```{r echo=FALSE}
+with(mtcars,{
+plot(wt, mpg)
+abline(lm(mpg~wt))
+title("Regression of MPG on Weight")
+}
+)
+```
+
+---
+
+全局参数设定，多图同列, 例如设置2列2行：
+```{r eval=FALSE}
+par(mfrow=c(3,1))
+```
+
+---
+
+四个直方图：
+
+```{r eval=FALSE}
+par(mfrow=c(3,1))
+with(mtcars,{
+  par(mfrow=c(2,2))
+  hist(wt)
+  hist(mpg)
+  hist(disp)
+  hist(hp)
+})
+```
+
+---
+
+四个直方图：
+
+```{r echo=FALSE}
+par(mfrow=c(3,1))
+with(mtcars,{
+  par(mfrow=c(2,2))
+  hist(wt)
+  hist(mpg)
+  hist(disp)
+  hist(hp)
+})
+```
+
+---
+
+箱图：
+
+```{r}
+boxplot(mtcars$mpg)
+```
+
+
+---
+# 保存图形：
+
+* 通过代码或图形用户界面来保存图形。
+
+--
+* 要通过代码保存图形，将绘图语句夹在开启目标 图形设备的语句和关闭目标图形设备的语句之间即可。
+
+---
+例如，以下代码会将图形保存到当前工作 目录中名为mygraph.pdf的PDF文件中:
+
+```{r}
+pdf("mygraph.pdf")
+      attach(mtcars)
+      plot(wt, mpg)
+      abline(lm(mpg~wt))
+      title("Regression of MPG on Weight")
+      detach(mtcars)
+dev.off()
+```
+
+---
+除了pdf()，还可以使用函数win.metafile()、png()、jpeg()、bmp()等将图形保存为其他格式。
+
+--
+* 通过图形用户界面保存图形，在RStudio的右下角，"Export"即可。
+
+---
+
+完结撒花
+
+
+.center[![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

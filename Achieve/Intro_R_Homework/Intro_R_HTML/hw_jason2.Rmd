@@ -1,0 +1,107 @@
+---
+title: "R 第5次课作业"
+author: "Jason Zhu"
+date: "10/05/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+Q1
+
+宅男Jason某日统计了DC超级英雄电影中6个英雄巨头杀敌人数如下：
+
+superhero_kills <- c("superman kills 1030 enemies.",
+            "wonderwoman kills 206 enemies.",
+            "aquaman kills 32 enemies.",
+            "cyborg kills 17 enemies.",
+            "batman kills 4 enemies.",
+            "the flash kills 0 enemies.")
+            
+他想考考自己的女朋友Rian知不知道这些超级英雄到底打败了多少敌人，但是懒得把里面的数字一个一个改成X。他想到在Data Maniac的课堂上学习了sub（）函数，并且了解到在R中，\\s代表空格，([0-9]+)代表任何出现的数字。他希望可以得到结果如下：
+
+[1] "superman kills X enemies."    "wonderwoman kills X enemies." "aquaman kills X enemies."     "cyborg kills X enemies."     
+[5] "batman kills X enemies."      "the flash kills X enemies." 
+
+那么请你来帮助他完成这个甜蜜的任务吧!
+
+
+```{r ex="circle", type="sample-code"}
+# you can do it!
+superhero_kills <- c("superman kills 1030 enemies.",
+            "wonderwoman kills 206 enemies.",
+            "aquaman kills 32 enemies.",
+            "cyborg kills 17 enemies.",
+            "batman kills 4 enemies.",
+            "the flash kills 0 enemies.")
+```
+
+```{r ex="circle", type="solution"}
+superhero_kills <- c("superman kills 1030 enemies.",
+            "wonderwoman kills 206 enemies.",
+            "aquaman kills 32 enemies.",
+            "cyborg kills 17 enemies.",
+            "batman kills 4 enemies.",
+            "the flash kills 0 enemies.")
+
+sub("\\s([0-9]+)\\s", " X ", superhero_kills)
+```
+
+Q2:
+
+Data Maniac 班上有很多可爱的同学，他们的信息被我们偷偷收集了，以下是班上14名同学的基本信息：
+
+name <- c("Jennifer", "Thalia", "Ken", "Elaine"," Jason","Chris","Lily","Odelia","Martin","Isabel", "Jane", "Connie", "Elisa"，"Cherry")
+
+age <- c(16, 17, 14, 17 , 29 , 19 , 21, 18, 19, 23, 17, 19, 22, 21)
+
+hair <- c("black", "green", "black", "brown", "white", "black", "purple", "black", "blue", "black", "green", "silver", "green", "black")
+
+为了更好的分析，我们用以下方法把这些数据转变为data.frame，并命名为classmates。
+
+# Create data frame 
+classmates <- data.frame(name, age, hair)
+
+classmates <- data.frame(name, age, hair)
+
+你需要协助Jason用课上学到的dplyr包完成以下任务：
+1.	同学中选出所有19岁及以下的；
+2.	在上一个任务的基础上选出黑色头发的；
+3.	接着根据年龄从大到小将这些黑发及19岁以下的同学进行排序；
+4.	计算出满足以上条件同学的平均年龄及最小年龄,分别命名为mean_age1和min_age1
+提示：以上任务你需要用%>%来完成。
+
+5.	计算出所有14位同学的平均年龄，最大及最小年龄，分别命名为mean_age2和max_age及min_age2。
+
+
+
+```{r ex="airquality", type="sample-code"}
+library(dplyr)
+name <- c("Jennifer", "Thalia", "Ken", "Elaine"," Jason","Chris","Lily","Odelia","Martin","Isabel", "Jane", "Connie", "Elisa","Cherry")
+age <- c(16, 17, 14, 17 , 29 , 19 , 21, 18, 19, 23, 17, 19, 22, 21)
+hair <- c("black", "green", "black", "brown", "white", "black", "purple", "black", "blue", "black", "green", "silver", "green", "black")
+
+
+```
+
+```{r ex="airquality", type="solution"}
+library(dplyr)
+
+name <- c("Jennifer", "Thalia", "Ken", "Elaine"," Jason","Chris","Lily","Odelia","Martin","Isabel", "Jane", "Connie", "Elisa","Cherry")
+
+age <- c(16, 17, 14, 17 , 29 , 19 , 21, 18, 19, 23, 17, 19, 22, 21)
+
+hair <- c("black", "green", "black", "brown", "white", "black", "purple", "black", "blue", "black", "green", "silver", "green", "black")
+
+# Create data frame 
+classmates <- data.frame(name, age, hair)
+
+classmates <- data.frame(name, age, hair)
+
+classmates%>%filter(age<=19)%>%filter(hair=='black')%>%arrange(desc(age))%>%summarise(mean_age1=mean(age),min_age1=min(age))
+
+summarise(classmates, mean_age2=mean(age),max_age=max(age),min_age2=min(age))
+```
+

@@ -1,0 +1,341 @@
+---
+title: "Churn Analysis: logistical regression"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# tutorial::go_interactive()
+```
+
+![](https://www.dropbox.com/s/clox5g5w652qjlt/churn.png?dl=1){width=600px}
+
+# 什么是 customer Churn，客户流失？
+
+We can shortly define customer churn (most commonly called “churn”) as customers that stop doing business with a company or a service. Customer churns exist in almost all business areas. 
+
+最常见的就是我们更换手机的运营商。
+
+# 什么是 Churn Analysis？
+
+用数据分析工具识别那些客户容易流失，他们有什么特征。重点关照这些客户，给他们定制广告，优惠等留住他们。因为留住一个客户比开发一个新客户容易地多，便宜地多。
+
+It’s a trendy topic in customer relationship management (CRM) departments because it costs more money to find new customers than keeping the existing ones. So companies want to prevent them to leave.
+
+# 怎么做 Churn Analysis？
+
+简单说来，我们需要以往的消费者数据，其中有人是流失了的，来建立模型，通常是logistic regression，然后将该模型应用到新的数据里面去预测其他客户流失的概率。
+
+在具体的操作中，
+
+  1. 我们将数据分成训练数据，测试数据，两者一起来使用建立最终模型。
+  2. 将得到的模型运用到新数据中（没有客户的流失信息）做预测。
+
+To identify the customers, we need to have a database with data about the previous customers that churned. Using this data, we develop a model which identifies customers that have a profile close to the ones that already left.
+To simulate an experiment where we want to predict if our customers will churn, we need to work with a partitioned database. The database has 2 parts, one part will be the training set. This will be used to create the model. The second part will be the testing set which will be used to evaluate our model.
+In this case we know customer answers from the testing dataset so we can compare the model prediction with the true answers. Nevertheless in reality, we don’t know what will be the true answers. So we have to target mainly customers with high probability to churn. This probability is given by our model.
+
+# 我们本节课的内容
+
+我们将使用来自IBM的消费者通信服务数据。我们的目标是预测哪些客户可能会离开他们现在的通信服务商。
+
+* 我们的课程假定你已经有一些统计的基础，重点在教会大家如何在R里面建立logistic regreesion来做Churn Analysis并进行预测。
+
+* 与linear regression类似，logistic regression也是探索因变量与自变量的关。
+
+* 不同的是，logistic regression的自变量是binary variable, 0, 1, 而不是连续性变量，例如票房收入。
+
+* 预测的结果是被观测样本可能发生某种行为的概率。在建模的时候使用的函数以及其它参数也是不一样的。
+
+* 读取数据并做初步探索：
+```{r}
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+
+telco_customer <- read.csv("https://www.dropbox.com/s/1t5umhj7l2ituqy/Telco-Customer-Churn.csv?dl=1")
+
+str(telco_customer)
+
+summary(telco_customer)
+```
+
+通过上面简单的描述统计，我们发现有些变量有不和谐的声音，例如
+“Yes”
+“No”
+“No internet service” (or “No phone service”).
+
+第三个类别没有提供更多的信息，我们把第三类都归为第二类 “No”。
+
+具体地，我们要结合使用lapply和select来达到目的：
+
+```{r}
+factor.variables = lapply(telco_customer %>% 
+                      dplyr::select(-customerID,-MonthlyCharges, 
+                      -TotalCharges, -tenure), 
+                      function(x){
+        x = gsub("No internet service", "No", x)
+        x = gsub("No phone service", "No", x)
+        return(x)
+})
+```
+
+```{r}
+factor.variables <- as.data.frame(factor.variables)
+telco_customer <- cbind( customerID = telco_customer$customerID, 
+                             TotalCharges = telco_customer$TotalCharges,
+                             MonthlyCharges = telco_customer$MonthlyCharges,
+                             tenure = telco_customer$tenure,
+                  factor.variables)
+```
+               
+```{r}
+summary(telco_customer)
+```
+
+* 处理缺失值
+```{r}
+
+telco_customer %>%
+  is.na() %>%
+  sum()
+
+telco_customer %>%
+  is.na() %>%
+  colSums()
+
+telco_customer %>%
+  filter(is.na(TotalCharges)==TRUE) %>%
+  dplyr::select(Churn) %>%
+  table()
+
+```
+
+```{r}
+11/7042
+```
+
+经过上面的探索，我们发现：
+
+* all missings are from TotalCharges
+* all of them do not churn
+* only 11/7042 missing
+
+所以，我们剔除那些有缺失值的样本。
+
+还有我们需要把 SeniorCitizen 变成因子变量。
+
+下面的代码使用 dplyr里面的函数结合 pipe operator, 一气呵成，完成上面的任务：
+```{r}
+telco_customer <- telco_customer %>%
+  filter(!is.na(TotalCharges)) %>%
+  mutate(SeniorCitizen=as.factor(SeniorCitizen))
+```
+
+绘制MonthlyCharges的直方图，查看MonthlyCharges的分布：
+```{r}
+telco_customer %>%
+  ggplot(aes(x=MonthlyCharges)) +
+  geom_histogram(color='blue', fill='red')
+```
+
+绘制TotalCharges的直方图，查看TotalCharges的分布：
+```{r}
+telco_customer %>%
+  ggplot(aes(x=TotalCharges)) +
+  geom_histogram(color='black', fill='green')
+```
+
+绘制 tenure 的直方图，查看 tenure 的分布:
+```{r}
+telco_customer %>%
+  ggplot(aes(x=tenure)) +
+  geom_histogram(color='black', fill='white')
+```
+
+
+将数据随机分成训练数据和测试数据:
+```{r}
+set.seed(100) 
+trainingRowIndex <- sample(1:nrow(telco_customer), 0.7*nrow(telco_customer)) 
+
+training_data <- telco_customer[trainingRowIndex, ] # model training data
+testing_data <- telco_customer[-trainingRowIndex, ] # test data
+```
+
+```{r}
+names(training_data)
+```
+
+Investigate who churned?
+```{r}
+training_data %>%
+  ggplot(aes(x = Churn)) +
+  geom_bar(position = "dodge")
+
+```
+
+```{r}
+training_data %>%
+  ggplot(aes(x = gender, fill = Churn)) +
+  geom_bar(position = "fill")
+```
+
+```{r}
+training_data %>%
+  ggplot(aes(x = SeniorCitizen, fill = Churn)) +
+  geom_bar(position = "fill")
+```
+
+```{r}
+training_data %>%
+  ggplot(aes(x = Partner, fill = Churn)) +
+  geom_bar(position = "fill")
+```
+
+
+```{r}
+training_data %>%
+  ggplot(aes(x = Dependents, fill = Churn)) +
+  geom_bar(position = "fill")
+```
+
+```{r}
+training_data %>%
+  ggplot(aes(x = PhoneService, fill = Churn)) +
+  geom_bar(position = "fill")
+```
+
+```{r}
+training_data %>%
+  ggplot(aes(x = OnlineBackup, fill = Churn)) +
+  geom_bar(position = "fill")
+```
+
+
+```{r}
+training_data %>%
+  ggplot(aes(x = PaymentMethod, fill = Churn)) +
+  geom_bar(position = "fill")
+```
+
+
+```{r}
+training_data %>%
+  ggplot(aes(x = PaymentMethod)) +
+  geom_bar()
+```
+
+
+# Another way of visulization:
+using "gridExtra" package:
+```{r}
+p1 <- ggplot(training_data, aes(x=gender)) + ggtitle("Gender") + xlab("Gender") +
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+p2 <- ggplot(training_data, aes(x=SeniorCitizen)) + ggtitle("Senior Citizen") + xlab("Senior Citizen") + 
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+p3 <- ggplot(training_data, aes(x=Partner)) + ggtitle("Partner") + xlab("Partner") + 
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+p4 <- ggplot(training_data, aes(x=Dependents)) + ggtitle("Dependents") + xlab("Dependents") +
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+p5 <- ggplot(training_data, aes(x=PhoneService)) + ggtitle("Phone Service") + xlab("Phone Service") +
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+p6 <- ggplot(training_data, aes(x=MultipleLines)) + ggtitle("Multiple Lines") + xlab("Multiple Lines") + 
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+p7 <- ggplot(training_data, aes(x=InternetService)) + ggtitle("Internet Service") + xlab("Internet Service") + 
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+p8 <- ggplot(training_data, aes(x=OnlineSecurity)) + ggtitle("Online Security") + xlab("Online Security") +
+  geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
+
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=2)
+```
+
+# building a good logistical model:
+
+* exert caution when you interpret the coefficients, only directions make sense. 
+    
+```{r}
+# Model specification using lm
+fullModel <- glm(Churn ~.-customerID, 
+                        data = training_data,
+                 family=binomial(link='logit'))
+
+# Looking at model summary
+summary(fullModel)
+```
+
+使用stepAIC函数，剔除无关变量，得到最佳模型：
+Choose a model by AIC in a Stepwise Algorithm
+```{r}
+library(MASS)
+# Model specification using lm
+fullModel <- glm(Churn ~.-customerID, 
+                        data = training_data,
+                 family=binomial(link='logit'))
+
+newModel <- stepAIC(fullModel,trace = 0)
+
+summary(newModel)
+
+newFormula <- as.formula(summary(newModel)$call)
+newFormula
+```
+
+# Let us predict with full model:
+
+```{r}
+table(telco_customer$Churn)
+```
+
+```{r}
+1869/(1869+5163)
+```
+
+```{r}
+class(testing_data$Churn)
+```
+
+
+```{r}
+testing_data$Churn <- as.character(testing_data$Churn)
+testing_data$Churn[testing_data$Churn=="No"] <- "0"
+testing_data$Churn[testing_data$Churn=="Yes"] <- "1"
+
+testing_data$Churn <- as.numeric(testing_data$Churn)
+```
+
+```{r}
+fitted.results <- predict(newModel,newdata=testing_data,type='response')
+fitted.results <- ifelse(fitted.results > 0.27,1,0)
+misClasificError <- mean(fitted.results != testing_data$Churn)
+misClasificError
+print(paste('Logistic Regression Accuracy is ', 1-misClasificError))
+
+```
+
+可能流失的客户有什么特征？
+
+
+```{r}
+testing_data$pred <- fitted.results
+
+testing_data%>%
+  group_by(pred) %>%
+  dplyr::select(TotalCharges, MonthlyCharges, tenure) %>%
+  summarise_all(funs(mean(.)))
+```
+
+完结撒花！
+
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)

@@ -1,0 +1,502 @@
+---
+title: "Regression Analysis"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# tutorial::go_interactive()
+```
+
+![](https://www.dropbox.com/s/a5okpste5xhbglo/regression_joke.png?dl=1){width=600px}
+
+# 双变量关系及建模
+
+* 两个变量都是数值型（numeric）
+
+* 应变量（response, dependent variable）
+
+* 解释变量（explanatory）
+
+  * 你认为与应变量有关的东西
+  * 也可以叫做，independent variable, predictor
+
+一般的模型表达式：
+
+$$应变量=f(解释变量)+噪音$$
+
+线性回归模型表达式：
+
+$$应变量=截距+斜率*解释变量+噪音$$
+
+线性回归模型--为什么这一条线最合适？
+
+$$y_i= a + b*x_i+e$$
+
+# 最小二乘法（least squares method ）
+
+简单地说，最小二乘的思想就是要使得 
+
+** 观测点和估计点的距离的平方和达到最小 **. 
+
+这里的“二乘”指的是用平方来度量观测点与估计点的远近（在古汉语中“平方”称为“二乘”），“最小”指的是参数的估计值要保证各个观测点与估计点的距离的平方和达到最小。
+
+![](https://www.dropbox.com/s/62kug7pbmkwsd5v/ols_pic.png?dl=1)
+
+
+
+线性回归模型:
+
+$$y_i= a + b*x_i+e_i$$
+
+$$e_i ~ N(0, \sigma)$$
+
+预测值：
+
+$$\hat{y_i} = \hat{a} + \hat{b}x_i$$
+
+
+残差（error）:
+
+$$e_i = y_i-\hat{y_i}$$
+
+拟合的过程：有n个样本量，也就是n个数据对 $(x_i,y_i)$, 找到 截距 $a$ 和斜率  $b$ ，使得残差平方和最小:
+
+$$\sum_1^{n} e_i^2$$
+
+** 关键概念 ** : 
+
+$\hat{y_i}$ 是给定 $x_i$ 值时， $y$ 的期望值
+
+
+$\hat{b}$ 是真实但是未知的 $b$ 的估计值
+
+
+残差 $e$：residual, error, noise
+
+
+最小二乘法求线性回归系数
+
+$$y_i= a + b*x_i+e_i$$
+
+$$\hat{y_i} = \hat{a} + \hat{b}x_i$$
+
+$$e_i = y_i-\hat{y_i}$$
+
+$$\sum_1^{n} e_i^2 = \sum (y_i-\hat{y_i})^2=\sum (y_i- \hat{a} -\hat{b}x_i)^2$$
+
+
+最小二乘法求线性回归系数:
+
+$$f=\sum_1^{n} e_i^2 =\sum (y_i- \hat{a} -\hat{b}x_i)^2$$
+
+一阶导数等于 0：
+
+$$\frac{\partial f}{\partial\hat{a}} = -2 \sum (y_i- \hat{a} -\hat{b}x_i)=0$$
+
+$$\frac{\partial f}{\partial\hat{b}} = -2 \sum (y_i- \hat{a} -\hat{b}x_i)x_i=0$$
+
+联立上面的二元一次方程组，求解 $\hat{a}$ 与 $\hat{b}$
+
+$$\hat{b}=\frac{\sum (x_i-\bar{x}) (y_i-\bar{y})}{\sum (x_i-\bar{x})^2}$$
+
+$$\hat{a}= \bar{y} - \hat{b}\bar{x}$$
+
+
+最小二乘法的特点:
+
+* 唯一性
+
+* 残差之和等于0
+
+* 回归线必过
+
+$(\bar{x}, \bar{y})$
+
+
+```{r echo=FALSE}
+library(ggplot2)
+
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+```{r}
+out <- lm(mpg~wt,data=mtcars)
+summary(out)
+```
+
+
+轶事：回归的由来
+
+Regression to the mean is a concept attributed to Sir Francis Galton. The basic idea is that extreme random observations will tend to be less extreme upon a second trial. This is simply due to chance alone. Note that "regression to the mean" and "linear regression" are not the same thing.
+
+* 孩子的身高和父母的身高：高个子的父母一般生的孩子个子也高，但是孩子一般没有父母那么高，孩子的身高会趋向于平均数。
+
+* 这就是我们没有看到乔丹的儿子能够和乔丹一样成为飞人的原因
+
+![](https://www.dropbox.com/s/kqijuf9qjliryst/regression_saying.png?dl=1)
+
+```{r echo=FALSE}
+#library(ggplot2)
+
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+$$y_i= a + b*x_i+e_i$$
+
+回归模型的目标是量化变量之间的关系：
+
+* 关键系数的大小
+
+* 关键系数的显著度
+
+* 模型的解释力
+
+* 模型的预测力
+
+```{r echo=FALSE}
+out <- lm(mpg~wt,data=mtcars)
+summary(out)
+```
+
+理解模型：
+
+1. 残差 （Residuals）：
+Residuals show if the predicted response values are close or not to the response values that the model predicts. 
+
+$$e_i = y_i-\hat{y_i}$$
+
+2. 系数估计 （Estimate coefficient）：
+How y changes when x changes by one unit
+
+$$\hat{b}=\frac{\sum (x_i-\bar{x}) (y_i-\bar{y})}{\sum (x_i-\bar{x})^2}$$
+
+$$\hat{a}= \bar{y} - \hat{b}\bar{x}$$
+
+3. 系数估计的标准差（Standard error）：
+Standard error measures how the coefficient estimates can vary from the actual average value of the response variable (i.e. if the model is run more times). 每一次数据不同，结果都会有差异，但是该差异在一定范围内。 
+
+4. 显著度与P值 （Significance and P value）：
+Test of significance of the model shows that there is strong evidence of a linear relationship between the variables. This is visually interpreted by the significance stars *** at the end of the row. This level is a threshold that is used to indicate real findings, and not the ones by chance alone.
+
+For each estimated regression coefficient, the variable’s p-Value Pr(>|t|) provides an estimate of the probability that the true coefficient is zero given the value of the estimate. More the number of stars near the p-Value are, more significant is the variable.
+
+P值 多少算显著？
+Typically, a p-value < 0.05 is a good cut-off point), null hypothesis can be safely rejected. In the current case, p-values are well below the 0.05 threshold, so the model is indeed statistically significant.
+
+5. R-squared 以及 adjusted R-squared
+  * 0-1 之间
+  * 越大说明自变量对因变量的解释越多
+  * 但模型的好坏并不完全取决于R
+
+$$R^2=1-\frac{var(e)}{var(y)}$$
+
+# 电影票房收入预测
+
+![](https://www.dropbox.com/s/7cmsuabyobwb6fn/hp_poster.jpg?dl=1)
+
+1. 读取数据：
+```{r}
+my_data <- read.csv("https://www.dropbox.com/s/sy790xviuxn8psp/movie_metadata.csv?dl=1") 
+```
+
+2. 观察数据结构：
+```{r}
+str(my_data)
+```
+
+3. 仅查看变量名称：
+```{r}
+names(my_data)
+```
+
+4. 查看数据的描述性统计：
+```{r}
+summary(my_data)
+```
+
+* 将票房收入和投资转换成以百万为单位。
+
+* 除掉有缺失值的样本，除去不相关变量，例如 “movie_imdb_link”，或者“director_name”。
+
+* 将电影分级这一变量里面的类别重新划分，限制级，非限制级：
+movie rating system: https://en.wikipedia.org/wiki/Motion_Picture_Association_of_America_film_rating_system
+
+```{r}
+my_data <- read.csv("https://www.dropbox.com/s/sy790xviuxn8psp/movie_metadata.csv?dl=1") 
+
+library(dplyr)
+
+my_data <- my_data %>%
+  na.omit() %>%
+  mutate(gross=gross/1000000, budget=budget/1000000, USA = as.numeric(country== "USA"), restricted=as.numeric(content_rating== "PG-13"|content_rating=="R"|content_rating== "NC-17")) %>%
+  select(-actor_1_name, -actor_2_name, -actor_3_name, -actor_2_facebook_likes,  -actor_3_facebook_likes, -movie_imdb_link, -plot_keywords, -color, -director_name, -cast_total_facebook_likes, -country, -content_rating)
+
+summary(my_data)
+```
+
+发现有的电影budget异常的高，剔除：
+```{r}
+library(dplyr)
+
+my_data <- my_data %>%
+  filter(budget<200)
+
+summary(my_data)
+```
+
+相关系数，精确到三位小数点（用round这个函数）
+```{r}
+library(corrplot)
+my_data %>%
+  select(-movie_title, -genres, -language, -title_year) %>%
+  cor() %>% 
+  round(3) %>%
+  corrplot(tl.srt=45)
+```
+
+使用下面的公式，计算相关性的P值，是否显著相关：
+```{r}
+library(corrplot)
+
+# mat : is a matrix of data
+# ... : further arguments to pass to the native R cor.test function
+cor.mtest <- function(mat, ...) {
+    mat <- as.matrix(mat)
+    n <- ncol(mat)
+    p.mat<- matrix(NA, n, n)
+    diag(p.mat) <- 0
+    for (i in 1:(n - 1)) {
+        for (j in (i + 1):n) {
+            tmp <- cor.test(mat[, i], mat[, j], ...)
+            p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+        }
+    }
+  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
+  p.mat
+}
+# matrix of the p-value of the correlation
+p.mat <- my_data %>% 
+  select(-movie_title, -genres, -language, -title_year) %>%
+  cor.mtest()
+```
+
+绘制关联矩阵：
+```{r}
+my_data %>%
+  select(-movie_title, -genres, -language, -title_year) %>%
+  cor() %>% 
+  round(3) %>%
+  corrplot(type="upper", p.mat = p.mat, sig.level = 0.05, tl.srt=45, method = "circle")
+```
+
+将数据随机分成训练数据和测试数据：
+```{r}
+set.seed(100) 
+trainingRowIndex <- sample(1:nrow(my_data), 0.7*nrow(my_data)) 
+
+training_data <- my_data[trainingRowIndex, ] # model training data
+testing_data <- my_data[-trainingRowIndex, ] # test data
+```
+
+最关心的变量 gross, budget, imdb_score，看一看他们的分布：
+```{r}
+library(ggplot2)
+library(dplyr)
+
+training_data %>%
+  ggplot(aes(x=gross))+
+  geom_histogram(color='black', fill='white') + 
+  ylab('counts') + 
+  xlab('Gross Income (million)')
+  ggtitle('gross income')
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+training_data %>%
+  ggplot(aes(x=gross))+
+  geom_histogram(color='black', fill='white') + 
+  geom_vline(aes(xintercept=mean(gross)), linetype="dashed", color="blue", size=1)+
+  geom_vline(aes(xintercept=median(gross)), linetype="dashed", color="red", size=1)+
+  ylab('counts') + 
+  xlab('Gross Income (million)')
+  ggtitle('gross income')
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+training_data %>%
+  filter(gross<400) %>%
+  ggplot(aes(x=gross))+
+  geom_histogram(color='black', fill='white') + 
+  geom_vline(aes(xintercept=mean(gross)), linetype="dashed", color="blue", size=1)+
+  geom_vline(aes(xintercept=median(gross)), linetype="dashed", color="red", size=1)+
+  ylab('counts') + 
+  xlab('Gross Income (million)')
+  ggtitle('gross income')
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+training_data %>%
+  ggplot(aes(x=budget))+
+  geom_histogram(color='black', fill='white') + 
+  geom_vline(aes(xintercept=mean(budget)), linetype="dashed", color="blue", size=1)+
+  geom_vline(aes(xintercept=median(budget)), linetype="dashed", color="red", size=1)+
+  ylab('counts') + 
+  xlab('Budget (million)')
+  ggtitle('Budget')
+```
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+training_data %>%
+  ggplot(aes(x=imdb_score))+
+  geom_histogram(color='black', fill='white') + 
+  ylab('counts') + 
+  ggtitle('imdb_score')
+
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+training_data %>%
+  ggplot(aes(x=imdb_score))+
+  geom_histogram(aes(y=..density..), color='black', fill='white') + 
+  ylab('percent') + 
+  ggtitle('imdb_score')
+
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+training_data %>%
+  ggplot(aes(x=imdb_score))+
+  geom_histogram(aes(y=..density..), binwidth=0.5, color='black', fill='white') + 
+  geom_vline(aes(xintercept=mean(imdb_score)), linetype="dashed", color="blue", size=1)+
+  ylab('percent') + 
+  ggtitle('imdb_score')
+
+```
+
+```{r}
+str(training_data)
+```
+
+```{r}
+# Model specification using lm
+fullModel <- lm(gross ~.-genres -movie_title -language, 
+                        data = my_data)
+
+# Looking at model summary
+summary(fullModel)
+```
+
+使用step函数，剔除无关变量：
+Choose a model by AIC in a Stepwise Algorithm.
+
+In the absence of subject-matter expertise, stepwise regression can assist with the search for the most important predictors of the outcome of interest.
+```{r}
+# Model specification using lm
+fullModel <- lm(gross ~.-genres -movie_title -language, 
+                        data = my_data)
+
+newModel <- step(fullModel)
+
+summary(newModel)
+
+newFormula <- as.formula(summary(newModel)$call)
+newFormula
+
+```
+
+```{r}
+bestModel<- training_data %>%
+  lm(formula=newFormula)
+
+summary(bestModel)
+```
+
+多元回归的共线性问题处理：
+Estimate the variance inflation factors using the vif() function from the rms package.
+A variance inflation factor greater than 5 hints to multicollinearity, greater than 10 indicates unstable regression estimates.
+
+```{r}
+library(rms)
+# Checking variance inflation factors
+vif(bestModel)
+```
+
+Since none of the variance inflation factors is greater than 10 we can certainly accept our bestModel. 
+
+```{r}
+summary(bestModel)
+```
+
+我们使用刚刚建立的模型来做预测：
+```{r}
+grossPred <- predict(bestModel, testing_data) # predict distance
+```
+
+检验一下，我们的预测效果
+```{r}
+actuals_preds <- data.frame(cbind(actuals=testing_data$gross, predicteds=grossPred)) # make actuals_predicteds dataframe.
+attach(actuals_preds)
+correlation_accuracy <- cor(actuals,predicteds) 
+correlation_accuracy
+```
+
+
+实际对比一下原始数据和预测数据
+```{r}
+head(actuals_preds, n=10)
+```
+
+还可以再进一步，交叉验证：从上面6，4分的训练测试数据得到的模型表现不错，这是不是偶然碰巧的结果？
+随机把数据分成K等份，K-1做训练，1做测试。得到k种结果，看看预测结果之间偏差如何？
+这个方法通常在数据量不足以支持数据分成训练组和测试组的时候
+k- Fold Cross validation
+曲线是否平行
+```{r}
+library(DAAG)
+kfold <- CVlm(data = my_data, form.lm = formula(newFormula), m=5, 
+                   dots = FALSE, seed=123, legend.pos="topleft",
+                   main="Cross Validation; k=5",
+                   plotit=TRUE, printit=FALSE)
+```
+
+ Remember, cross-validation validates the modeling process, not an actual model
+ 
+还有一种 kWayCrossValidation(nRows, nSplits, NULL, NULL)
+
+library(vtreat)
+
+完结撒花！
+
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)

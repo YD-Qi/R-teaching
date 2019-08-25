@@ -1,0 +1,221 @@
+---
+title: "R 第6次课作业"
+author: "Jason Zhu"
+date: "10/05/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+国庆节的最后一天，你收到了澳大利亚某气象局的offer，在你上班的第一天，老板Jason把你叫到了办公室，布置了一个神秘任务。原来，Jason正在闷声发大财，默默的在一年内收集了澳大利亚Canberra当地2007年一整年的天气数据。作为Data Maniac的荣誉学员，你需要：
+
+Q1：
+
+我们已经在后台加载了这个名为 'weather' 的数据。用你这几节课学到的方法，你需要快速的了解数据结构（观测值/变量个数，变量性质等）；
+
+```{r ex="ex1", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex1", type="sample-code"}
+# you can do it!
+
+```
+
+```{r ex="ex1", type="solution"}
+weather
+str(weather)
+names(weather)
+
+```
+
+Q2：
+
+你发现这个数据集中的’RainTomorrow’变量很有意思，你想到这个变量是否和‘Sunshine’以及‘Rainfall’这两个变量是否有某种不可告人的关系，为了更好得分析，你需要用课上学到的dplyr包中的某种方法只留下以下4个变量，‘Date’，‘Rainfall’，‘Sunshine’, ‘RainTomorrow’。并且将其命名为weather_cut；
+
+```{r ex="ex2", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex2", type="sample-code"}
+library(dplyr)
+
+```
+
+```{r ex="ex2", type="solution"}
+library(dplyr)
+weather_cut<-weather%>%select(1,5,7,24)
+weather_cut
+```
+
+Q3：为了更好的了解‘RainTomorrow‘和’Sunshine‘两个变量的关系，用tidyr包的spread函数将’RainTomorrow‘的两个值’Yes’和‘No’变成两个变量，填充在这两个新变量下的是原来变量’Sunshine‘的值。如果成功，你可以看到新的数据集的前六行为。讲这个新的数据集命名为weather_forecast;
+
+```{r ex="ex3", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex3", type="sample-code"}
+library(dplyr)
+library(tidyr)
+weather_cut<-weather%>%select(1,5,7,24)
+
+
+```
+
+```{r ex="ex3", type="solution"}
+library(dplyr)
+library(tidyr)
+weather_cut<-weather%>%select(1,5,7,24)
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+head(weather_forecast)
+
+```
+
+Q4: 分析完毕后，你想把weather_forecast恢复成原样，于是你需要用tidyr包的gather函数把它变回去，结果的前六行如下：
+
+Date Rainfall   No Yes
+1  2007-11-01      0.0   NA 6.3
+2  2007-11-02      3.6   NA 9.7
+3  2007-11-03      3.6   NA 3.3
+4  2007-11-04     39.8   NA 9.1
+5  2007-11-05      2.8 10.6  NA
+6  2007-11-06      0.0  8.2  NA
+
+```{r ex="ex4", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex4", type="sample-code"}
+#
+library(dplyr)
+library(tidyr)
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+```
+
+```{r ex="ex4", type="solution"}
+library(dplyr)
+library(tidyr)
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+weather_cut<-gather(weather_forecast,RainTomorrow,Sunshine,3:4)
+head(weather_cut)
+
+```
+
+
+Q5：你发现weather_forecast数据集中有很多的NA，你需要用课上学习的方法（any(is.na())找到‘Yes‘和’No’两个变量中确认是否有NA，并且用summary函数找到这两个变量中的NA的数量；
+
+```{r ex="ex5", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex5", type="sample-code"}
+library(dplyr)
+library(tidyr)
+
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+```
+
+```{r ex="ex5", type="solution"}
+library(dplyr)
+library(tidyr)
+
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+any(is.na(weather_forecast$Yes))
+any(is.na(weather_forecast$No))
+summary(weather_forecast)
+
+```
+
+Q6. 
+
+确认NA后，你决定用平均数去填充”Yes”和“No”中的所有变量；
+
+```{r ex="ex6", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex6", type="sample-code"}
+library(dplyr)
+library(tidyr)
+
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+
+```
+
+```{r ex="ex6", type="solution"}
+library(dplyr)
+library(tidyr)
+
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+##
+weather_forecast$No[is.na(weather_forecast$No)]<-mean(weather_forecast$No,na.rm = TRUE)
+
+weather_forecast$Yes[is.na(weather_forecast$Yes)]<-mean(weather_forecast$Yes,na.rm = TRUE)
+
+```
+
+
+Q7. 
+
+解决了NA的问题以后，你需要用hist函数，plot函数以及boxplot函数找到weather_forecast数据集的‘No’变量中的异常值，感受下哪个函数最适合发现异常值。
+
+```{r ex="ex7", type="pre-exercise-code"}
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+```
+
+```{r ex="ex7", type="sample-code"}
+library(dplyr)
+library(tidyr)
+
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+##
+weather_forecast$No[is.na(weather_forecast$No)]<-mean(weather_forecast$No,na.rm = TRUE)
+weather_forecast$Yes[is.na(weather_forecast$Yes)]<-mean(weather_forecast$Yes,na.rm = TRUE)
+
+##
+
+```
+
+```{r ex="ex7", type="solution"}
+library(dplyr)
+library(tidyr)
+
+weather_cut<-weather%>%select(1,5,7,24)
+
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+
+##
+weather_forecast$No[is.na(weather_forecast$No)]<-mean(weather_forecast$No,na.rm = TRUE)
+weather_forecast$Yes[is.na(weather_forecast$Yes)]<-mean(weather_forecast$Yes,na.rm = TRUE)
+
+
+hist(weather_forecast$No)
+plot(weather_forecast$No)
+boxplot(weather_forecast$No)
+
+```
+
+

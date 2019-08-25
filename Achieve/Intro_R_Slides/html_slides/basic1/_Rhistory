@@ -1,0 +1,512 @@
+# Scatterplot of SLG vs. OBP
+mlbBat10 %>%
+filter(AB >= 200) %>%
+boxplot(mlbBat10$OBP)
+# Scatterplot of SLG vs. OBP
+boxplot(mlbBat10$OBP)
+knitr::opts_chunk$set(echo = TRUE)
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+boxplot(cars$speed, main="Speed", sub=paste("Outlier rows: ", boxplot.stats(cars$speed)$out))  # box plot for 'speed'
+boxplot(cars$speed, main="Speed", sub=paste("Outlier rows: ", boxplot.stats(cars$speed)$out))  # box plot for 'speed'
+boxplot(cars$dist, main="Distance", sub=paste("Outlier rows: ", boxplot.stats(cars$dist)$out))  # box plot for 'distance'
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+boxplot(cars$speed, main="Speed")  # box plot for 'speed'
+boxplot(cars$speed, main="Speed")
+boxplot(cars$speed)
+?boxplot
+str(cars)
+boxplot(cars$price)
+head(cars)
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+boxplot(cars$price, main="Price")  # box plot for 'speed'
+boxplot(cars$mpgCity, main="mpg in city ")  # box plot for 'distance'
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+boxplot(cars$price, main="Price")  # box plot for 'speed'
+boxplot(cars$mpgCity, main="mpg in city ")  # box plot for 'distance'
+install.packages("MASS")
+install.packages("openintro")
+install.packages("HistData")
+install.packages("dplyr")
+install.packages("MASS")
+library(MASS)
+library(openintro)
+library(HistData)
+library(ggplot2)
+library(dplyr)
+# Mammals scatterplot
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point()
+# Body dimensions scatterplot
+ggplot(data = bdims, aes(x = hgt, y = wgt, color = factor(sex))) +
+geom_point()
+# Baseball player scatterplot
+ggplot(data = mlbBat10, aes(x = OBP, y = SLG)) +
+geom_point()
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point()
+# Scatterplot with coord_trans()
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point() +
+coord_trans(x = "log10", y = "log10")
+# Scatterplot with scale_x_log10() and scale_y_log10()
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point() +
+scale_x_log10() + scale_y_log10()
+# Scatterplot of SLG vs. OBP
+mlbBat10 %>%
+filter(AB >= 200) %>%
+ggplot(aes(x = OBP, y = SLG)) +
+geom_point()
+# Identify the outlying player
+mlbBat10 %>%
+filter(AB >= 200, OBP < 0.2)
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+boxplot(cars$price, main="Price")  # box plot for 'speed'
+boxplot(cars$mpgCity, main="mpg in city ")  # box plot for 'distance'
+ncbirths %>%
+summarize(N = n(), r = cor(weight, mage))
+# Compute correlation for all non-missing pairs
+ncbirths %>%
+summarize(N = n(), r = cor(weight, weeks, use = "pairwise.complete.obs"))
+# Compute correlation for all non-missing pairs
+ncbirths %>%
+summarize(N = n(), r = cor(weight, weeks, use = "pairwise.complete.obs"))
+# Compute correlation for all non-missing pairs
+ncbirths %>%
+summarize(N = n(), r = cor(weight, weeks))
+# Compute correlation for all non-missing pairs
+ncbirths %>%
+summarize(N = n(), r = cor(weight, weeks, use = "pairwise.complete.obs"))
+# Correlation of body dimensions
+bdims %>%
+group_by(sex) %>%
+summarize(N = n(), r = cor(hgt, wgt))
+# Correlation among mammals, with and without log
+mammals %>%
+summarize(N = n(),
+r = cor(BodyWt, BrainWt),
+r_log = cor(log(BodyWt), log(BrainWt)))
+# Scatterplot with regression line
+ggplot(data = bdims, aes(x = hgt, y = wgt)) +
+geom_point()
+# Scatterplot with regression line
+ggplot(data = bdims, aes(x = hgt, y = wgt)) +
+geom_point() +
+geom_smooth(method = "lm", se = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+# Packages
+library(tidyverse)  # data manipulation and visualization
+library(modelr)     # provides easy pipeline modeling functions
+library(broom)      # helps to tidy up model outputs
+library(DAAG)
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+advertising
+colSums(is.na(advertising))
+knitr::opts_chunk$set(echo = TRUE)
+# sales outliers
+boxplot.stats(advertising$sales)$out
+# sales outliers
+boxplot.stats(advertising$sales)$out
+qplot(sales, data = advertising, geom="histogram", binwidth=1,
+fill=I("azure4"), col=I("azure3")) +
+labs(title = "sales") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+qplot(sales, data = advertising, geom="histogram", binwidth=1) +
+labs(title = "sales") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+qplot(sales, data = advertising, geom="histogram", binwidth=1) +
+labs(title = "sales") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+ggplot(sales, data = advertising) +
+geom_bar( )
+ggplot(advertising, aes(y=sales)) +
+geom_bar( )
+ggplot(advertising, aes(y=sales)) +
+geom_histogram( )
+ggplot(advertising, aes(x=sales)) +
+geom_histogram( )
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+qplot(sales, data = advertising, geom="histogram", binwidth=1,
+fill=I("azure4"), col=I("azure3")) +
+labs(title = "sales") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+qplot(sales, data = advertising, geom="histogram", binwidth=1,
+fill=I("azure4"), col=I("azure3")) +
+labs(title = "sales") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+model1 <- lm(sales ~ TV, data = advertising)
+#Residuals vs Fitted values
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=1)
+#Normal Q-Q
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=2)
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=4)
+advertising$outlier = ifelse(advertising$sales>40,"Y","N") # create condition Yes/No if outlier
+ggplot(data=advertising, aes(x=TV, y=sales, col=as.factor(outlier)))+
+geom_point()+
+ggtitle("TV ads and sales")+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5))
+ggplot(data=advertising, aes(x=TV, y=sales, col=as.factor(outlier)))+
+geom_point()+
+ggtitle("TV ads and sales")+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5))
+install.packages("knitr")
+knitr::opts_chunk$set(echo = TRUE)
+plot(cars)
+summary(cars)
+plot(pressure)
+library(knitr)
+# Packages
+library(tidyverse)  # data manipulation and visualization
+library(modelr)     # provides easy pipeline modeling functions
+library(broom)      # helps to tidy up model outputs
+library(DAAG)
+getwd()
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+advertising
+View(advertising)
+View(advertising)
+colSums(is.na(advertising))
+summary(advertising)
+par(mfrow=c(1,2 ))  # it divides graph area in two parts
+boxplot(advertising$sales, col = "yellow",
+main= "SALES boxplot",
+ylab= "g per decaliter")
+boxplot(advertising$TV, col = "orange",
+main= "TV boxplot",
+ylab= "percent values")
+# sales outliers
+boxplot.stats(advertising$sales)$out
+qplot(sales, data = advertising, geom="histogram", binwidth=1,
+fill=I("azure4"), col=I("azure3")) +
+labs(title = "sales") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+qplot(sales, data = advertising, geom="histogram", binwidth=1,
+fill=I("azure4"), col=I("azure3")) +
+labs(title = "sales") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="sales (units)") +
+labs(y = "Frequency") +
+scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+="blue", labels="Median")
+hist(advertising$TV)
+qplot(TV, data = advertising, geom="histogram", binwidth=5,
+fill=I("azure4"), col=I("azure3")) +
+labs(title = "TV") +
+theme(plot.title = element_text(hjust = 0.5)) +
+labs(x ="AD budget in TV (in ten thousand dollars)") +
+labs(y = "Frequency") +
+scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+scale_x_continuous(limits = c(0, 300)) +
+geom_vline(xintercept = mean(advertising$TV), show_guide=TRUE, color
+="red", labels="Average") +
+geom_vline(xintercept = median(advertising$TV), show_guide=TRUE, color
+="blue", labels="Median")
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("TV ad budget and sales relationship")
+plot(advertising$TV, advertising$sales)
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 50)) +
+ggtitle("TV ad budget and sales relationship")
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 5)) +
+ggtitle("TV ad budget and sales relationship")
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 1)) +
+ggtitle("TV ad budget and sales relationship")
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("TV ad budget and sales relationship")
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0)) +
+ggtitle("TV ad budget and sales relationship")
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("TV ad budget and sales relationship")+
+geom_smooth(method="lm")
+model1 <- lm(sales ~ TV, data = advertising)
+summary(model1)
+plot(advertising$TV, advertising$sales)
+ggplot(advertising, aes(x=TV, y=sales))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("TV ad budget and sales relationship")+
+geom_smooth(method="lm")
+model1 <- lm(sales ~ TV, data = advertising)
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=1)
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=2)
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=4)
+advertising$outlier = ifelse(advertising$sales>40,"Y","N") # create condition Yes/No if outlier
+ggplot(data=advertising, aes(x=TV, y=sales, col=as.factor(outlier)))+
+geom_point()+
+ggtitle("TV ads and sales")+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5))
+ad_new<-subset(advertising, sales<40)
+model2 <- lm(sales~TV,data=ad_new )
+summary(model2)
+summary(model1)
+AIC(model2)
+AIC(model1)
+BIC(model2)
+BIC(model1)
+set.seed(100) # 设置种子点，以便重复再现同样的结果
+trainingRowIndex <- sample(1:nrow(ad_new), 0.7*nrow(ad_new))
+# 将数据七三分，training vs. testing
+train <- ad_new[trainingRowIndex, ] # model training data
+test <- ad_new[-trainingRowIndex, ] # test data
+modTrain <- lm(sales~TV, data=train)  # build the model
+predict <- predict(modTrain, test)  # predicted values
+summary(modTrain)
+act_pred <- data.frame(cbind(actuals=test$sales, predicteds=predict)) # actuals_predicteds
+cor(act_pred) # correlation_accuracy
+head(act_pred, n=10)
+kfold <- CVlm(data = ad_new, form.lm = formula(sales ~ TV), m=5,
+dots = FALSE, seed=123, legend.pos="topleft",
+main="Cross Validation; k=5",
+plotit=TRUE, printit=FALSE)
+names(advertising)[1]<-"new_name"
+View(advertising)
+install.packages("tutorial")
+install.packages("knitr")
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+# Initialize the speed variable
+speed <- 64
+# Extend/adapt the while loop
+while (speed > 30) {
+print(paste("Your speed is", speed))
+if (speed > 48) {
+print("Slow down big time!")
+speed <- speed - 11
+} else {
+print("Slow down!")
+speed <- speed - 6
+}
+}
+install.packages("nasaweather")
+install("ggvis")
+install.packages("ggvis")
+str(mtcars)
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+knitr::opts_chunk$set(echo = TRUE)
+library(openintro)
+# Scatterplot of weight vs. weeks
+ggplot(ncbirths, aes(x=weeks,y=weight))+
+geom_point()
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("advertising.csv")
+#advertising
+colSums(is.na(advertising))
+setwd("~/R Teaching/demo code/regression3/")
+advertising <- read.csv("~/R Teaching/demo code/regression3/advertising.csv")
+#advertising
+advertising <- read.csv("~/R Teaching/demo code/regression3/advertising.csv")
+#advertising
+colSums(is.na(advertising))
+advertising <- read.csv("~/R Teaching/demo code/regression3/advertising.csv")
+#advertising
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+advertising <- read.csv("https://www.dropbox.com/s/m6jh5kspianm215/advertising.csv?dl=0")
+advertising <- read.csv('https://www.dropbox.com/s/m6jh5kspianm215/advertising.csv?dl=0')
+library(data.table)
+mydat <- fread('http://www.stats.ox.ac.uk/pub/datasets/csb/ch11b.dat')
+head(mydat)
+library(data.table)
+mydat <- fread('http://www.stats.ox.ac.uk/pub/datasets/csb/ch11b.dat')
+head(mydat)
+library(data.table)
+mydat <- fread('http://www.stats.ox.ac.uk/pub/datasets/csb/ch11b.dat')
+head(mydat)
+ggplot(mydat, aes(x=V3, y=V4))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("TV ad budget and sales relationship")
+library(data.table)
+library(ggplot2)
+mydat <- fread('http://www.stats.ox.ac.uk/pub/datasets/csb/ch11b.dat')
+head(mydat)
+ggplot(mydat, aes(x=V3, y=V4))+
+geom_point(colour = "blue", size = 1.5)+
+scale_y_continuous(limits=c(0,50))+
+scale_x_continuous(limits=c(0,300))+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("TV ad budget and sales relationship")
+advertising <- read.csv('https://www.dropbox.com/s/m6jh5kspianm215/advertising.csv?dl=1')
+library(ggplot2)
+#advertising
+install.packages("twitteR")
+library(twitteR)
+consumer_key <- "Your_Consumer_Key"
+consumer_secret <- "Your_Consumer_Secret"
+access_token <- NULL
+access_secret <- NULL
+setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+2
+tweets <- userTimeline("realDonaldTrump", n = 3200)
+(n.tweet <- length(tweets))
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+library(twitteR)
+consumer_key <- "Your_Consumer_Key"
+consumer_secret <- "Your_Consumer_Secret"
+access_token <- NULL
+access_secret <- NULL
+setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+install.packages("blogdown")
+blogdown::install_hugo()
+2+3
+3/6
+my_var<-42
+my_var
+my_var^2
+my_var<-43
+my_var<-43
+my_var
+?c
+c(1,7:9)
+c(1,1:9)
+c(1:5, 10.5, "next")
+?c
+# install.packages("dplyr")
+install.packages("dplyr")
+library(dplyr)
+getwd()
+setwd("~/R_Teaching/Intro_R_Slides/html_slides/basic1")
+ls()
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+out <- lm(mpg~wt,data=mtcars)
+summary(out)
+install.packages("learnr")
+?tutorial
+??tutorial

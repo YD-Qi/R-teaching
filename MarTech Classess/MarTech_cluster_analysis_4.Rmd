@@ -1,0 +1,752 @@
+---
+title: "MarTech_cluster_analysis"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+
+# 聚类分析 Cluster Analysis:
+
+Clustering is an unsupervised learning algorithm that tries to cluster data based on their similarity. Thus, there is no outcome to be predicted, and the algorithm just tries to find patterns in the data.
+
+为什么要做聚类分析？
+
+根据相似度把样本分成不同的组，组内成员具有相似性，组间成员具有差异性。
+
+应用的例子：
+1. Using consumer behavior data to identify distinct segments within a market.
+2. Identifying distinct groups of stocks that follow similar trading patterns.
+
+Market segmentation（市场划分） and pattern grouping（按规律分组） are both good examples where clustering is appropriate.
+
+Market segmentation is the activity of dividing a broad consumer or business market, normally consisting of existing and potential customers, into sub-groups of consumers based on some type of shared characteristics.
+
+
+相似度，用距离来度量。
+
+欧几里得距离 Euclidean distance formula：
+
+$$d(x, y) = \sqrt{(x_1-y_1)^2+(x_2-y_2)^2}$$
+
+例如有两个运动员，我们要计算他们之间的空间距离，使用函数`dist()`：
+```{r}
+players<-matrix(rbind(c(0,0), c(3,4)), nrow = 2,
+                dimnames = list(c("red", "blue"),
+                               c("x", "y")))
+players
+
+dist(players)
+```
+
+推而广之，如果我们要计算两个观测样本彼此之间的特征距离（不仅是空间上的x，y轴，还包括其它特征，速度，年龄，进球次数等），欧几里得距离的一般公式：
+
+$$d(x, y) = \sqrt{(x_1-y_1)^2+(x_2-y_2)^2+...+(x_n-y_n)^2}$$
+
+度量单位与变量的标准化：
+
+身高与体重，厘米与米或者，怎么样他们之间的距离才有意义？
+
+$$X_{scaled}=\frac{X-mean(X)}{sd(X)}$$
+
+这样所有变量的均值是0，标准差是1.
+
+
+# Hierachical Clustering
+
+重要概念：
+  linkage - 计算某一个样本与其它群组的距离。例如在一群球员在场上，已知其中两名球员距离最近，那剩下的球员里，谁离他们俩最近？找出他！以此类推，把更多的人一层一层圈进来，就像一个石头扔进水里泛出的涟漪，或者金字塔的自上而下。
+
+![](https://www.dropbox.com/s/usu2tvym5ijzzkz/hrk.png?dl=1)
+
+
+# Hierachical Clustering 原理
+
+1. 找到两个距离最近的样本，将他们归为一组
+
+2. 计算其它样本与该组的距离，最近的样本与该组划在一起（linkage）
+  * 如何确定第三个样本与该组（组里有两个及以上样本）的距离：有 max, min, average三种方法，可以是第三者与两个的平均距离，最短距离，最大距离。不同的方法出来的聚类分析会有差异。
+  
+3. 如此不断推进，直到所有样本形成一个大组（类）。
+
+4. 根据我们的专业经验，确定要分几个组。
+
+5. 每个样本依据上一步的模型，被分配到不同的组。
+
+# Hierachical Clustering 实操步骤
+
+1. 预备数据，使用`dist()`函数得到distance_matrix。
+
+2. 将得到的函数得到distance_matrix传入hclust(distance_matrix, method = "complete")，并选定linkage的方式(complete, single, average)。
+
+  * 如果事先知道要分几个组，例如k=2，将从上述步骤得到的模型传入cutree(hc_players, k = 2)得到每个样本的分组。
+  
+  * 如果事先不知道要分几个组，我们就把上述结果plot()出来，然后选取一个高度，例如, h=40, 将从上述步骤得到的模型传入cutree(hc_players, h = 40)得到每个样本的分组
+
+4. 将分组结果与原数据合并。
+
+5. 分析聚类结果
+
+# Hierachical Clustering 实操
+
+install.packages("mclust")
+
+使用`hclust()`来计算linkage 与 使用`cutree`提取预测的分类结果：
+在后台，我们已经载入`lineup`的数据，是两队各6名球员在球场上的首发位置，我们来根据他们彼此间的距离来给他们分队，看看我们的分队（分类）结果与实际的分队有什么差距。
+
+我们已知是两个队在场上，所以K=2。
+
+`hclust()`的具体使用方法：
+ hclust(distance_matrix, method = "complete")。还可以是single, average。
+
+由上面的函数可知，我们还需要distance_matrix。我们之前讲到距离，每一个人与其它所有人的距离，由这些距离组成的矩阵就是distance_matrix。
+
+下面我们来实际操作：
+
+1. 计算场上运动员之间的distance matrix，命名为dist_players
+
+2. 使用`hclust`中的`complete` method 来做hierarchical clustering 并把结果命名为 hc_players。
+
+3. 将上面的结果按照k=2,也就是有两个组的情况，使用`cutree()`, 将得到的结果命名为 `clusters_k2`, 然后将其合并到原来的数据`lineup`中，形成新的数据框 lineup_k2_complete
+
+```{r ex="ex1", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+```
+
+```{r ex="ex1", type="sample-code"}
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- ___
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- ___
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- ___
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = ___)
+```
+
+```{r ex="ex1", type="solution"}
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- cutree(hc_players, k = 2)
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = clusters_k2)
+```
+
+# 检查我们的分类结果
+
+1. 数一下每一个cluster各有几名球员
+
+2. 将球员的位置绘制在图上，并用颜色区分两个cluster
+
+```{r ex="ex2", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- cutree(hc_players, k = 2)
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = clusters_k2)
+```
+
+```{r ex="ex2", type="sample-code"}
+library(ggplot2)
+library(dplyr)
+
+# Count the cluster assignments
+count(lineup_k2_complete, ___)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_k2_complete, aes(x = ___, y = ___, color = factor(___))) +
+  geom_point()
+```
+
+```{r ex="ex2", type="solution"}
+library(ggplot2)
+library(dplyr)
+# Count the cluster assignments
+count(lineup_k2_complete$cluster)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_k2_complete, aes(x = x, y = y, color = factor(cluster))) +
+  geom_point()
+```
+
+
+注意，不同的linkage方法可能会产生不同的结果，试一试更改下面的method:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+plot(hc_players)
+
+```
+
+# cutting the tree!
+
+如果事先不知道几个组合适，怎么办？
+
+根据dendrogram的高度来砍一刀，确定我们得到几个组？
+
+先安装这个
+install.packages("dendextend") 
+
+这里我们来借用dendrogram，确定一个最高的高度(h)，砍一刀，在这一刀下面，我们得以把观测样本分成不同的组。
+
+我们会使用`dendextend`包里的`color_branches()`函数来将分组涂色。
+
+* 注意：这个练习需要在本地电脑上完成！
+
+```{r ex="ex3", type="sample-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(dplyr)
+library(dendextend)
+
+dist_players <- dist(lineup, method = 'euclidean')
+hc_players <- hclust(dist_players, method = "complete")
+
+# Create a dendrogram object from the hclust variable
+dend_players <- as.dendrogram(___)
+
+# Plot the dendrogram
+
+
+# Color branches by cluster formed from the cut at a height of 20 & plot
+dend_20 <- color_branches(___, h = ___)
+
+# Plot the dendrogram with clusters colored below height 20
+
+
+# Color branches by cluster formed from the cut at a height of 40 & plot
+dend_40 <- ___
+
+# Plot the dendrogram with clusters colored below height 40
+
+```
+
+```{r ex="ex3", type="solution"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(dplyr)
+library(dendextend)
+
+dist_players <- dist(lineup, method = 'euclidean')
+hc_players <- hclust(dist_players, method = "complete")
+
+# Create a dendrogram object from the hclust variable
+dend_players <- as.dendrogram(hc_players)
+
+# Plot the dendrogram
+plot(dend_players)
+
+# Color branches by cluster formed from the cut at a height of 20 & plot
+dend_20 <- color_branches(dend_players, h = 20)
+
+# Plot the dendrogram with clusters colored below height 20
+plot(dend_20)
+
+# Color branches by cluster formed from the cut at a height of 40 & plot
+dend_40 <- color_branches(dend_players, h = 40)
+
+# Plot the dendrogram with clusters colored below height 40
+plot(dend_40)
+```
+
+
+# 用k means 做聚类分析的原理：
+
+1. 确定 k 个中心点。
+
+2. 计算每个样本与中心点的距离。
+
+3. 样本与哪个中心点距离近就被分配到哪个组。
+
+4. 如此这般，我们把所有的样本分成了k组。
+
+5. 然后我们找到每一个组的中心点。
+
+6. 然后，我们再次计算每个样本与新的中心点的距离。
+
+7. 根据每个样本点与新的中心点的距离，再次把样本分组。
+
+8. 如此循环往复，直到再没有点改变它的分组。
+
+
+# 用k means 做聚类分析的步骤：
+
+1. 确定分组数量
+
+  * 如果事先知道要分几个组，例如k=2, 我们将数据传入 kmeans(lineup, centers = 2)，。
+  
+  * 如果事先不知道要分几个组，我们可以从1到n（样本总量）都试一下，当然太大太接近n也没意义。一般地，我们可以使用 肘子法则（elbow rule: k 从小到大，依次取值，计算组内的方差的平均值，组分得越多，这个方差就越小，我们取那个使得组内方差急剧坠落的k值。然后将数据和得到的k值传入 kmeans(lineup, centers = 2)。
+
+2. 从上述模型提取聚类结果。
+
+3. 将该结果与原数据合并。
+
+4. 分析每个组的特征。
+
+# k means 实操练习1：
+
+跟之前一样，我们用`lineup` 这个数据，里面是开场前两个球队球员的场中位置。
+因为我们知道这是两个队的比赛，所以我们的K=2，没毛病。
+
+我们的目标是，把球员各归各队各找各妈。
+
+我们在`kmeans()` 这个函数中，将参数k的取值规定为2.
+
+```{r ex="ex5", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+```
+
+```{r ex="ex5", type="sample-code"}
+library(dplyr)
+library(ggplot2)
+
+# Build a kmeans model
+model_km2 <- kmeans(___, centers = ___)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km2 <- ___
+
+# Create a new dataframe appending the cluster assignment
+lineup_km2 <- mutate(___, cluster = ___)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(___, aes(x = ___, y = ___, color = factor(___))) +
+  geom_point()
+```
+
+```{r ex="ex5", type="solution"}
+library(dplyr)
+library(ggplot2)
+
+# Build a kmeans model
+model_km2 <- kmeans(lineup, centers = 2)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km2 <- model_km2$cluster
+
+# Create a new dataframe appending the cluster assignment
+lineup_km2 <- mutate(lineup, cluster = clust_km2)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_km2, aes(x = x, y = y, color = factor(cluster))) +
+  geom_point()
+```
+
+
+
+# k means 实操练习2：
+
+# Data preperation: 
+
+数据下载：https://archive.ics.uci.edu/ml/onlineRetailsets/Online+Retail
+
+  1. 整体观察，有多少消费者，有多少缺失值
+  
+  2. 我们在消费者层面做研究，所以剔除那些缺失CustomerID的样本
+  
+  3. 将日期这一变量的格式规范化
+  
+  4. 选取一整年的数据（强迫症）：
+  
+  5. 消费者行为特点具有地域性，我们选取一个国家作为研究对象吧：
+  
+  6. 看来数据主要来自英国，我选一个数量小一点的，德国吧。
+  
+  7. 这些收据里面，有的是购物的，有的是退货的，有必要做一下区分。`C`表示`cancel`退货。
+  
+```{r ex="ex6", type="sample-code"}
+onlineRetail <- read.csv("https://www.dropbox.com/s/zemwk29vgvgb87t/Online%20Retail.csv?dl=1")
+
+str(onlineRetail)
+
+```
+
+```{r ex="ex6", type= "solution"}
+library(dplyr)
+
+onlineRetail <- read.csv("https://www.dropbox.com/s/zemwk29vgvgb87t/Online%20Retail.csv?dl=1")
+
+
+onlineRetail %>%
+  select(CustomerID) %>%
+  is.na() %>%
+  sum()
+
+onlineRetail_new <- onlineRetail %>%
+  filter(!is.na(CustomerID))
+
+onlineRetail_new<-onlineRetail_new %>%
+  mutate(InvoiceDate=as.Date(InvoiceDate, format = "%m/%d/%y"))
+
+range(onlineRetail_new$InvoiceDate)
+onlineRetail_new <- subset(onlineRetail_new, InvoiceDate >= "2010-12-09")
+range(onlineRetail_new$InvoiceDate)
+
+table(onlineRetail_new$Country)
+
+onlineRetail_new <- subset(onlineRetail_new, Country == "Germany")
+
+length(unique(onlineRetail_new$InvoiceNo))
+length(unique(onlineRetail_new$CustomerID))
+
+# Identify returns
+onlineRetail_new$item.return <- grepl("C", onlineRetail_new$InvoiceNo, fixed=TRUE) 
+onlineRetail_new$purchase.invoice <- ifelse(onlineRetail_new$item.return=="TRUE", 0, 1)
+```
+
+
+做Customer segmentation，我们最关注的是each customer’s recency of last purchase, frequency of purchase, and monetary value. These three variables, collectively known as RFM, are often used in customer segmentation for marketing purposes。具体的参见维基百科：https://en.wikipedia.org/wiki/RFM_(customer_value)
+
+# Create customer-level data
+
+我们现在的数据是收据水平的，消费者被nested在收据之间，就是一个消费者可能多次消费，有多张收据，因而出现在数行数据里面。我们要做的是消费者层面的分析，因为要重组数据到消费者层面。
+
+具体地，我们要整个数据一个消费者是一行数据，没有重复的。
+
+ 1. recency，每个消费者上一次消费距离现在有多久了？
+
+ 2. frequency，消费的次数是多少？
+
+ 3. Monetary value，总共消费了多少？
+
+ 4. 有些人的Monetary value是负的，这可能是因为今年退货了去年买的东西，我们把负的统一设置成0。
+
+
+1. recency
+
+ * 除掉退货的，我们只考虑最新的购物。
+
+ * 我们把分析时间定在最近的一张收据的后一天，所以Recency是距离"2011-12-10"的天数。
+
+ * 我们为每位消费者计算出他最近一次消费距离“现在recency”的天数。
+
+
+```{r ex="ex7", type="pre-exercise-code"}
+library(dplyr)
+
+onlineRetail <- read.csv("https://www.dropbox.com/s/zemwk29vgvgb87t/Online%20Retail.csv?dl=1")
+
+onlineRetail_new <- onlineRetail %>%
+  filter(!is.na(CustomerID)) %>%
+  mutate(InvoiceDate=as.Date(InvoiceDate, format = "%m/%d/%y"))
+
+onlineRetail_new <- subset(onlineRetail_new, InvoiceDate >= "2010-12-09")
+
+onlineRetail_new <- subset(onlineRetail_new, Country == "Germany")
+
+# Identify returns
+onlineRetail_new$item.return <- grepl("C", onlineRetail_new$InvoiceNo, fixed=TRUE) 
+onlineRetail_new$purchase.invoice <- ifelse(onlineRetail_new$item.return=="TRUE", 0, 1)
+```
+
+```{r ex="ex7", type="sample-code"}
+library(dplyr)
+
+```
+
+```{r ex="ex7", type="solution"}
+library(dplyr)
+recency <- onlineRetail_new %>%
+  filter(purchase.invoice == 1) %>%
+  mutate(recency = as.numeric(difftime("2011-12-10", as.Date(InvoiceDate)), units="days")
+         )
+recency <- aggregate(recency ~ CustomerID, data=recency, FUN=min, na.rm=TRUE)
+```
+
+
+2. Frequency 
+
+```{r ex="ex8", type="pre-exercise-code"}
+library(dplyr)
+
+onlineRetail <- read.csv("https://www.dropbox.com/s/zemwk29vgvgb87t/Online%20Retail.csv?dl=1")
+
+onlineRetail_new <- onlineRetail %>%
+  filter(!is.na(CustomerID)) %>%
+  mutate(InvoiceDate=as.Date(InvoiceDate, format = "%m/%d/%y"))
+
+onlineRetail_new <- subset(onlineRetail_new, InvoiceDate >= "2010-12-09")
+
+onlineRetail_new <- subset(onlineRetail_new, Country == "Germany")
+
+# Identify returns
+onlineRetail_new$item.return <- grepl("C", onlineRetail_new$InvoiceNo, fixed=TRUE) 
+onlineRetail_new$purchase.invoice <- ifelse(onlineRetail_new$item.return=="TRUE", 0, 1)
+```
+
+```{r ex="ex8", type="sample-code"}
+library(dplyr)
+
+```
+
+```{r ex="ex8", type="solution"}
+library(dplyr)
+
+frequency<- onlineRetail_new %>%
+  filter(purchase.invoice == 1) %>%
+  select("CustomerID","InvoiceNo", "purchase.invoice") %>%
+  arrange(CustomerID)
+
+frequency <- aggregate(purchase.invoice ~ CustomerID, data=frequency, FUN=sum, na.rm=TRUE)
+
+colnames(frequency)[colnames(frequency)=="purchase.invoice"] <- "frequency"
+```
+
+3. Monetary Value of Customers 
+
+```{r ex="ex9", type="pre-exercise-code"}
+library(dplyr)
+
+onlineRetail <- read.csv("https://www.dropbox.com/s/zemwk29vgvgb87t/Online%20Retail.csv?dl=1")
+
+onlineRetail_new <- onlineRetail %>%
+  filter(!is.na(CustomerID)) %>%
+  mutate(InvoiceDate=as.Date(InvoiceDate, format = "%m/%d/%y"))
+
+onlineRetail_new <- subset(onlineRetail_new, InvoiceDate >= "2010-12-09")
+
+onlineRetail_new <- subset(onlineRetail_new, Country == "Germany")
+
+# Identify returns
+onlineRetail_new$item.return <- grepl("C", onlineRetail_new$InvoiceNo, fixed=TRUE) 
+onlineRetail_new$purchase.invoice <- ifelse(onlineRetail_new$item.return=="TRUE", 0, 1)
+```
+
+```{r ex="ex9", type="sample-code"}
+library(dplyr)
+
+```
+
+```{r ex="ex9", type="solution"}
+library(dplyr)
+
+# Total spent on each item on an invoice
+library(dplyr)
+
+annual.sales <- onlineRetail_new %>%
+  filter(purchase.invoice == 1) %>%
+  mutate(Amount = Quantity*UnitPrice)
+
+# Aggregated total sales to customer
+annual.sales <- aggregate(Amount ~ CustomerID, data=annual.sales, FUN=sum, na.rm=TRUE)
+names(annual.sales)[names(annual.sales)=="Amount"] <- "monetary"
+
+# merge all three variables
+
+library(dplyr)
+
+customers <- left_join(recency, frequency, by="CustomerID") %>%
+  left_join(.,annual.sales, by="CustomerID") 
+
+hist(customers$monetary)
+customers$monetary <- ifelse(customers$monetary < 0, 0, customers$monetary)
+hist(customers$monetary)
+
+```
+
+* 我们来做集聚分析，可以把这个数据里的消费者分成几个组？
+
+* 用kmeans的方法，从1到10都试一下，根据肘子法则，方差下降最大的k为最合适的。
+
+```{r ex="ex10", type="pre-exercise-code"}
+customers<-read.csv("https://www.dropbox.com/s/3bs78srrnjuwcmu/customers.csv?dl=1")
+```
+
+```{r ex="ex10", type="sample-code"}
+library(purrr)
+library(ggplot2)
+library(dplyr)
+
+# Use map_dbl to run many models with varying value of k (centers)
+tot_withinss <- map_dbl(1:10,  function(k){
+  model <- kmeans(x = customers[,2:4], centers = k)
+  model$
+})
+
+# Generate a data frame containing both k and tot_withinss
+elbow_df <- data.frame(
+  k = 1:10,
+  tot_withinss = tot_withinss
+)
+
+# Plot the elbow plot
+ggplot(elbow_df, aes(x = k, y = tot_withinss)) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:10)
+
+# Build a kmeans model
+model_km <- kmeans(customers[,2:4], )
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km <- model_km$
+
+# Create a new dataframe appending the cluster assignment
+customers_cluster <- mutate(customers, cluster = )
+
+# Plot the positions of the players and color them using their cluster
+ggplot(customers_cluster, aes(x = log(recency), y = log(monetary), color = factor(cluster)))
+
+```
+
+```{r ex="ex10", type="solution"}
+library(purrr)
+library(ggplot2)
+library(dplyr)
+  
+# Use map_dbl to run many models with varying value of k (centers)
+tot_withinss <- map_dbl(1:10,  function(k){
+  model <- kmeans(x = customers[,2:4], centers = k)
+  model$tot.withinss
+})
+
+# Generate a data frame containing both k and tot_withinss
+elbow_df <- data.frame(
+  k = 1:10,
+  tot_withinss = tot_withinss
+)
+
+# Plot the elbow plot
+ggplot(elbow_df, aes(x = k, y = tot_withinss)) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:10)
+```
+
+
+```{r ex="ex11", type="pre-exercise-code"}
+customers<-read.csv("https://www.dropbox.com/s/3bs78srrnjuwcmu/customers.csv?dl=1")
+```
+
+```{r ex="ex11", type="sample-code"}
+library(purrr)
+library(ggplot2)
+library(dplyr)
+```
+
+* 运用kmeans() 来聚类，将结果合并到原数据，绘制以log(recency)为横坐标，以 log(monetary)为纵坐标的散点图，将点用不同颜色标识出他们的分组：
+
+```{r ex="ex11", type="solution"}
+# Build a kmeans model
+model_km <- kmeans(customers[,2:4], centers = 2)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km <- model_km$cluster
+
+# Create a new dataframe appending the cluster assignment
+customers_cluster <- mutate(customers, cluster = clust_km)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(customers_cluster, aes(x = log(recency), y = log(monetary), color = factor(cluster))) +
+  geom_point()
+```
+
+```{r}
+customers_segment %>% 
+  group_by(cluster) %>% 
+  summarise_all(funs(mean(.)))
+```
+
+
+炫酷的3D图：
+```{r}
+customers<-read.csv("https://www.dropbox.com/s/3bs78srrnjuwcmu/customers.csv?dl=1")
+library(purrr)
+library(car)
+library(rgl)
+
+# Plot clusters in 3D
+
+colors <- c('red','orange','green3','deepskyblue','blue','darkorchid4','violet','pink1','tan3','black')
+
+# Build a kmeans model
+model_km <- kmeans(customers[,2:4], centers = 2)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km <- model_km$cluster
+
+# Create a new dataframe appending the cluster assignment
+customers_cluster <- mutate(customers, cluster = clust_km)
+
+scatter3d(x = log(customers_cluster$frequency), 
+          y = log(customers_cluster$monetary),
+          z = log(customers_cluster$recency), 
+          groups = factor(customers_cluster$cluster),
+          xlab = "Frequency (Log-transformed)", 
+          ylab = "Monetary Value (log-transformed)",
+          zlab = "Recency (Log-transformed)",
+          surface.col = colors,
+          axis.scales = FALSE,
+          surface = TRUE, # produces the horizonal planes through the graph at each level of monetary value
+          fit = "smooth",
+          #     ellipsoid = TRUE, # to graph ellipses uses this command and set "surface = " to FALSE
+          grid = TRUE,
+          axis.col = c("black", "black", "black"))
+
+remove(colors)
+```
+
+# 80/20 Rule 
+
+二八法则，百分之二十的消费者贡献了百分之八十的消费。
+这百分之二十的消费者是最有价值的，商家想要留住他们，吸引他们多购物。
+
+```{r}
+customers <- customers %>%
+  arrange(-monetary)
+```
+
+```{r}
+# Apply Pareto Principle (80/20 Rule)
+pareto.cutoff <- 0.8 * sum(customers$monetary)
+customers$pareto <- ifelse(cumsum(customers$monetary) <= pareto.cutoff, "High", "Low")
+customers$pareto <- factor(customers$pareto, levels=c("High", "Low"), ordered=TRUE)
+levels(customers$pareto)
+```
+
+```{r}
+round(prop.table(table(customers$pareto)), 2)
+
+remove(pareto.cutoff)
+
+customers <- customers[order(customers$CustomerID),]
+```
+具体就我们的数据来说，上层35%的德国消费者贡献80%的消费额。
+
+
+
+

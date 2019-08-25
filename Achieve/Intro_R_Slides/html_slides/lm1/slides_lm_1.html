@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>相关与回归</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Chris Qi" />
+    <meta name="date" content="2018-01-01" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="zh-CN.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 相关与回归
+## correlation and regression
+### Chris Qi
+### 2018
+
+---
+
+
+
+
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 700px
+background-position: 50% 50%
+
+---
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 200px
+background-position: 95% 3%
+
+---
+
+background-image: url(https://www.dropbox.com/s/a5okpste5xhbglo/regression_joke.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+---
+### Outline
+
+* scatter plots
+
+* correlation
+
+* best fit line
+
+* regression to mean
+
+* least squared estimates
+
+---
+### 双变量关系及建模
+
+* 两个变量都是数值型（numeric）
+
+* 应变量（response, dependent variable）
+
+* 解释变量（explanatory）
+
+  * 你认为与应变量有关的东西
+  * 也可以叫做，independent variable, predictor
+
+
+
+---
+### 散点图-双变量关系的图形化表示
+
+![](slides_lm_1_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+
+---
+### 双变量关系的特征
+
+* 形式（线性，非线性）
+
+* 方向（正，负）
+
+* 强度
+
+* 异常值
+
+
+
+---
+### 相关性 correlation
+* 两个变量间的关系到底有多强？
+
+* 取值范围[-1,1]
+
+* 符号正负表示方向
+
+* 绝对值大小表示强度
+
+
+
+---
+background-image: url(https://www.dropbox.com/s/6hnp2fo1k8karkq/cor_near_perfect.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+### 接近完美相关（正）
+
+
+---
+background-image: url(https://www.dropbox.com/s/ol76qbjpdzsw2t2/cor_strong.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+### 强相关（正）
+
+---
+background-image: url(https://www.dropbox.com/s/e80y7dyeg6kvpoq/cor_somewhat.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+### 弱相关相关（正）
+
+---
+background-image: url(https://www.dropbox.com/s/d6e5ubkhd3ip4fd/cor_none.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+### 不相关
+
+
+
+---
+background-image: url(https://www.dropbox.com/s/o1r4j8893h7qdx6/cor_negative.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+### 负相关
+
+
+---
+background-image: url(https://www.dropbox.com/s/upcocxdm6no2cgp/cor_nonlinear.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+### 非线性
+
+
+---
+### 相关系数计算公式(标准化的协方差)
+
+
+`$$correlation = r(x, y)=\frac{Cov(x, y)}{\delta_x*\delta_y}$$`
+
+`$$Cov(x, y) = \frac{\sum ^n _{i=1} (x_i-\bar{x})* (y_i-\bar{y})}{n}$$`
+
+`$$\delta _x = \sqrt{\frac{\sum ^n _{i=1} (x_i-\bar{x})^2}{n}}$$`
+---
+### 相关性的理解
+
+* 相关性不等于因果关系 (癌症与吸烟)
+
+* 尤其注意因为时间联系在一起的数据，他们的相关性可能毫无意义
+
+---
+background-image: url(https://www.dropbox.com/s/xs9zlxcqtd8b34n/flase_flim.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+尼古拉斯凯奇的电影与在游泳池溺亡的人数有关系吗？
+
+
+
+---
+background-image: url(https://www.dropbox.com/s/pk9iicscc6jsb6r/false_music.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+摇滚乐与美国石油产量有关系吗？
+---
+background-image: url(https://www.dropbox.com/s/d3rjmo9tk56hd4m/false_hw.png?dl=1)
+background-size: 500px
+background-position: 50% 50%
+
+高速路死亡率与鲜柠檬进口量有关系吗？
+---
+### 线性回归模型--为什么这一条线最合适？
+
+`$$y_i= a + b*x_i+e$$`
+
+
+![](slides_lm_1_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+
+---
+### 最小二乘法（least squares method ）
+
+简单地说，最小二乘的思想就是要使得 
+
+** 观测点和估计点的距离的平方和达到最小 **. 
+
+这里的“二乘”指的是用平方来度量观测点与估计点的远近（在古汉语中“平方”称为“二乘”），“最小”指的是参数的估计值要保证各个观测点与估计点的距离的平方和达到最小。
+
+
+---
+background-image: url(https://www.dropbox.com/s/62kug7pbmkwsd5v/ols_pic.png?dl=1)
+background-size: 400px
+background-position: 50% 50%
+
+### 最小二乘法（least squares method ）
+
+---
+### 一般的模型表达式
+
+`$$应变量=f(解释变量)+噪音$$`
+
+### 线性回归模型表达式
+
+`$$应变量=截距+斜率*解释变量+噪音$$`
+
+
+
+---
+线性回归模型:
+
+`$$y_i= a + b*x_i+e_i$$`
+
+`$$e_i ~ N(0, \sigma)$$`
+
+预测值：
+
+`$$\hat{y_i} = \hat{a} + \hat{b}x_i$$`
+
+
+残差（error）:
+
+`$$e_i = y_i-\hat{y_i}$$`
+
+拟合的过程：有n个样本量，也就是n个数据对 `\((x_i,y_i)\)`, 找到 截距 `\(a\)` 和斜率  `\(b\)` ，使得残差平方和最小:
+
+`$$\sum_1^{n} e_i^2$$`
+
+---
+线性回归模型:
+
+`$$y_i= a + b*x_i+e_i$$`
+
+`$$e_i ~ N(0, \sigma)$$`
+
+预测值：
+
+`$$\hat{y_i} = \hat{a} + \hat{b}x_i$$`
+
+
+残差（error）:
+
+`$$e_i = y_i-\hat{y_i}$$`
+
+
+** 关键概念 ** : 
+
+`\(\hat{y_i}\)` 是给定 `\(x_i\)` 值时， `\(y\)` 的期望值
+
+
+`\(\hat{b}\)` 是真实但是未知的 `\(b\)` 的估计值
+
+
+残差 `\(e\)`：residual, error, noise
+
+
+---
+最小二乘法求线性回归系数
+
+`$$y_i= a + b*x_i+e_i$$`
+
+`$$\hat{y_i} = \hat{a} + \hat{b}x_i$$`
+
+`$$e_i = y_i-\hat{y_i}$$`
+
+`$$\sum_1^{n} e_i^2 = \sum (y_i-\hat{y_i})^2=\sum (y_i- \hat{a} -\hat{b}x_i)^2$$`
+
+---
+最小二乘法求线性回归系数:
+
+`$$f=\sum_1^{n} e_i^2 =\sum (y_i- \hat{a} -\hat{b}x_i)^2$$`
+
+一阶导数等于 0：
+
+`$$\frac{\partial f}{\partial\hat{a}} = -2 \sum (y_i- \hat{a} -\hat{b}x_i)=0$$`
+
+`$$\frac{\partial f}{\partial\hat{b}} = -2 \sum (y_i- \hat{a} -\hat{b}x_i)x_i=0$$`
+
+联立上面的二元一次方程组，求解 `\(\hat{a}\)` 与 `\(\hat{b}\)`
+
+`$$\hat{b}=\frac{\sum (x_i-\bar{x}) (y_i-\bar{y})}{\sum (x_i-\bar{x})^2}$$`
+
+`$$\hat{a}= \bar{y} - \hat{b}\bar{x}$$`
+
+---
+最小二乘法的特点:
+
+* 唯一性
+
+* 简单（相对于非线性）
+
+* 残差之和等于0
+
+* 回归线必过
+
+`\((\bar{x}, \bar{y})\)`
+
+
+![](slides_lm_1_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+### 轶事：回归的由来
+
+Regression to the mean is a concept attributed to Sir Francis Galton. The basic idea is that extreme random observations will tend to be less extreme upon a second trial. This is simply due to chance alone. Note that "regression to the mean" and "linear regression" are not the same thing.
+
+* 孩子的身高和父母的身高：高个子的父母一般生的孩子个子也高，但是孩子一般没有父母那么高，孩子的身高会趋向于平均数。
+
+* 这就是我们没有看到乔丹的儿子能够和乔丹一样成为飞人的原因
+
+---
+background-image: url(https://www.dropbox.com/s/kqijuf9qjliryst/regression_saying.png?dl=1)
+background-size: 700px
+background-position: 50% 50%
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

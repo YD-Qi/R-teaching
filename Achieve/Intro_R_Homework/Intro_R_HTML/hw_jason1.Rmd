@@ -1,0 +1,88 @@
+---
+title: "R 第四次课作业"
+author: "Jason Zhu"
+date: "09/30/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+Q1:
+
+用args（）和？（）了解strsplit（）函数
+
+
+```{r ex="circle", type="sample-code"}
+# you can do it!
+
+```
+
+```{r ex="circle", type="solution"}
+args(strsplit)
+?args(strsplit)
+```
+
+Q2:
+
+用args（）和？（）了解tolower（）函数
+```{r ex="airquality", type="sample-code"}
+# you can do it!
+```
+
+```{r ex="airquality", type="solution"}
+args(tolower)
+?args(tolower)
+```
+
+
+Q3:
+
+输入jason和chris两个男神导师和两位美女助教的最大特点，命名为personality
+你可以直接复制：personality <- c("JASON:RICH","CHRIS:INTELLIGENT","LILY:PASSINATE","ODELIA:HAPPY")
+用你刚了解的strsplit（）函数，把personality拆分成list的形式，并命名为personality2
+最后用apply（）函数把刚才的list里面的每一个字母都变成小写的
+
+
+```{r ex="teacher", type="sample-code"}
+# This one is not very easy, try your best:
+
+```
+
+```{r ex="teacher", type="solution"}
+personality <- c("JASON:RICH","CHRIS:INTELLIGENT","LILY:PASSINATE","ODELIA:HAPPY")
+personality2<-strsplit(personality,split=',')
+sapply(personality2,tolower)
+lapply(personality2,tolower)
+```
+
+
+Q4: 
+你在帮杂货店老王卖饮料，以下是本周7天每天卖的饮料的瓶数：
+
+coke<-c(5,7,12,3,8,10,6)
+
+beer<-c(9,15,6,7,3,18,25)
+
+自创一个叫做absolute_deviate的函数，算出本周每天两种饮料的销售量差的绝对值，你可以用abs（）得到绝对值。记得设计完公式后拿coke和beer进行检验哦！
+
+
+```{r ex="teacher1", type="sample-code"}
+# Just do it!
+coke<-c(5,7,12,3,8,10,6)
+beer<-
+```
+
+```{r ex="teacher1", type="solution"}
+
+coke<-c(5,7,12,3,8,10,6)
+beer<-c(9,15,6,7,3,18,25)
+
+absolute_deviation<-function(x,y){
+  abs(x-y)
+}
+
+absolute_deviation(coke,beer)
+
+```

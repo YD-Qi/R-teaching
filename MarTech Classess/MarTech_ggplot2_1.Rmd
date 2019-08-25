@@ -1,0 +1,640 @@
+---
+title: "R ggplot2 作图"
+author: "Chris Qi"
+date: "9/5/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+```{r}
+library(dplyr)
+superstore_order <- read.csv("https://www.dropbox.com/s/5hznlozuyuvfq2k/Superstore_orders.csv?dl=1")
+
+#superstore_return <- read.csv("https://www.dropbox.com/s/5kliig3zby8qctw/Superstore_returns.csv?dl=1")
+
+#superstore <- left_join(superstore_order, superstore_return, by = c("Order.ID"))
+superstore_order$Profit.Rate<-superstore_order$Profit/superstore_order$Sales
+summary(superstore_order$Profit.Rate)
+
+```
+
+
+```{r}
+library(ggplot2)
+
+ggplot(superstore_order, aes(x=Ship.Mode))+
+  geom_bar()+
+  facet_wrap(~Sub.Category)
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(superstore_order, aes(Discount, Sales, fill=factor(Discount)))+
+  geom_boxplot( )+
+  facet_wrap(~Sub.Category)
+
+```
+
+
+ggplot(mpg, aes(class,hwy,fill=class)) +
+  geom_boxplot()
+
+
+
+
+
+
+![](https://www.dropbox.com/s/nvwvot6qh3hssyn/martechc_logo.JPG?dl=1){width=100px}
+
+
+ggplot2, R语言最为强大的作图软件包，没有之一
+
+* 由Hadley Wickham于2005 年创建
+* 经过多次优化改进, 现在成为最流行的数据可视化工具
+
+
+# 层 (Layer)
+
+* data: 感兴趣的变量 (data frame)
+
+* Aesthetics: x-axis/ y-axis/ color/ fill/ size/ label/ alpha/ shape
+
+* Geometrics: point/ line/ histogram/ bar/ boxplot
+
+* Facets: columns/ rows
+
+* Statistics: binning/ smoothing/ descriptive/ inferential 
+
+* Coordinates: cartesian/ fixed/ polar/ limits
+
+* Themes: non-data ink
+
+
+ggplot2 功能包的两大函数：
+
+* qplot()
+
+  * 类似于base基本系统的plot, 参数包含了 aesthetics/ geom/ facets
+  
+  * 隐藏了绘图细节
+
+* ggplot()
+
+  * 是核心，可以实现qplot()无法实现的功能
+  
+  * 调用ggplot()本身并不能实现绘图，要在其基础上添加层（如geom_point()）
+才可以
+
+
+使用`airquality`的数据，运用`qplot()`绘图：
+
+
+qplot():最基本的散点图,它默认 `geom = "point"`
+
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality)
+```
+
+qplot(): 添加颜色，每个月一种颜色
+```{r}
+library(ggplot2)
+airquality$Month<-as.factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, color=Month)
+```
+
+qplot()：所有数据点统一为一种颜色
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, color=I("red"))
+```
+
+qplot()：改变数据点的形状，每个月份一种形状
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, shape=factor(Month))
+```
+
+qplot()：改变数据点的大小，每个月份一种大小
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, size=Month)
+```
+
+qplot()：统一大小
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality, size=I(3))
+```
+
+在当前的图上按颜色区分月份，并加入平滑曲线
+```{r}
+library(ggplot2)
+airquality$Month<-as.factor(airquality$Month)
+
+qplot(Wind, Temp, data=airquality, size=I(1), color=Month,
+      geom=c("point", "smooth"))
+```
+
+修改坐标轴，添加标题：
+```{r}
+library(ggplot2)
+
+airquality$Month<-as.factor(airquality$Month)
+
+qplot(Wind, Temp, data=airquality, size=I(1), color=Month,
+      geom=c("point", "smooth"),
+      xlab="wind (mph)", ylab="Temp",
+      main="wind vs. temp")
+```
+
+加入“面”这个参数
+```{r}
+library(ggplot2)
+airquality$Month<-as.factor(airquality$Month)
+
+qplot(Wind, Temp, data=airquality, size=I(1),
+      geom=c("point", "smooth"),
+      xlab="wind (mph)", ylab="Temp",
+      main="wind vs. temp",
+      facets = Month~.)
+
+```
+
+为风速这一变量绘制密度曲线
+```{r}
+library(ggplot2)
+qplot(Wind, data=airquality, geom="density")
+
+# by month:
+qplot(data=airquality, Wind, geom="density",
+      color=factor(Month))
+```
+
+
+# ggplot() 
+为什么要使用ggplot()
+
+* 用户能在更抽象层面上控制图形，使创造性绘图更容易
+
+* 采用图层的设计方式，有利于结构化思维
+
+* 图形美观
+
+
+ ggplot() 的基本概念
+
+* 数据(Data)和映射(Mapping) 
+* 标度(Scale)
+* 几何对象(Geometric)
+* 统计变换(Statistics)
+* 坐标系统(Coordinate) 
+* 图层(Layer)
+* 分面(Facet)
+
+
+* aes() 美学映射：
+
+aes是aesthetic mapping的缩写，也即“美学映射”。文档里对aes是这么描述的：
+Generate aesthetic mappings that describe how variables in the data are mapped to visual properties (aesthetics) of geoms.
+
+也就是aes是把数据映射到可见属性的函数，这些属性包括图像的横坐标，纵坐标，颜色，大小等。
+
+将数据中的变量映射到图形美学属性。美学映射控制了二者之间的关系。
+ 
+![](https://www.dropbox.com/s/hrs3vpx6i4rng1d/mapping.png?dl=1)
+
+
+* 标度(Scale)
+
+标度负责控制映射后图形属性的显示方式。具体形式 上来看是图例和坐标刻度。Scale和Mapping是紧密相 关的概念。
+
+![](https://www.dropbox.com/s/dvgyyahckhq4dm9/scaling.png?dl=1)
+
+
+* 几何对象(Geometric)
+
+几何对象代表我们在图中实际看到的图形元素，如点、
+线、多边形等。
+
+
+* 统计变换(statistics)
+
+对原始数据进行某种计算，例如对二元散点图加上一
+条回归线。
+
+
+* 坐标系统(Coordinate) 
+
+坐标系统控制坐标轴幵影响所有图形元素，坐标轴可
+以进行变换以满足不同的需要。
+
+
+* 图层(Layer)
+
+数据、映射、几何对象、统计变换等构成一个图层。
+图层可以允许用户一步步的构建图形，方便单独对图
+层进行修改。
+
+
+* 分面(Facet)
+
+  * 条件绘图，将数据按某种方式分组，然后分别绘图。 
+  * 分面就是控制分组绘图的方法和排列形式。
+
+常用图形
+
+* 散点图 
+* 直方图
+* 箱（线）图
+
+```{r}
+library(ggplot2)
+str(mpg)
+```
+
+底层画布：
+```{r}
+library(ggplot2)
+
+ggplot(data=mpg, mapping=aes(x=cty, y=hwy))
+
+# Equal expression:
+ggplot(mpg, aes(x=cty, y=hwy))
+
+```
+
+
+散点图
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(x=cty, y=hwy)) + 
+  geom_point()
+```
+
+
+1. 将年份映射到颜色属性
+2. 将底层画布存储成p，方便后面引用
+3. 添加平滑曲线
+
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(x=cty, y=hwy, colour=factor(year)))
+
+p + geom_point()+ 
+  stat_smooth()
+```
+
+
+通过改变图形透明度和错位来展示数据密度，重合的点
+
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(x=cty, y=hwy, colour=factor(year)))
+
+p + geom_point(alpha=0.4, position = "jitter")+ 
+  stat_smooth()
+
+```
+
+
+用坐标控制图形显示的范围，相当于局部放大
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(x=cty, y=hwy, colour=factor(year)))
+
+p + geom_point(alpha=0.4,position = "jitter")+ 
+  stat_smooth()+
+  coord_cartesian(xlim = c(15, 25),ylim=c(15,40))
+```
+
+
+用坐标控制图形显示的范围, 按年份分面板显示，逃离扁平
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(x=cty, y=hwy, colour=factor(year)))
+
+p + geom_point(alpha=0.4,position = "jitter")+ 
+  stat_smooth()+
+  coord_cartesian(xlim = c(15, 25),ylim=c(15,40))+
+  facet_wrap(~ year,ncol=1)
+```
+
+
+添加标题，横轴与纵轴，使作图更清晰易懂：
+```{r }
+library(ggplot2)
+p <- ggplot(mpg,aes(x=cty, y=hwy, colour=factor(year)))
+
+p + geom_point(alpha=0.4,position = "jitter")+ 
+  stat_smooth()+
+  coord_cartesian(xlim = c(15, 25),ylim=c(15,40))+
+  facet_wrap(~ year,ncol=1)+
+  ggtitle("Miles Per Gallon of Different Displacements")+
+  xlab("mpg in city")+
+  ylab("mpg at highway")
+```
+
+
+直方图（连续性变量）
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(hwy)) 
+
+p + geom_histogram()
+```
+
+改进：
+
+* 边框黑色
+* 内部填充红色
+
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(hwy)) 
+
+p + geom_histogram(color="black", fill="red")
+
+```
+
+
+调整直方的宽度为2
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(hwy)) 
+
+p + geom_histogram(color="black", fill="red", binwidth=2)
+```
+
+添加平均值的竖线
+
+* 蓝色
+* 虚线
+* 大小设定为1
+
+```{r}
+library(ggplot2)
+p <- ggplot(mpg,aes(hwy)) 
+
+p + geom_histogram(color="black", fill="red", binwidth=2)+
+  geom_vline(aes(xintercept=mean(hwy)),
+            color="blue", linetype="dashed", size=1)
+```
+
+
+* 显示年份
+* 修改图例的位置
+
+```{r}
+library(ggplot2)
+
+p <- ggplot(mpg,aes(hwy, color=factor(year))) 
+
+p + geom_histogram(binwidth=2)+
+  geom_vline(aes(xintercept=mean(hwy)),
+            color="blue", linetype="dashed", size=1)+
+    theme(legend.position="top")
+
+```
+
+
+条形图 (分类变量)
+```{r}
+library(ggplot2)
+
+ggplot(mpg, aes(x=class))+
+  geom_bar()
+```
+
+
+* 根据年份分别绘制条形图
+* position控制位置调整方式
+
+```{r}
+library(ggplot2)
+
+ggplot(mpg, aes(class,fill=factor(year)))+ 
+  geom_bar(position='identity',alpha=0.5)
+```
+
+* 并立方式
+
+```{r}
+library(ggplot2)
+
+ggplot(mpg, aes(class,fill=factor(year)))+ 
+  geom_bar(position='dodge')
+```
+
+* 叠加方式
+
+```{r}
+library(ggplot2)
+
+ggplot(mpg, aes(class,fill=factor(year)))+ 
+  geom_bar(position='stack')
+```
+
+* 相对比例
+
+```{r}
+library(ggplot2)
+
+ggplot(mpg, aes(class,fill=factor(year)))+ 
+  geom_bar(position='fill')
+```
+
+
+* 绘制柱状图，在`aes()`里使用`fill`的选项，显示不同车型`class`的数量
+* 一次性绘制两个（上下）面板，按年份
+
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(class,fill=class))+ 
+  geom_bar()+
+  facet_wrap(~year,ncol=1)
+```
+
+
+给每一个车型做数量的箱线图
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(class,hwy,fill=class)) +
+  geom_boxplot()
+```
+
+
+饼图
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(x = factor(1), fill = factor(class))) + 
+  geom_bar(width = 1) + 
+  coord_polar(theta = "y")
+```
+
+
+
+总结：
+
+* 有明确的起始（以ggplot函数开始）与终止（一句语句一幅图）
+
+* 图层之间的叠加是靠“+”号实现的，越后面其图层越高。
+
+* ggplot2的核心理念是将绘图与数据分离，数据相关的绘图与数据无关的绘图分离
+
+* ggplot2是按图层作图
+
+*	ggplot2保有命令式作图的调整函数，使其更具灵活性
+
+*	ggplot2将常见的统计变换融入到了绘图中。
+
+
+
+## ggplot()作图练习
+
+使用R自带数据集 `mtcars`绘制以下图形：
+
+散点图：x = wt, y = disp
+```{r ex="4", type="sample-code"}
+library(ggplot2)
+ggplot()
+```
+
+```{r ex="4", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = disp)) +
+  geom_point()
+
+```
+
+散点图：x = wt, y = mpg， 用颜色区分不同气缸数量的车
+```{r ex="5", type="sample-code"}
+library(ggplot2)
+ggplot(mtcars)
+```
+
+```{r ex="5", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg, col = factor(cyl))) +
+  geom_point()
+```
+
+添加平滑曲线
+```{r ex="6", type="sample-code"}
+library(ggplot2)
+ggplot(mtcars)
+```
+
+```{r ex="6", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()+
+  geom_smooth()
+```
+
+在上图基础上，修改`xlab`, `ylab`的名称并添加标题 `relationship between weights and mpg` petal`:
+```{r ex="7", type="sample-code"}
+library(ggplot2)
+ggplot()
+```
+
+```{r ex="7", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()+
+  geom_smooth()+
+  xlab("car weights")+
+  ylab("miles per gallon")+
+  ggtitle("relationship between weights and mpg")
+```
+
+
+直方图（频率）`mpg`:
+```{r ex="8", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="8", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram()
+  
+```
+
+直方图（频率）`mpg`，改变直方宽度为3:
+```{r ex="9", type="sample-code"}
+library(ggplot2)
+```
+
+```{r ex="9", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 3)
+```
+
+直方图（频率）`mpg`，添加黑色边框，填充绿色, 注意是在geom_histogram里面进行
+```{r ex="10", type="sample-code"}
+#
+library(ggplot2)
+
+```
+
+
+```{r ex="10", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 3, color="black", fill="green")
+```
+
+使用geom_bar()绘制柱状图，调用position的三种不同参数。
+绘制每一种气缸数量里手动挡与自动挡(变量 `am`)的数量的直方图：
+```{r ex="11", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="11", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = factor(cyl), fill = factor(am)))+
+  geom_bar()
+```
+
+修改上面的图，从叠加改为并列直方图
+```{r ex="13", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="13", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = factor(cyl), fill = factor(am)))+
+  geom_bar(position = "dodge") 
+```
+
+修改上面的图，从手动挡自动挡的数量，改为二者的比例
+```{r ex="12", type="sample-code"}
+library(ggplot2)
+#
+```
+
+```{r ex="12", type="solution"}
+library(ggplot2)
+ggplot(mtcars, aes(x = factor(cyl), fill = factor(am)))+
+  geom_bar(position="fill")
+```
+
+```{r}
+library(readxl)
+superstore<-read.csv("https://www.dropbox.com/s/5hznlozuyuvfq2k/Superstore_orders.csv?dl=1")
+```
+```{r}
+library(readxl)
+superstore<-read_excel("Superstore.xls",sheet=1)
+```
+

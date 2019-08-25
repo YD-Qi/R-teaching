@@ -1,0 +1,304 @@
+options(htmltools.dir.version = FALSE)
+y <- matrix(1:18, nrow=2)
+y
+y[2, 3]
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+my_data<-data.frame(1:100, 10, 10)
+my_data[3, c(5:8)]
+my_data<-data.frame(1:100, 10, 10)
+my_data[3, c(5:8)]
+y <- matrix(1:18, nrow=2)
+y
+y[2,c(3:5)]
+my_data
+my_data<-data.frame(1:100, nrow=10, ncol=10)
+my_data<-data.frame(1:100, nrow=10, ncol=10)
+my_data
+my_data<-matrix(1:100, nrow=10)
+my_data
+my_data[3, c(5:8)]
+help("plot")
+url <- 'https://www.dropbox.com/s/cy1ls5p6f4qqcya/rstudio.png?dl=0'
+knitr::include_graphics(url)
+url <- 'https://www.dropbox.com/s/cy1ls5p6f4qqcya/rstudio.png?dl=1'
+knitr::include_graphics(url)
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+weather<- read.csv("https://www.dropbox.com/s/y7rf8f98l2mxifk/weather.csv?dl=1")
+weather
+str(weather)
+names(weather)
+library(dplyr)
+weather
+str(weather)
+names(weather)
+library(dplyr)
+weather
+str(weather)
+names(weather)
+glimpse(weather)
+corrplot::colorlegend()
+corrplot(weather)
+str(weather)
+glimpse(weather)
+library(dplyr)
+library(tidyr)
+weather_cut<-weather%>%select(1,5,7,24)
+weather_forecast<-spread(weather_cut,RainTomorrow,Sunshine)
+head(weather_forecast)
+knitr::opts_chunk$set(echo = TRUE)
+ncbirths %>%
+summarize(N = n(), r = cor(weight, mage))
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+boxplot(cars$price, main="Price")  # box plot for 'speed'
+# Mammals scatterplot
+#注释
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point()
+library(MASS)
+library(openintro)
+library(HistData)
+library(ggplot2)
+library(dplyr)
+# Mammals scatterplot
+#注释
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point()
+# Mammals scatterplot
+#注释
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point()
+# Body dimensions scatterplot
+ggplot(data = bdims, aes(x = hgt, y = wgt, color = factor(sex))) +
+geom_point()
+# Mammals scatterplot
+#注释
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point()
+# Body dimensions scatterplot
+ggplot(data = bdims, aes(x = hgt, y = wgt, color = factor(sex))) +
+geom_point()
+# Baseball player scatterplot
+ggplot(data = mlbBat10, aes(x = OBP, y = SLG)) +
+geom_point()
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point()
+# Scatterplot with coord_trans()
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point() +
+coord_trans(x = "log10", y = "log10")
+# Scatterplot with scale_x_log10() and scale_y_log10()
+ggplot(data = mammals, aes(x = BodyWt, y = BrainWt)) +
+geom_point() +
+scale_x_log10() + scale_y_log10()
+# Scatterplot of SLG vs. OBP
+mlbBat10 %>%
+filter(AB >= 200) %>%
+ggplot(aes(x = OBP, y = SLG)) +
+geom_point()
+# Identify the outlying player
+mlbBat10 %>%
+filter(AB >= 200, OBP < 0.2)
+par(mfrow=c(1, 2))  # divide graph area in 2 columns
+boxplot(cars$price, main="Price")  # box plot for 'speed'
+boxplot(cars$mpgCity, main="mpg in city ")  # box plot for 'distance'
+ncbirths %>%
+summarize(N = n(), r = cor(weight, mage))
+# Compute correlation for all non-missing pairs
+ncbirths %>%
+summarize(N = n(), r = cor(weight, weeks, use = "pairwise.complete.obs"))
+# Correlation for all baseball players
+mlbBat10 %>%
+summarize(N = n(), r = cor(OBP, SLG))
+# Correlation for all players with at least 200 ABs
+mlbBat10 %>%
+filter(AB >= 200) %>%
+summarize(N = n(), r = cor(OBP, SLG))
+# Correlation of body dimensions
+bdims %>%
+group_by(sex) %>%
+summarize(N = n(), r = cor(hgt, wgt))
+# Correlation among mammals, with and without log
+mammals %>%
+summarize(N = n(),
+r = cor(BodyWt, BrainWt),
+r_log = cor(log(BodyWt), log(BrainWt)))
+# Scatterplot with regression line
+ggplot(data = bdims, aes(x = hgt, y = wgt)) +
+geom_point()
+# Scatterplot with regression line
+ggplot(data = bdims, aes(x = hgt, y = wgt)) +
+geom_point() +
+geom_smooth(method = "lm", se = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+# Load the corrplot library for the corrplot() function
+library(corrplot)
+# Extract the numerical variables from UScereal
+numericalVars <- UScereal[, 2:10]
+# Compute the correlation matrix for these variables
+corrMat <- cor(numericalVars)
+# Generate the correlation ellipse plot
+corrplot(corrMat, method = "ellipse")
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+plot(iris$Petal.Length, iris$Petal.Width)
+knitr::opts_chunk$set(echo = TRUE)
+plot(whiteside$Temp,whiteside$Gas,
+xlab="Outside temperature",
+ylab= "Heating gas consumption")
+# 探索性绘图，方便自己理解变量之间的大概关系
+# plot(数据)，得到数据里面每两个变量之间的散点图
+plot(whiteside)
+#options(htmltools.dir.version = FALSE)
+# Load the corrplot library for the corrplot() function
+library(corrplot)
+# Extract the numerical variables from UScereal
+numericalVars <- UScereal[, 2:10]
+# Compute the correlation matrix for these variables
+corrMat <- cor(numericalVars)
+# Generate the correlation ellipse plot
+corrplot(corrMat, method = "ellipse")
+.center[![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)]
+library(MASS)
+library(lattice)
+xyplot(MPG.city ~ Horsepower | Cylinders, data = Cars93)
+library(lattice) #需要先安装install.packages("lattice")
+xyplot(Temp~Ozone, data=airquality) #散点图,还没有考察交互关系
+airquality$Month<-factor(airquality$Month)
+library(MASS)
+library(lattice)
+xyplot(MPG.city ~ Horsepower | Cylinders, data = Cars93)
+airquality$Month<-factor(airquality$Month)
+xyplot(Temp~Ozone|Month, data=airquality)
+airquality$Month<-factor(airquality$Month)
+xyplot(Temp~Ozone|Month, data=airquality, ncol=1)
+airquality$Month<-factor(airquality$Month)
+xyplot(Temp~Ozone|Month, data=airquality, layout=c(5,1))
+library(lattice)
+xyplot(Temp~Ozone|Month, data=airquality,
+layout=c(5,1)) #画1行5列
+boxplot(Temp|Month, data=airquality) #画1行5列
+boxplot(Temp|Month, data=airquality) #画1行5列
+boxplot(Temp~Month, data=airquality) #画1行5列
+hist(airquality$Temp, xlab = "Temperature",freq = FALSE, main="The Distribution of Temperature")
+library(MASS)
+truehist(airquality$Temp, xlab = "Temperature",main="The Distribution of Temperature")
+library(MASS)
+par(mfrow=c(2,2))
+hist(airquality$Temp)
+truehist(airquality$Temp, col="red")
+lines(density(airquality$Temp))
+hist(airquality$Wind)
+truehist(airquality$Wind, col="blue")
+lines(density(airquality$Wind))
+names(iris)
+names(iris)
+knitr::opts_chunk$set(echo = TRUE)
+summary(cars)
+boxplot(mpg~cyl,data=mtcars, main="Car Milage Data",
+xlab="Number of Cylinders", ylab="Miles Per Gallon")
+truehist(airquality$Temp, xlab = "Temperature", main="The Distribution of Temperature",col="red")
+#options(htmltools.dir.version = FALSE)
+ggplot(mpg, aes(x = factor(1), fill = factor(class))) +
+geom_bar(width = 1) +
+coord_polar(theta = "y")
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+#所有数据点统一为一种颜色
+qplot(Wind, Temp, data=airquality, color=I("red"))
+#改变数据点的形状，每个月份一种形状
+qplot(Wind, Temp, data=airquality, shape=Month)
+qplot(Wind, Temp, data=airquality, size=Month)
+qplot(Wind, Temp, data=airquality, size=I(3))
+#加上月份，会发生什么？
+qplot(Wind, Temp, data=airquality,color=Month,
+geom = c("point", "smooth"))
+#在当前的图上加入其他重要信息
+qplot(Wind, Temp, data=airquality,
+geom = c("point", "smooth")) #几何客体：点，平滑
+#加上月份，会发生什么？
+qplot(Wind, Temp, data=airquality,color=Month,
+geom = c("point", "smooth"))
+qplot(Wind, Temp, data=airquality, size=I(1),
+xlab="wind (mph)", ylab="Temp",
+main="wind vs. temp")
+#在当前的图上加入其他重要信息
+qplot(Wind, Temp, data=airquality,
+xlab="wind (mph)", ylab="Temp",
+main="wind vs. temp",
+geom = c("point", "smooth")) #几何客体：点，平滑
+qplot(Wind, Temp, data=airquality, size=I(1),
+xlab="wind (mph)", ylab="Temp",
+main="wind vs. temp")
+qplot(Wind, Temp, data=airquality, size=I(1),
+xlab="wind (mph)", ylab="Temp",
+main="wind vs. temp")
+qplot(Wind, Temp, data=airquality,
+xlab="wind (mph)", ylab="Temp",
+main="wind vs. temp",
+geom = c("point", "smooth")) #几何客体：点，平滑
+qplot(Wind, Temp, data=airquality,
+xlab="wind (mph)", ylab="Temp",
+main="wind vs. temp",
+geom = c("smooth"))
+qplot(Wind, Temp, data=airquality,
+xlab="wind (mph)", ylab="Temp",
+main="wind vs. temp",
+geom = c("point", "smooth"))
+qplot(Wind, data=airquality,
+facets = Month~.)
+qplot(y=Wind, data=airquality)
+qplot(Wind, data=airquality, geom="density")
+qplot(Wind, data=airquality, geom="dotplot")
+library(ggplot2)
+qplot(factor(cyl), data = mtcars)
+knitr::opts_chunk$set(echo = TRUE)
+# qplot() with x and y, 自动为我们选择散点图，但是...
+qplot(factor(cyl), factor(vs), data = mtcars)
+#所以我们用jitter 来错位一下
+qplot(factor(cyl), factor(vs), data = mtcars, geom = "jitter")
+qplot(Wind, data=airquality, fill=Month)
+library(ggplot2)
+airquality$Month<- factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, shape=Month)
+load("/Users/yuandong/R Learning/ggplot2_part1/recess.RData")
+View(recess)
+install.packages("DetR")
+library("DetR", lib.loc="~/Library/R/3.5/library")
+chis2009<-chis2009
+chis2009
+library("DetR")
+library("chis2009")
+library(chis2009)
+mtcars
+chis2009
+chis2009
+chis2009
+library(haven)
+adult <- read_dta("~/Downloads/chis09_adult_stata/chis09_adult_stata/adult.dta")
+View(adult)
+names(adult)
+write.csv(adult, file = "adult.csv")
+getwed()
+getwd()
+read_csv("/Users/yuandong/R_Teaching/Intro_R_Slides/html_slides/adult.csv")
+read.csv("/Users/yuandong/R_Teaching/Intro_R_Slides/html_slides/adult.csv")
+adult<-read.csv("/Users/yuandong/R_Teaching/Intro_R_Slides/html_slides/adult.csv")
+head(adult)
+adult<-read.csv("/Users/yuandong/R_Teaching/Intro_R_Slides/html_slides/adult.csv")
+head(adult)
+load("/Users/yuandong/R Learning/ggplot2_part1/iris.RData")
+write.csv(iris.tidy, file = "/Users/yuandong/R Learning/ggplot2_part1/tidy.csv")
+?write
+write.csv(iris.wide, file = "/Users/yuandong/R Learning/ggplot2_part1/iris.wide.csv")
+write.csv(iris.wide2, file = "/Users/yuandong/R Learning/ggplot2_part1/iris.wide2.csv")
+readRDS("https://www.dropbox.com/s/q7axc14huwf33za/iris.RData?dl=1")
+readRDS("https://www.dropbox.com/s/q7axc14huwf33za/iris.RData?dl=0")
+load("/Users/yuandong/Dropbox/Public/iris.RData")
+write.csv(iris.tidy, file = "/Users/yuandong/R Learning/ggplot2_part1/iris.tidy.csv")
+read.csv("https://www.dropbox.com/s/tvyb06x9cis8lrr/iris.tidy.csv?dl=1")
+options(htmltools.dir.version = FALSE)
+ggplot(data=mtcars, aes(x=wt, y=mpg))+
+geom_point()
+?geom_smooth

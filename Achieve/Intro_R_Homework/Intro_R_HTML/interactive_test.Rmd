@@ -1,0 +1,2962 @@
+---
+title: "交互练习模版"
+author: "Chris Qi"
+date: "9/5/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+datacamp 数据下载，并使用下面的代码转化成csv，以便从dropbox读取：
+library("rio")
+export(object, "object.csv")
+
+```{r ex="ex1", type="pre-exercise-code"}
+#advertising <- read.csv('https://www.dropbox.com/s/m6jh5kspianm215/advertising.csv?dl=1')
+library(data.table)
+library(ggplot2)
+#advertising
+```
+
+plot relationship between expense on radio and sales:
+```{r ex="ex1", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex1", type="solution"}
+ggplot(advertising, aes(x=radio, y=sales))+
+  geom_point(colour = "blue", size = 1.5)+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("radio ad budget and sales relationship")
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+vv
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+v
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+v
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+v
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+
+```{r ex="ex", type="pre-exercise-code"}
+
+```
+
+:
+```{r ex="ex", type="sample-code"}
+# ggplot()
+```
+
+```{r ex="ex", type="solution"}
+#
+
+```
+

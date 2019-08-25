@@ -1,7 +1,0 @@
-"0","with(airquality,{"
-"0","       plot(x=Wind, y=Temp,"
-"0","            xlab=""wind speed"","
-"0","            ylab = ""Temperature"")"
-"0","  abline(lm(Wind~Temp))"
-"0","  title(""Weather in NYC"")"
-"0","    })"

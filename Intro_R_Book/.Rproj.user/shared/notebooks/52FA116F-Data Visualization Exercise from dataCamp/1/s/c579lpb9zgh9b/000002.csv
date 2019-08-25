@@ -1,6 +1,0 @@
-"0","# Load the rpart library"
-"0","library(rpart)"
-"0","# Fit an rpart model to predict medv from all other Boston variables"
-"0","model<-rpart(medv~.,data=Boston)"
-"0","# Plot the structure of this decision tree model"
-"0","plot(model)"

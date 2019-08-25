@@ -1,0 +1,9 @@
+install.packages("rattle.data")
+library(rattle.data)
+weather
+weather<weather
+weather<-weather
+View(weather)
+write.csv(weather,file = "weather.csv")
+getwd()
+read.csv(weather.csv)

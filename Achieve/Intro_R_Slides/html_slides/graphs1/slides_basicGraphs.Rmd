@@ -1,0 +1,541 @@
+---
+title: "R 数据可视化"
+subtitle: "基础作图"
+author: "Chris Qi"
+date: "2018"
+output:
+  xaringan::moon_reader:
+    css: [default, zh-CN.css]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+#options(htmltools.dir.version = FALSE)
+```
+
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 700px
+background-position: 50% 50%
+
+---
+background-image: url(https://www.dropbox.com/s/zk8948u32y01sj8/logo.png?dl=1)
+background-size: 200px
+background-position: 95% 3%
+
+
+---
+# R 基础作图快速入门
+
+导语：用数据说话的今天，随着数据量的不断增加，数据可视化成为将数字变成可用的信息的一个重要方式。
+
+--
+* 基本绘图系统（Base Plotting System）
+
+
+--
+* Lattice绘图系统（Lattice Plotting System）
+
+
+
+--
+* ggplot2 绘图系统（ggplot2 Plotting System）
+
+
+---
+# 常用图形
+
+* 直方图 histogram
+
+* 散点图 scatter 
+
+* 箱图 boxplot
+
+
+---
+# 基本绘图系统
+
+* 人人都是艺术家：绘图开始于空白，一笔一划添加内容
+
+* 事先计划好，直观地反映绘图和分析数据的逻辑
+
+* 用基本R绘图需要走两步
+  * 图
+  * 修饰/添加=执行一系列函数
+  
+* quick, easy, dirty
+
+---
+# 直方图（频数）
+
+```{r eval=FALSE}
+library(MASS)
+hist(Cars93$Horsepower,main="hist() plot")
+```
+
+---
+# 直方图（频数）
+
+```{r echo=FALSE}
+library(MASS)
+hist(Cars93$Horsepower,main="hist() plot")
+```
+
+---
+
+# 直方图 histogram（频率）
+'truehist()'频率直方图的函数，来自MASS这个包：
+```{r eval=FALSE}
+library(MASS)
+truehist(Cars93$Horsepower,main="hist() plot")
+```
+
+---
+# 直方图 histogram（频率）
+'truehist()'频率直方图的函数，来自MASS这个包：
+```{r echol=FALSE}
+library(MASS)
+truehist(Cars93$Horsepower,main="hist() plot")
+```
+
+---
+# 散点图 scatter 
+```{r eval=FALSE}
+library(MASS)
+plot(UScereal$sugars, UScereal$calories)
+title("plot(sugars and calories in US cereals)")
+```
+
+---
+# 散点图 scatter 
+```{r echo=FALSE}
+library(MASS)
+plot(UScereal$sugars, UScereal$calories)
+title("plot(sugars and calories in US cereals)")
+```
+
+---
+散点图中的菊花图，让你更懂数据
+
+```{r eval=FALSE}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create the standard scatterplot
+plot(rad~zn,data=Boston)
+
+# Add the title
+title("Standard scatterplot")
+
+# Create the sunflowerplot
+sunflowerplot(rad~zn,data=Boston)
+
+# Add the title
+title("Sunflower plot")
+```
+
+---
+散点图中的菊花图，让你更懂数据
+
+```{r echo=FALSE}
+# Set up a side-by-side plot array
+par(mfrow=c(1,2))
+
+# Create the standard scatterplot
+plot(rad~zn,data=Boston)
+
+# Add the title
+title("Standard scatterplot")
+
+# Create the sunflowerplot
+sunflowerplot(rad~zn,data=Boston)
+
+# Add the title
+title("Sunflower plot")
+```
+
+---
+# 箱图 boxplot
+```{r}
+boxplot(Temp~Month, data=airquality)
+```
+
+
+---
+# Lattice graphics 绘图系统:
+* 需要安装 install.packages("lattice")
+  * 有这些函数可以调用：xyplot/bwplot/histogram/stripplot/dotplot/splom/levelplot.contourplot
+  
+* 格式xyplot(y~x|f*g,data)，f*g是分类变量
+
+* 特别适用于观测变量间的交互：在变量z的不同水平，变量y如何随着x变化
+
+---
+lattice 绘图
+```{r}
+library(MASS)
+library(lattice) #需要先安装install.packages("lattice")
+xyplot(Temp~Ozone, data=airquality) 
+```
+
+---
+lattice 绘图，考察交互关系
+```{r}
+airquality$Month<-factor(airquality$Month)
+xyplot(Temp~Ozone|Month, data=airquality, layout=c(5,1))
+```
+
+
+---
+# ggplot2 绘图系统:
+```{r eval=FALSE}
+library(MASS)
+library(ggplot2)
+title <-
+ "ggplot2 plot of \n UScereal$calories vs. \n UScereal$sugars"
+basePlot <- ggplot(UScereal, aes(x = sugars, y = calories))
+basePlot +
+ geom_point(shape = as.character(UScereal$shelf), size = 3) +
+ annotate("text", label = title, x = 3, y = 400,
+ colour = "red")
+```
+
+---
+ggplot2:
+```{r echo=FALSE}
+library(MASS)
+library(ggplot2)
+title <-
+ "ggplot2 plot of \n UScereal$calories vs. \n UScereal$sugars"
+basePlot <- ggplot(UScereal, aes(x = sugars, y = calories))
+basePlot +
+ geom_point(shape = as.character(UScereal$shelf), size = 3) +
+ annotate("text", label = title, x = 3, y = 400,
+ colour = "red")
+```
+
+
+
+---
+# 探索性数据可视化:
+
+目的：
+
+* 了解数据特征，找到数据中的模式，形成分析策略
+
+* 图与数字相互验证，帮助发现错误，用于交流结果
+
+---
+# 探索性数据可视化:
+
+特点：
+
+* 快速，通常呈现在屏幕设备上
+
+* 不需要过分注重图是否漂亮
+
+---
+探索小鸡的成长之路：ChickWeight数据集
+```{r}
+plot(ChickWeight)
+```
+
+---
+# 解释（分析）性数据可视化：
+
+--
+* 整合文字，数字， 图， 表等来讲一个美丽的故事
+
+
+--
+* 用多种方式显示数据的特征
+
+
+--
+* 不要让工具主宰分析
+  * 研究问题的重要性 > 作图漂亮
+  
+  
+--
+* 使用适当的图标，尺度等
+  * 完备性，一图胜千言
+
+ 
+--
+
+让别人明白数据，便于交流信息，呈现你的数据发现
+
+
+---
+我们用一个简单的冬季取暖数据来建构一个简单的分析图：
+
+
+--
+* Temp: 一周的室外气温
+
+
+--
+* Gas: 该周的天然气用量
+
+
+--
+* Insul: 有两个值的分类变量，分别代表房子升级改造前后
+
+
+---
+简单绘图看一下：
+```{r}
+# Plot whiteside data
+plot(whiteside)
+```
+
+---
+简单的探索性散点图：
+不要完全依赖默认设置，适当修改，让图更有意义容易理解
+做一个气温与天然气用量的散点图，加上轴标签：
+
+--
+```{r eval=FALSE}
+plot(whiteside$Temp,whiteside$Gas,
+     xlab="Outside temperature",
+     ylab= "Heating gas consumption")
+```
+
+---
+简单的探索性散点图：
+不要完全依赖默认设置，适当修改，让图更有意义容易理解
+做一个气温与天然气用量的散点图，加上轴标签：
+
+```{r echo=FALSE}
+plot(whiteside$Temp,whiteside$Gas,
+     xlab="Outside temperature",
+     ylab= "Heating gas consumption")
+```
+
+---
+'plot()'是一个一般性的函数，会根据数据类型的不同而作出不同的图，例如下面，我们把它用在'whiteside$Insul'上，得到一个完全不一样的图
+```{r}
+plot(whiteside$Insul)
+```
+
+---
+使用形状，颜色和参考线来增加细节，我们用Cars93这个数据集来做一个高级一点的图来展示三个变量间的关系：
+
+--
+* Price: 某款车的平均售价
+
+--
+* Max.Price: 该款车的最高售价
+
+--
+* Min.Price: 该款车的最低售价
+
+---
+使用 'names()' 来看看这个Cars93 都有什么变量
+```{r}
+names(Cars93)
+```
+
+---
+最高价vs.平均价，红色三角
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+```
+
+---
+添加最高价vs. 平均价，蓝色，圆点
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+points(Cars93$Min.Price,Cars93$Price,col="blue",pch=16)
+```
+
+---
+添加一条参考线，0为截距，1为斜率，虚线
+```{r}
+plot(Cars93$Max.Price, Cars93$Price,col="red",pch=17)
+points(Cars93$Min.Price,Cars93$Price,col="blue",pch=16)
+abline(a = 0, b = 1, lty = 2)
+```
+
+
+---
+'with()' 更简便的绘图函数，再不用每个变量都引用数据集。
+```{r}
+with(airquality, plot(Wind~Temp))
+title(main="wind and temp in NYC") #使用title进行修饰
+```
+
+---
+```{r}
+#另外一种方式添加标题，一样的结果
+with(airquality, plot(Wind, Temp,
+     main="wind and temp in NYC")) 
+```
+
+---
+```{r}
+#有用的 type="n"
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+```
+
+---
+```{r}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+```
+
+
+---
+```{r}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+```
+
+---
+```{r eval=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+#完成了用不同的颜色表示不同的月份的点
+```
+
+---
+```{r echo=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+#完成了用不同的颜色表示不同的月份的点
+```
+
+---
+```{r eval=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+```
+
+---
+```{r echo=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+```
+
+---
+```{r eval=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+
+fit<-lm(Temp~Wind, airquality) #拟合一个回归模型
+abline(fit,lwd=2) #把回归线加进去
+
+#加入图例，说明颜色含义
+legend("topright", pch=1, #右上角，空心圆点
+       col=c("red","blue","green","black"),
+       legend=c("Sep","August","July","Other"))
+#使用基本函数绘图，需要事先计划，运行很多函数，
+#可以直观的反映我们绘图的逻辑
+#图例要仔细一一对应
+```
+
+---
+```{r echo=FALSE}
+with(airquality, plot(Wind, Temp,
+                      main="Wind and Temp in NYC",
+                      type="n"))
+with(subset(airquality, Month==9), 
+     points(Wind, Temp, col="red"))
+
+with(subset(airquality, Month==8), 
+     points(Wind, Temp, col="blue"))
+
+with(subset(airquality, Month==7), 
+     points(Wind, Temp, col="green"))
+
+with(subset(airquality, Month %in% c(5,6)), 
+     points(Wind, Temp, col="black"))
+
+fit<-lm(Temp~Wind, airquality) #拟合一个回归模型
+abline(fit,lwd=2) #把回归线加进去
+
+#加入图例，说明颜色含义
+legend("topright", pch=1, #右上角，空心圆点
+       col=c("red","blue","green","black"),
+       legend=c("Sep","August","July","Other"))
+#使用基本函数绘图，需要事先计划，运行很多函数，
+#可以直观的反映我们绘图的逻辑
+#图例要仔细一一对应
+```
+
+
+---
+
+完结撒花
+
+
+.center[![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)]
+
+

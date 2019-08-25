@@ -1,0 +1,466 @@
+---
+title: "Correlation and Regression 3"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#tutorial::go_interactive()
+```
+
+![](/Users/yuandong/Dropbox/Public/logo.png){width=500px}
+
+![](https://www.dropbox.com/s/a5okpste5xhbglo/regression_joke.png?dl=1){width=600px}
+
+课程回放：(https://www.cctalk.com/v/15407237534698?xh_fshareuid=87b7f11f-6ceb-c339-6ae2-1632fe5f61ea&xh_preshareid=d4d94a43-9b8b-4a59-ae17-7aadf5918469)
+
+
+导入数据：
+```{r}
+Salaries <- read.csv("https://www.dropbox.com/s/h4wny8slh4x1v1s/Salaries.csv?dl=1" ) 
+```
+
+查看数据结构：
+```{r}
+str(Salaries)
+```
+
+回顾取子集的方法：
+```{r}
+Salaries$yrs.service        # yrs.service variable
+Salaries[2,]                # second row, observation
+Salaries$discipline[6]      # 6th observation of the discipline variable
+Salaries[5,"yrs.service"]   # row 5 of the yrs.service variable
+Salaries[4,3]               # row 4, column 3
+Salaries[2:6,]              # observations 2 through 6
+Salaries[c(7,9,16),]        # observations 7, 9, and 16
+```
+
+使用`sum`函数，结合`is.na()`查看是否存在缺失值：
+```{r}
+sum( is.na(Salaries) )
+sum( Salaries=="" )
+```
+
+查看数据的描述性统计:
+```{r}
+summary(Salaries)
+```
+
+把工资变量对数化，存成新变量logSalary:
+```{r}
+logSalary <- log(Salaries$salary)
+```
+
+将新变量加入到原来的数据:
+```{r}
+Salaries <- data.frame(Salaries,
+ logSalary = logSalary
+)
+```
+
+再次查看数据的描述性统计:
+```{r}
+summary(Salaries)
+```
+
+将教授级别变成有序分类变量
+```{r}
+Salaries$rank <- ordered(Salaries$rank, levels=c("AsstProf","AssocProf","Prof"))
+```
+
+教授工资与其工作时间（年）
+```{r}
+library(ggplot2)
+ggplot(data=Salaries, aes(x=yrs.service, y=salary)) +
+  geom_point() +
+  theme_bw() +
+  ggtitle("Professor's salaries from 2008-9") 
+```
+
+细节改进：横轴，纵轴标签
+```{r}
+library(ggplot2)
+ggplot(data=Salaries, aes(x=yrs.service, y=salary)) +
+  geom_point() +
+  theme_bw() +
+  ggtitle("Professor's salaries from 2008-9") +
+  theme( plot.title=element_text(vjust=1.0) ) +
+  xlab("Years of service") +
+  theme( axis.title.x = element_text(vjust=-.5) ) +
+  ylab("Salary in thousands of dollars") +
+  theme( axis.title.y = element_text(vjust=1.0) ) 
+```
+
+细节改进：按教授级别分别作图，更改背景
+```{r}
+library(ggplot2)
+plotSalFacRank <- ggplot(data=Salaries, aes(x=yrs.service, y=salary)) +
+  geom_point(aes(color=rank)) +
+  theme_bw() +
+  ggtitle("Professor's salaries from 2008-9") +
+  theme( plot.title=element_text(vjust=1.0) ) +
+  xlab("Years of service") +
+  theme( axis.title.x = element_text(vjust=-.5) ) +
+  ylab("Salary in thousands of dollars") +
+  theme( axis.title.y = element_text(vjust=1.0) ) +
+  facet_wrap(~rank) +
+  theme(strip.background = element_rect(fill = "White"))
+plotSalFacRank
+```
+
+散点图：添加图表标题，在底部添加图例
+```{r}
+library(ggplot2)
+ggplot(data=Salaries, aes(x=yrs.service, y=salary)) +
+  geom_point(aes(color=rank)) +
+  theme_bw() +
+  ggtitle("Professor's salaries from 2008-9") +
+  theme( plot.title=element_text(vjust=1.0) ) +
+  xlab("Years of service") +
+  theme( axis.title.x = element_text(vjust=-.5) ) +
+  ylab("Salary in thousands of dollars") +
+  theme( axis.title.y = element_text(vjust=1.0) ) +
+  theme(legend.position = "bottom")
+```
+
+简单回归模型
+```{r}
+out <- lm(salary~sex,data=Salaries)
+summary(out)
+```
+
+模型评估：adjusted R squared, BIC, AIC
+从最全的模型开始
+工资～学科+性别+级别+工作年数+年数平方
+工资～学科+性别+级别+取得博士之后的年数+取得博士之后年数平方
+
+哪个模型好？比较调整后的r方
+
+```{r}
+Salaries$yrs.serviceSqr <- Salaries$yrs.service^2
+
+outSer <- lm(salary~discipline + sex + rank + yrs.service+yrs.serviceSqr,data=Salaries)
+summary(outSer)
+```
+
+```{r}
+Salaries$yrs.since.phdSqr <- Salaries$yrs.since.phd^2
+
+outSin <- lm(salary~discipline + sex + rank + yrs.since.phd+yrs.since.phdSqr,data=Salaries)
+summary(outSin)
+```
+
+有可以移除的变量吗？，使用step函数
+最好的模型（AIC最小）：
+
+```{r}
+step(outSin)
+```
+
+```{r}
+best<-lm(salary~discipline + rank + yrs.service+yrs.serviceSqr,data=Salaries)
+```
+
+模型预测：
+
+* 设置种子点，以便重复再现同样的结果
+* 将数据二八分
+
+```{r}
+set.seed(100) 
+trainingRowIndex <- sample(1:nrow(Salaries), 0.8*nrow(Salaries))
+trainingData <- Salaries[trainingRowIndex, ] # model training data
+testData <- Salaries[-trainingRowIndex, ] # test data
+```
+
+然后，用训练数据建立一个模型
+```{r}
+bestMod <- lm(salary~discipline + rank + yrs.service+yrs.serviceSqr,data=trainingData) # build the model
+```
+
+再然后，将我们建立的模型用来测试数据上，做预测
+```{r}
+salaryPred <- predict(bestMod, testData) # predict distance
+```
+
+检验一下，我们的预测效果
+```{r}
+actuals_preds <- data.frame(cbind(actuals=testData$salary, predicteds=salaryPred)) # make actuals_predicteds dataframe.
+
+correlation_accuracy <- cor(actuals_preds$actuals,actuals_preds$predicteds) 
+correlation_accuracy
+```
+
+读取数据
+```{r}
+advertising <- read.csv("https://www.dropbox.com/s/m6jh5kspianm215/advertising.csv?dl=1",sep="\t")
+
+#advertising
+```
+
+```{r}
+colSums(is.na(advertising))
+```
+
+```{r}
+summary(advertising)
+```
+
+```{r}
+par(mfrow=c(1, 2))  # it divides graph area in two parts
+
+boxplot(advertising$sales, col = "yellow", border="blue",
+        main = "SALES boxplot",
+        ylab = "g per decaliter")
+
+boxplot(advertising$Television, col = "orange", border="blue",
+        main = "Television boxplot",
+        ylab = "percent values")
+```
+
+找出异常值
+```{r}
+# sales outliers
+boxplot.stats(advertising$sales)$out 
+```
+
+sales直方图
+```{r}
+library(ggplot2)
+qplot(sales, data = advertising, geom="histogram", binwidth=1, 
+      fill=I("azure4"), col=I("azure3")) +
+  labs(title = "sales") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x ="sales (units)") +
+  labs(y = "Frequency") +
+  scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+  scale_x_continuous(breaks = c(1,5,10,20,30,50), minor_breaks = 5) +
+  geom_vline(xintercept = mean(advertising$sales), show_guide=TRUE, color
+             ="red", labels="Average") +
+  geom_vline(xintercept = median(advertising$sales), show_guide=TRUE, color
+             ="blue", labels="Median")
+```
+Television 直方图
+```{r}
+library(ggplot2)
+qplot(Television, data = advertising, geom="histogram", binwidth=5, 
+      fill=I("azure4"), col=I("azure3")) +
+  labs(title = "Television") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x ="AD budget in Television (in ten thousand dollars)") +
+  labs(y = "Frequency") +
+  scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18), minor_breaks = NULL) +
+  scale_x_continuous(limits = c(0, 300)) +
+  geom_vline(xintercept = mean(advertising$Television), show_guide=TRUE, color
+             ="red", labels="Average") +
+  geom_vline(xintercept = median(advertising$Television), show_guide=TRUE, color
+             ="blue", labels="Median")
+```
+
+散点图
+```{r}
+library(ggplot2)
+ggplot(advertising, aes(x=Television, y=sales))+
+  geom_point(colour = "blue", size = 1.5)+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Television ad budget and sales relationship")
+```
+
+在散点图基础上添加线性回归拟合线
+```{r}
+library(ggplot2)
+ggplot(advertising, aes(x=Television, y=sales))+
+  geom_point(colour = "blue", size = 1.5)+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Television ad budget and sales relationship")+
+  geom_smooth(method="lm", color="red")
+```
+
+建立模型
+```{r}
+model1 <- lm(sales ~ Television, data = advertising)
+```
+
+```{r}
+summary(model1)
+```
+
+
+回归诊断作图
+
+```{r}
+#Residuals vs Fitted values
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=1)
+```
+
+
+```{r}
+plot(model1, pch=16, col="blue", lty=1, lwd=2, which=4)
+```
+
+模型改进，标记异常值
+```{r}
+advertising$outlier = ifelse(advertising$sales>40,"Y","N") # create condition Yes/No if outlier
+```
+
+```{r}
+library(ggplot2)
+ggplot(data=advertising, aes(x=Television, y=sales, col=as.factor(outlier)))+
+  geom_point()+
+  ggtitle("Television ads and sales")+
+  scale_y_continuous(limits=c(0,50))+
+  scale_x_continuous(limits=c(0,300))+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+剔除异常值，创建新数据
+```{r}
+ad_new<-subset(advertising, sales<40)
+```
+
+用新数据从新估计模型
+```{r}
+model2 <- lm(sales ~ Television, data = ad_new)
+```
+
+新模型完爆旧模型:
+
+```{r}
+summary(model2)
+```
+
+```{r}
+summary(model1)
+```
+
+```{r}
+AIC(model2)
+```
+
+```{r}
+AIC(model1)
+```
+
+```{r}
+BIC(model2)
+```
+
+```{r}
+BIC(model1)
+
+```
+
+再应用一次机器学习方法：
+```{r}
+set.seed(100)
+trainingRowIndex <- sample(1:nrow(ad_new), 0.7*nrow(ad_new)) 
+
+train <- ad_new[trainingRowIndex, ] # model training data
+test <- ad_new[-trainingRowIndex, ] # test data
+```
+
+用训练数据建模，将得到的模型运用到测试数据来做预测
+```{r}
+modTrain <- lm(sales ~ Television, data=train)  # build the model
+predict <- predict(modTrain, test)  # predicted values
+summary(modTrain)
+```
+
+将预测数据和实际数据放在一起（针对测试数据而言），计算相关系数，来衡量模型
+```{r}
+act_pred <- data.frame(cbind(actuals=test$sales, predicteds=predict)) # actuals_predicteds 
+cor(act_pred) # correlation_accuracy
+```
+实际对比一下原始数据和预测数据
+```{r}
+head(act_pred, n=10)
+```
+
+还可以再进一步，交叉验证：从上面6，4分的训练测试数据得到的模型表现不错，这是不是偶然碰巧的结果？
+随机把数据分成K等份，K-1做训练，1做测试。得到k种结果，看看预测结果之间偏差如何？
+k- Fold Cross validation
+曲线是否平行
+```{r}
+library(DAAG)
+kfold <- CVlm(data = ad_new, form.lm = formula(sales ~ Television), m=5, 
+                   dots = FALSE, seed=123, legend.pos="topleft",
+                   main="Cross Validation; k=5",
+                   plotit=TRUE, printit=FALSE)
+```
+
+
+# 逻辑回归模型 logistic model
+
+Logistic regression involves fitting a curve to numeric data to make predictions about binary events. Arguably one of the most widely used machine learning methods。
+
+* 药品是否有疗效
+* 顾客是否购买某产品
+* 选民是否投票给某个候选人
+* 谁会做慈善捐助
+
+我们这里有一个关于给瘫痪军人募款的数据库，我们想要建一个logistic regression model,来预测人们的慈善行为。
+
+先看一下数据内容：
+```{r}
+donors<-read.csv("https://www.dropbox.com/s/8w2bf93e4fqzyib/donors.csv?dl=1")
+# Examine the dataset to identify potential independent variables
+str(donors)
+
+# Explore the dependent variable
+table(donors$donated)
+
+```
+
+我们采用如下几个变量来预测一个人是否捐赠：
+
+* bad_address column, which is set to 1 for an invalid mailing address and 0 otherwise, seems like it might reduce the chances of a donation.
+
+* religious interest (interest_religion)
+
+* interest in veterans affairs (interest_veterans) would be associated with greater charitable giving.
+
+```{r}
+donors<-read.csv("https://www.dropbox.com/s/8w2bf93e4fqzyib/donors.csv?dl=1")
+
+# Build the donation model
+donation_model <- glm(donated ~ bad_address + interest_religion + interest_veterans, 
+                      data = donors, family = "binomial")
+
+# Summarize the model results
+summary(donation_model)
+```
+
+# 他会捐款吗？我们来预测一下吧！
+
+* 使用`predict()` 来预测某个人的捐款可能性。 
+
+* 将预测结果命名为donation_prob，并添加到原数据中。
+
+* 计算实际的捐款人占总人数的比例，也就是平均的捐款概率。
+
+* 如果某个人的估计捐款概率大于这个平均的捐款概率，使用 `ifelse()`将其标记为捐款`1`, 否则是 `0`, 这个新的变量（预测的是否捐款的行为）命名为`donation_pred`，加入到原数据里。
+
+* 使用`mean()`来检查模型的精确度。
+
+```{r}
+# Estimate the donation probability
+donors$donation_prob <- predict(donation_model, type = "response")
+
+# Find the donation probability of the average prospect
+mean(donors$donated)
+
+# Predict a donation if probability of donation is greater than average (0.0504)
+donors$donation_pred <- ifelse(donors$donation_prob > 0.0504, 1, 0)
+
+# Calculate the model's accuracy
+mean(donors$donated == donors$donation_pred)
+```
+
+

@@ -1,0 +1,269 @@
+---
+title: "Correlation and Regression"
+author: "Chris Qi"
+date: "10/13/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#tutorial::go_interactive()
+```
+
+![](/Users/yuandong/Dropbox/Public/logo.png){width=500px}
+
+课程回放：(https://www.cctalk.com/v/15401191323766?xh_fshareuid=87b7f11f-6ceb-c339-6ae2-1632fe5f61ea&xh_preshareid=61f5865c-a0ff-470f-b32b-8464b20d9cd3)
+
+![](https://www.dropbox.com/s/a5okpste5xhbglo/regression_joke.png?dl=1){width=600px}
+
+
+
+
+### 双变量关系及建模
+
+* 两个变量都是数值型（numeric）
+
+* 应变量（response, dependent variable）
+
+* 解释变量（explanatory）
+
+  * 你认为与应变量有关的东西
+  * 也可以叫做，independent variable, predictor
+
+
+
+
+### 散点图-双变量关系的图形化表示
+
+```{r echo=FALSE}
+library(ggplot2)
+ggplot(data=mtcars, aes(x=wt, y=mpg))+
+  geom_point()
+```
+
+
+
+### 双变量关系的特征
+
+* 形式（线性，非线性）
+
+* 方向（正，负）
+
+* 强度
+
+* 异常值
+
+
+
+
+### 相关性 correlation
+
+* 两个变量间的关系到底有多强？
+
+* 取值范围[-1,1]
+
+* 符号正负表示方向
+
+* 绝对值大小表示强度
+
+
+
+
+![](https://www.dropbox.com/s/6hnp2fo1k8karkq/cor_near_perfect.png?dl=1){width=500px}
+
+### 接近完美相关（正）
+
+![](https://www.dropbox.com/s/ol76qbjpdzsw2t2/cor_strong.png?dl=1){width=500px}
+
+
+### 强相关（正）
+
+![](https://www.dropbox.com/s/e80y7dyeg6kvpoq/cor_somewhat.png?dl=1){width=500px}
+
+
+### 弱相关相关（正）
+
+
+![](https://www.dropbox.com/s/d6e5ubkhd3ip4fd/cor_none.png?dl=1){width=500px}
+
+
+### 不相关
+
+![](https://www.dropbox.com/s/o1r4j8893h7qdx6/cor_negative.png?dl=1){width=500px}
+
+
+### 负相关
+
+![](https://www.dropbox.com/s/upcocxdm6no2cgp/cor_nonlinear.png?dl=1){width=500px}
+
+
+### 非线性
+
+
+
+### 相关系数计算公式(标准化的协方差)
+
+
+$$correlation = r(x, y)=\frac{Cov(x, y)}{\delta_x*\delta_y}$$
+
+$$Cov(x, y) = \frac{\sum ^n _{i=1} (x_i-\bar{x})* (y_i-\bar{y})}{n}$$
+
+$$\delta _x = \sqrt{\frac{\sum ^n _{i=1} (x_i-\bar{x})^2}{n}}$$
+
+### 相关性的理解
+
+* 相关性不等于因果关系 (癌症与吸烟)
+
+* 尤其注意因为时间联系在一起的数据，他们的相关性可能毫无意义
+
+![](https://www.dropbox.com/s/xs9zlxcqtd8b34n/flase_flim.png?dl=1){width=500px}
+
+
+尼古拉斯凯奇的电影与在游泳池溺亡的人数有关系吗？
+
+![](https://www.dropbox.com/s/pk9iicscc6jsb6r/false_music.png?dl=1){width=500px}
+
+
+摇滚乐与美国石油产量有关系吗？
+
+![](https://www.dropbox.com/s/d3rjmo9tk56hd4m/false_hw.png?dl=1){width=500px}
+
+
+高速路死亡率与鲜柠檬进口量有关系吗？
+
+```{r echo=FALSE}
+ggplot(airquality, aes(x=Wind, y=Temp))+
+  geom_point()+
+  geom_smooth(method = lm, se = FALSE)
+```
+
+### 一般的模型表达式
+
+$$应变量=f(解释变量)+噪音$$
+
+### 线性回归模型表达式
+
+$$应变量=截距+斜率*解释变量+噪音$$
+
+### 线性回归模型--为什么这一条线最合适？
+
+$$y_i= a + b*x_i+e$$
+
+### 最小二乘法（least squares method ）
+
+简单地说，最小二乘的思想就是要使得 
+
+** 观测点和估计点的距离的平方和达到最小 **. 
+
+这里的“二乘”指的是用平方来度量观测点与估计点的远近（在古汉语中“平方”称为“二乘”），“最小”指的是参数的估计值要保证各个观测点与估计点的距离的平方和达到最小。
+
+![](https://www.dropbox.com/s/62kug7pbmkwsd5v/ols_pic.png?dl=1)
+
+
+### 最小二乘法（least squares method ）
+
+
+线性回归模型:
+
+$$y_i= a + b*x_i+e_i$$
+
+$$e_i ~ N(0, \sigma)$$
+
+预测值：
+
+$$\hat{y_i} = \hat{a} + \hat{b}x_i$$
+
+
+残差（error）:
+
+$$e_i = y_i-\hat{y_i}$$
+
+拟合的过程：有n个样本量，也就是n个数据对 $(x_i,y_i)$, 找到 截距 $a$ 和斜率  $b$ ，使得残差平方和最小:
+
+$$\sum_1^{n} e_i^2$$
+
+** 关键概念 ** : 
+
+$\hat{y_i}$ 是给定 $x_i$ 值时， $y$ 的期望值
+
+
+$\hat{b}$ 是真实但是未知的 $b$ 的估计值
+
+
+残差 $e$：residual, error, noise
+
+
+最小二乘法求线性回归系数
+
+$$y_i= a + b*x_i+e_i$$
+
+$$\hat{y_i} = \hat{a} + \hat{b}x_i$$
+
+$$e_i = y_i-\hat{y_i}$$
+
+$$\sum_1^{n} e_i^2 = \sum (y_i-\hat{y_i})^2=\sum (y_i- \hat{a} -\hat{b}x_i)^2$$
+
+
+最小二乘法求线性回归系数:
+
+$$f=\sum_1^{n} e_i^2 =\sum (y_i- \hat{a} -\hat{b}x_i)^2$$
+
+一阶导数等于 0：
+
+$$\frac{\partial f}{\partial\hat{a}} = -2 \sum (y_i- \hat{a} -\hat{b}x_i)=0$$
+
+$$\frac{\partial f}{\partial\hat{b}} = -2 \sum (y_i- \hat{a} -\hat{b}x_i)x_i=0$$
+
+联立上面的二元一次方程组，求解 $\hat{a}$ 与 $\hat{b}$
+
+$$\hat{b}=\frac{\sum (x_i-\bar{x}) (y_i-\bar{y})}{\sum (x_i-\bar{x})^2}$$
+
+$$\hat{a}= \bar{y} - \hat{b}\bar{x}$$
+
+
+最小二乘法的特点:
+
+* 唯一性
+
+* 简单（相对于非线性）
+
+* 残差之和等于0
+
+* 回归线必过
+
+$(\bar{x}, \bar{y})$
+
+
+```{r echo=FALSE}
+library(ggplot2)
+
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+```{r}
+out <- lm(mpg~wt,data=mtcars)
+summary(out)
+```
+
+
+### 轶事：回归的由来
+
+Regression to the mean is a concept attributed to Sir Francis Galton. The basic idea is that extreme random observations will tend to be less extreme upon a second trial. This is simply due to chance alone. Note that "regression to the mean" and "linear regression" are not the same thing.
+
+* 孩子的身高和父母的身高：高个子的父母一般生的孩子个子也高，但是孩子一般没有父母那么高，孩子的身高会趋向于平均数。
+
+* 这就是我们没有看到乔丹的儿子能够和乔丹一样成为飞人的原因
+
+
+![](https://www.dropbox.com/s/kqijuf9qjliryst/regression_saying.png?dl=1)
+
+
+
+
+
+
+

@@ -1,0 +1,258 @@
+---
+title: "Correlation Matrix"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#tutorial::go_interactive()
+```
+
+```{r echo=FALSE}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, method="circle")
+```
+
+
+# 关联矩阵分析
+
+散点图-双变量关系的图形化表示
+
+```{r echo=FALSE}
+library(ggplot2)
+ggplot(data=mtcars, aes(x=wt, y=mpg))+
+  geom_point()
+```
+
+
+### 相关性 correlation
+
+* 两个变量间的关系到底有多强？
+
+* 取值范围[-1,1]
+
+* 符号正负表示方向
+
+* 绝对值大小表示强度
+
+
+接近完美相关:
+
+![](https://www.dropbox.com/s/6hnp2fo1k8karkq/cor_near_perfect.png?dl=1){width=500px}
+
+强相关:
+
+![](https://www.dropbox.com/s/ol76qbjpdzsw2t2/cor_strong.png?dl=1){width=500px}
+
+弱相关相关:
+
+![](https://www.dropbox.com/s/e80y7dyeg6kvpoq/cor_somewhat.png?dl=1){width=500px}
+
+不相关:
+
+![](https://www.dropbox.com/s/d6e5ubkhd3ip4fd/cor_none.png?dl=1){width=500px}
+
+负相关:
+
+![](https://www.dropbox.com/s/o1r4j8893h7qdx6/cor_negative.png?dl=1){width=500px}
+
+非线性:
+
+![](https://www.dropbox.com/s/upcocxdm6no2cgp/cor_nonlinear.png?dl=1){width=500px}
+
+# 相关系数计算公式(标准化的协方差)
+
+$$correlation = r(x, y)=\frac{Cov(x, y)}{\delta_x*\delta_y}$$
+
+$$Cov(x, y) = \frac{\sum ^n _{i=1} (x_i-\bar{x})* (y_i-\bar{y})}{n}$$
+
+$$\delta _x = \sqrt{\frac{\sum ^n _{i=1} (x_i-\bar{x})^2}{n}}$$
+
+# 相关性的理解
+
+* 相关性不等于因果关系（大学辍学与财富积累）
+
+* 尤其注意被时间联系在一起的数据，他们的相关性可能毫无意义
+
+
+
+尼古拉斯凯奇的电影与在游泳池溺亡的人数有关系吗？
+
+![](https://www.dropbox.com/s/xs9zlxcqtd8b34n/flase_flim.png?dl=1){width=500px}
+
+摇滚乐与美国石油产量有关系吗？
+
+![](https://www.dropbox.com/s/pk9iicscc6jsb6r/false_music.png?dl=1){width=500px}
+
+
+高速路死亡率与鲜柠檬进口量有关系吗？
+
+![](https://www.dropbox.com/s/d3rjmo9tk56hd4m/false_hw.png?dl=1){width=500px}
+
+
+# 用R实现关联分析：
+
+记得在自己本地电脑上安装`install.packages("corrplot")`
+
+查看数据结构和内容：
+```{r}
+head(mtcars)
+```
+
+所有变量间的相关系数：
+```{r}
+cor(mtcars)
+```
+
+保存所有相关系数为`M`，保留两位小数：
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+round(M,2)
+```
+
+corrplot主要有数种展现相关性的方法：“circle”,"pie", “color”, “number”。
+一般表达式为：
+```{r eval=FALSE}
+corrplot(corr, method="circle")
+```
+
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, method="circle")
+
+```
+
+可以根据需要改变相关性的表现形式：
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, method="pie")
+
+```
+
+
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, method="color")
+```
+
+
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, method="number")
+
+```
+
+只保留一半的图形，另一半与之完全对称：
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, type="upper")
+
+```
+
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, type="lower")
+
+```
+
+改字体颜色以及字体方向：
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+corrplot(M, type="upper", tl.col="black", tl.srt=45)
+
+```
+
+改变背景颜色：
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+# Change background color to lightblue
+corrplot(M, type="upper", col=c("black", "white"),
+         bg="lightblue")
+
+```
+
+使用下面的公式，计算相关性的P值，是否显著相关：
+```{r}
+# mat : is a matrix of data
+# ... : further arguments to pass to the native R cor.test function
+cor.mtest <- function(mat, ...) {
+    mat <- as.matrix(mat)
+    n <- ncol(mat)
+    p.mat<- matrix(NA, n, n)
+    diag(p.mat) <- 0
+    for (i in 1:(n - 1)) {
+        for (j in (i + 1):n) {
+            tmp <- cor.test(mat[, i], mat[, j], ...)
+            p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+        }
+    }
+  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
+  p.mat
+}
+# matrix of the p-value of the correlation
+p.mat <- cor.mtest(mtcars)
+head(p.mat[, 1:5])
+```
+
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+
+# Specialized the insignificant value according to the significant level
+corrplot(M, type="upper", order="hclust", 
+         p.mat = p.mat, sig.level = 0.01)
+
+```
+
+让不显著的关联消失：
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+
+# Leave blank on no significant coefficient
+corrplot(M, type="upper", 
+         p.mat = p.mat, sig.level = 0.01, insig = "blank")
+```
+
+还可以调整其它参数，作出自己想要的结果：
+```{r}
+library(corrplot)
+M<-cor(mtcars)
+
+col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
+corrplot(M, method="color", col=col(200),  
+         type="upper", 
+         addCoef.col = "black", # Add coefficient of correlation
+         tl.col="black", tl.srt=45, #Text label color and rotation
+         # Combine with significance
+         p.mat = p.mat, sig.level = 0.01, insig = "blank", 
+         # hide correlation coefficient on the principal diagonal
+         diag=FALSE 
+         )
+```
+
+使用 `corrplot()`函数 作出炫酷的相关性矩阵 correlation matrix，你学会了吗？
+
+![](/Users/yuandong/Dropbox/Public/Uncle_Sam.png){width=200px}
+
+再教你一招，来补一刀！
+
+`install.packages("PerformanceAnalytics")`
+
+```{r}
+library("PerformanceAnalytics")
+my_data <- mtcars[, c(1,3,4,5,6,7)]
+chart.Correlation(my_data, histogram=TRUE, pch=19)
+```

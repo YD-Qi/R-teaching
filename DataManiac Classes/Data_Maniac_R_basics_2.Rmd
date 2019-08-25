@@ -1,0 +1,480 @@
+---
+title: "R 语言数据分析-入门2"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+![](/Users/yuandong/Dropbox/Public/logo.png){width=500px}
+
+
+# 读取数据
+
+![](https://www.dropbox.com/s/gn5ffuougtqsujb/xl_r.png?dl=1){width=250px}
+
+读取数据是数据分析的第一步，应该 so easy!
+
+然而现实并非如此，因为真实的世界里，数据的格式百花齐放：
+![](https://www.dropbox.com/s/mdod5vejgjnkodi/data_format.png?dl=1){width=500px}
+```{r}
+ad<-read.csv("https://www.dropbox.com/s/m6jh5kspianm215/advertising.csv?dl=1")
+```
+
+许多数据以flat files形式出现: simple tabular text files.
+我们首先学习 how to read CSV and text files in R。
+需要用到package `utils`里面的`read.csv()`函数，是R自带的。
+
+我们来使用`swimming_pools.csv`做练习。it contains data on swimming pools in Brisbane, Australia (Source: data.gov.au).
+
+可以使用我提供的dropbox链接下载数据到自己的本地硬盘，然后将其路径输入到`read.csv()`，或者直接使用dropbox链接读取。
+
+`read.csv()` 默认将`string` 读成`factor`，可以通过设定选项`stringsAsFactors = FALSE`来修改。
+
+看看结果有什么不同：
+
+```{r}
+pools<-read.csv("https://www.dropbox.com/s/unbyqfspb95rsqm/swimming_pools.csv?dl=1")
+str(pools)
+
+pools<-read.csv("https://www.dropbox.com/s/unbyqfspb95rsqm/swimming_pools.csv?dl=1", stringsAsFactors = FALSE)
+
+str(pools)
+```
+
+我们再学习一下如何读取文本数据。 .txt files which are basically text files
+
+使用的函数是`read.delim()`，默认是数据点分隔方式是 `\t`。(fields in a record are delimited by tabs) and the header argument to TRUE (the first row contains the field names)。
+
+练习读取数据 `hotdogs.txt`, containing information on sodium and calorie levels in different hotdogs (Source: UCLA)。
+
+
+```{r}
+hotdogs<-read.delim("https://www.dropbox.com/s/0hbraqcpl4dw8w8/hotdogs.txt?dl=1", sep="\t",header = TRUE)
+# Summarize hotdogs
+summary(hotdogs)
+```
+
+使用`read.table()`来通吃各种`非正常`数据，需要具体设置各种参数。
+具体的我们来看个例子，依旧用`hotdogs`数据：
+
+```{r}
+# Path to the hotdogs.txt file: path
+path <- file.path("https://www.dropbox.com/s/0hbraqcpl4dw8w8/hotdogs.txt?dl=1")
+
+# Import the hotdogs.txt file: hotdogs
+hotdogs <- read.table(path, 
+                      sep = "\t", 
+                      col.names = c("type", "calories", "sodium"))
+
+# Call head() on hotdogs
+head(hotdogs)
+```
+
+有两个好朋友，李雷和韩梅梅想分享一个hotdog，但是在到底吃哪一个上面，他们意见不合。所以决定各自吃一个，李雷想要卡路里最少的，韩梅梅想吃含盐量最少的，我们来帮他们选一下吧！
+
+```{r}
+# Finish the read.delim() call
+# Path to the hotdogs.txt file: path
+path <- file.path("https://www.dropbox.com/s/0hbraqcpl4dw8w8/hotdogs.txt?dl=1")
+
+# Import the hotdogs.txt file: hotdogs
+hotdogs <- read.table(path, 
+                      sep = "\t", 
+                      col.names = c("type", "calories", "sodium"))
+
+# Select the hot dog with the least calories: lily
+Li_Lei <- hotdogs[which.min(hotdogs$calories), ]
+
+# Select the observation with the most sodium: tom
+Han_Meimei <- hotdogs[which.min(hotdogs$sodium), ]
+
+
+# Print Li_Lei, Han_Meimei
+
+Li_Lei
+Han_Meimei
+
+```
+
+
+单独设置每一个变量的数据类型。
+如果我有好几个`string`类型的变量在我的数据里，我想要有的是`string`，有的是`logical`，还有的是`factor`，怎么破？
+
+```{r}
+hotdogs <- read.delim("https://www.dropbox.com/s/0hbraqcpl4dw8w8/hotdogs.txt?dl=1", header = FALSE, col.names = c("type", "calories", "sodium"))
+
+# Display structure of hotdogs
+str(hotdogs)
+
+# Edit the colClasses argument to import the data correctly: hotdogs2
+hotdogs2 <- read.delim("https://www.dropbox.com/s/0hbraqcpl4dw8w8/hotdogs.txt?dl=1", header = FALSE, 
+                       col.names = c("type", "calories", "sodium"),
+                       colClasses = c("factor", "NULL", "numeric"))
+
+# Display structure of hotdogs2
+str(hotdogs2)
+
+```
+
+# 编写函数
+
+到目前为止你已经接触并使用了很多R的函数，现在我们要学习编写函数？为什么要编写函数，不是已经有很多现成的吗？再说，我又不编写r packages。我们学习编写函数有两个原因：
+
+1. make your code more readable, avoid coding errors
+2. automate repetitive tasks
+
+函数的模版一般长这个样子：
+my_fun <- function(arg1, arg2) {
+  # body
+}
+
+1. my_fun is the variable that you want to assign your function to
+2. arg1 and arg2 are arguments to the function. The template has two arguments, but you can specify any number of arguments, each separated by a comma. 
+3. You then replace # body with the R code that your function will execute, referring to the inputs by the argument names you specified.
+
+来，我们编写一个计算圆面积的函数 `size()`:
+
+```{r ex="fun1", type="sample-code"}
+# Define size() function
+my_fun <- function(arg1) {
+  # body
+}
+
+# Call size() with argument 5
+
+```
+
+```{r ex="fun2", type="solution"}
+# Define size() function
+size <- function(x) {
+  3.14*x^2
+}
+
+# Call size() with argument 5
+size(5)
+```
+
+注意：
+1. match arguments by positions, by names?
+by name is always perferred, especially when you have more than 2 arguments, or the arguments have default values. 
+2. when you call a function, you should place a space around = in function calls, and always put a space after a comma, not before (just like in regular English). Using whitespace makes it easier to skim the function for the important components.
+
+我们说过，函数可以帮助我们避免重复劳动同时减少出错，来，看个例子：
+一个10*4 的数据集已经预备好了，我们要计算每一列的中位数，并把结果存起来。
+编写完成这个任务的函数，我们要
+1. 写一个空白的向量，以备存储计算结果
+2. 用 `seq_along()` 来提取待计算的数据集的长度
+3. 使用for loop 来迭代（从第一行计算到最后一行）
+```{r ex="fun2", type="sample-code"}
+df<-data.frame(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+# Create new double vector: output
+
+
+# Alter the loop
+for (i in seq_along(df)) {
+  # Change code to store result in output
+  print(median(df[[i]]))
+}
+
+# Print output
+
+```
+
+```{r ex="fun2", type="solution"}
+df<-data.frame(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+# Create new double vector: output
+output <- vector("double", ncol(df))
+
+# Alter the loop
+for (i in seq_along(df)) {
+  # Change code to store result in output
+  output[[i]] <- median(df[[i]])
+}
+
+# Print output
+output
+```
+
+一步一步，我们来搭建另一个函数`rescale01`可以把一个数据集的每一列数据都变成0-1之间：
+
+`(df$a - min(df$a, na.rm = TRUE)) /(max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))`
+
+首先，确定需要哪些输入`inputs`？很明显是df$a，简便起见，就叫它`x`吧。
+
+定义一个示意的向量，我们可以把上面的一段代码写成这样：
+```{r}
+# Define example vector x
+x <- 1:10
+
+# Rewrite this snippet to refer to x
+(x - min(x, na.rm = TRUE)) /
+  (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+```
+
+庖丁解牛，我们看看函数的核心里面都有什么，有重复出现的内容吗？我们可不可以简化一下？
+
+1. One obviously duplicated statement is min(x, na.rm = TRUE). It makes more sense for us just to calculate it once, store the result, and then refer to it when needed. 
+2. In fact, since we also need the maximum value of x, it would be even better to calculate the range once, then refer to the first and second elements when they are needed.
+
+具体我们这么操作：
+
+1. Define the intermediate variable rng to contain the range of x using the function range(). 
+2. Specify the na.rm() argument to automatically ignore any NAs in the vector.
+3. Rewrite the snippet to refer to this intermediate variable.
+
+```{r ex="ex8", type="sample-code"}
+# Define example vector x
+x <- 1:10
+
+# Define rng
+
+
+# Rewrite this snippet to refer to the elements of rng
+(x - min(x, na.rm = TRUE)) /
+  (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+
+# Use the function template to create the rescale01 function
+
+# Test your function, call rescale using the vector x as the argument
+
+
+```
+
+```{r ex="ex8", type="solution"}
+# Define example vector x
+x <- 1:10 
+
+# Define rng
+rng <- range(x, na.rm = TRUE)
+
+# Rewrite this snippet to refer to the elements of rng
+(x - rng[1]) / 
+  (rng[2] - rng[1])
+
+# Use the function template to create the rescale01 function
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+# Test your function, call rescale using the vector x as the argument
+rescale01(x)
+```
+
+# apply family
+
+for loop 很有用，帮助我们完成重复性劳动并减少出错。不过呢，有时候要写的代码还是太多比较麻烦。所以`apply family` 闪亮登场，使我们的工作更容易。
+
+lapply()
+1. apply function over list or vector
+2. output is a list
+
+sapply()
+1. apply function over list or vector
+2. try to simplify list to array 
+Note: Arrays are the R data objects which can store data in more than two dimensions.
+
+vapply()
+1. apply function over list or vector
+2. explicitly specify output format
+3. `vapply()` is safer than `sapply()`
+
+
+具体怎么操作？
+我们举个例子，简单直接：
+1. 先写一个`select_el()`函数，让它提取向量里指定位置的元素
+2. 我们使用这个函数, 结合`lapply`来分别提取数据里几个数学家的名字和生日
+
+注意`lapply`的`l`是 list的意思，返回的值都是list。这个函数的作用是把其它的函数作用到数据集里面的每一个元素。
+
+
+```{r ex="ex9", type="sample-code"}
+# Definition of split_low
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+split <- strsplit(pioneers, split = ":")
+split_low <- lapply(split, tolower)
+
+# Generic select function
+select_el <- function(x, index) {
+  x[index]
+}
+
+# Use lapply() twice on split_low: names and years
+
+```
+
+```{r ex="ex9", type="solution"}
+# Definition of split_low
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+split <- strsplit(pioneers, split = ":")
+split_low <- lapply(split, tolower)
+
+# Generic select function
+select_el <- function(x, index) {
+  x[index]
+}
+
+# Use lapply() twice on split_low: names and years
+names <- lapply(split_low, select_el, index = 1)
+years <- lapply(split_low, select_el, index = 2)
+names
+years
+```
+
+我们现在使用另一个函数`sapply()`来做同样的事情, 看看结果有什么不一样？
+
+```{r ex="ex10", type="sample-code"}
+# Definition of split_low
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+split <- strsplit(pioneers, split = ":")
+split_low <- lapply(split, tolower)
+
+# Generic select function
+select_el <- function(x, index) {
+  x[index]
+}
+
+# Use lapply() twice on split_low: names and years
+
+```
+
+```{r ex="ex10", type="solution"}
+# Definition of split_low
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+split <- strsplit(pioneers, split = ":")
+split_low <- lapply(split, tolower)
+
+# Generic select function
+select_el <- function(x, index) {
+  x[index]
+}
+
+# Use lapply() twice on split_low: names and years
+names <- sapply(split_low, select_el, index = 1)
+years <- sapply(split_low, select_el, index = 2)
+names
+years
+```
+
+你可能已经猜到了，`s`在`sapply()`里面是simplify的意思！
+
+再看看下面的例子来体会一下sapply的作用,一个温度数据的list已经在后台加载好了
+
+```{r ex="ex11", type="pre-exercise-code"}
+ temp<- list(c(3,  7,  9,  6, -1), c(6,  9, 12, 13,  5), c(4,  8,  3, -1, -3),
+                c(1 , 4,  7,  2, -2), c(5, 7, 9, 4, 2), c(-3,  5,  8,  9,  4), c(3, 6, 9, 4, 1))
+```
+
+```{r ex="ex11", type="sample-code"}
+# temp is already available in the workspace
+
+# Create a function that returns min and max of a vector: extremes
+extremes <- function(x) {
+  c(min = min(x), ___ = ___)
+}
+
+# Apply extremes() over temp with sapply()
+
+
+# Apply extremes() over temp with lapply()
+```
+
+```{r ex="ex11", type="solution"}
+# temp is already available in the workspace
+
+# Create a function that returns min and max of a vector: extremes
+extremes <- function(x) {
+  c(min = min(x), max = max(x))
+}
+
+# Apply extremes() over temp with sapply()
+sapply(temp, extremes)
+
+# Apply extremes() over temp with lapply()
+lapply(temp, extremes)
+```
+
+最后来看看`vapply()`:
+```{r ex="ex12", type="pre-exercise-code"}
+ temp<- list(c(3,  7,  9,  6, -1), c(6,  9, 12, 13,  5), c(4,  8,  3, -1, -3),
+                c(1 , 4,  7,  2, -2), c(5, 7, 9, 4, 2), c(-3,  5,  8,  9,  4), c(3, 6, 9, 4, 1))
+```
+
+```{r ex="ex12", type="sample-code"}
+# temp is already available in the workspace
+
+# Definition of basics()
+basics <- function(x) {
+  c(min = min(x), mean = mean(x), max = max(x))
+}
+
+# Apply basics() over temp using vapply()
+
+```
+
+```{r ex="ex12", type="solution"}
+# temp is already available in the workspace
+
+# Definition of basics()
+basics <- function(x) {
+  c(min = min(x), mean = mean(x), max = max(x))
+}
+
+# Apply basics() over temp using vapply()
+vapply(temp, basics, numeric(3))
+
+```
+
+ 你真的理解了`sapply()`与`vapply()`的差异了吗？
+ 那你修复一下下面的代码？
+ 
+```{r ex="ex13", type="pre-exercise-code"}
+ temp<- list(c(3,  7,  9,  6, -1), c(6,  9, 12, 13,  5), c(4,  8,  3, -1, -3),
+                c(1 , 4,  7,  2, -2), c(5, 7, 9, 4, 2), c(-3,  5,  8,  9,  4), c(3, 6, 9, 4, 1))
+```
+
+```{r ex="ex13", type="sample-code"}
+# temp is already available in the workspace
+
+# Definition of the basics() function
+basics <- function(x) {
+  c(min = min(x), mean = mean(x), median = median(x), max = max(x))
+}
+
+# Fix the error:
+vapply(temp, basics, numeric(3))
+sapply(temp, basics, numeric(3))
+
+```
+
+```{r ex="ex13", type="solution"}
+# temp is already available in the workspace
+
+# Definition of the basics() function
+basics <- function(x) {
+  c(min = min(x), mean = mean(x), median = median(x), max = max(x))
+}
+
+# Fix the error:
+vapply(temp, basics, numeric(4))
+
+```
+
+# 日期与时间
+
+

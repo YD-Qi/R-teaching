@@ -1,0 +1,272 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# k means 实操练习2：
+
+# Data preperation: 
+
+数据下载：https://archive.ics.uci.edu/ml/datasets/Online+Retail
+
+  1. 整体观察，有多少消费者，有多少缺失值
+  
+  2. 我们在消费者层面做研究，所以剔除那些缺失CustomerID的样本
+  
+  3. 将日期这一变量的格式规范化
+  
+  4. 选取一整年的数据（强迫症）：
+  
+  5. 消费者行为特点具有地域性，我们选取一个国家作为研究对象吧：
+  
+  6. 看来数据主要来自英国。
+  
+  7. 这些收据里面，有的是购物的，有的是退货的，有必要做一下区分。`C`表示`cancel`退货。
+  
+```{r ex="ex6", type="sample-code"}
+onlineRetail <- read.csv("https://www.dropbox.com/s/zemwk29vgvgb87t/Online%20Retail.csv?dl=1")
+
+str(onlineRetail)
+
+```
+
+用dplyr package 的pipe operator 结合`select()`等函数，检查多少样本缺了CustomerID
+```{r ex="ex6", type= "solution"}
+library(dplyr)
+library(ggplot2)
+
+onlineRetail %>%
+  select(CustomerID) %>%
+  is.na() %>%
+  sum()
+```
+
+使用`filter()`排除缺失了CustomerID的样本，新得到的数据命名为`onlineRetail_new`：
+```{r}
+onlineRetail_new <- onlineRetail %>%
+  filter(!is.na(CustomerID))
+```
+
+将变量`InvoiceDate`的格式修改为日期格式：
+```{r}
+onlineRetail_new<-onlineRetail_new %>%
+  mutate(InvoiceDate=as.Date(InvoiceDate, format = "%m/%d/%y"))
+```
+
+查看`InvoiceDate`的日期范围
+```{r}
+range(onlineRetail_new$InvoiceDate)
+```
+
+取一整年数据作为研究对象：
+```{r}
+onlineRetail_new <- subset(onlineRetail_new, InvoiceDate >= "2010-12-09")
+```
+
+确认我们的数据的时间范围：
+```{r}
+range(onlineRetail_new$InvoiceDate)
+```
+
+查看商品销售的国家分布：
+```{r}
+table(onlineRetail_new$Country)
+```
+
+选取英国作为研究对象：
+```{r}
+onlineRetail_new <- subset(onlineRetail_new, Country == "United Kingdom")
+```
+
+查看销售来自多少次交易，和多少个消费者：
+```{r}
+length(unique(onlineRetail_new$InvoiceNo))
+length(unique(onlineRetail_new$CustomerID))
+```
+
+识别并标记哪些是属于退货，哪些是属于新购买：
+```{r}
+# Identify returns
+onlineRetail_new$item.return <- grepl("C", onlineRetail_new$InvoiceNo, fixed=TRUE) 
+onlineRetail_new$purchase.invoice <- ifelse(onlineRetail_new$item.return=="TRUE", 0, 1)
+```
+
+做Customer segmentation，我们最关注的是each customer’s recency of last purchase, frequency of purchase, and monetary value. These three variables, collectively known as RFM, are often used in customer segmentation for marketing purposes。具体的参见维基百科：https://en.wikipedia.org/wiki/RFM_(customer_value)
+
+# 重构数据：以消费者为单位 Create customer-level data
+
+我们现在的数据是收据-商品水平的，一个消费者可能多次消费有多张收据，一张收据上有多个商品。我们要做的是消费者层面的分析，所以要重构数据，以消费者为单位。
+
+具体地，
+
+1. recency，每个消费者上一次消费距离现在有多少天？
+
+2. frequency，消费的次数是多少，即是每一个人收据的个数？
+
+3. Monetary value，每个消费者消费总额多少？
+
+4. 有些人的Monetary value是负的，这可能是因为今年退货了去年买的东西，我们把负的统一设置成0。
+
+
+1. recency
+
+ * 除掉退货的，我们只考虑最新的购物。
+
+ * 我们把分析时间定在最近的一张收据的后一天，所以Recency是最近一次消费距离"2011-12-10"的天数。 
+```{r}
+library(dplyr)
+recency <- onlineRetail_new %>%
+  filter(purchase.invoice == 1) %>%
+  mutate(recency = as.numeric(difftime("2011-12-10", as.Date(InvoiceDate)), units="days")
+         )
+
+```
+
+```{r}
+recency <- aggregate(recency ~ CustomerID, data=recency, FUN=min, na.rm=TRUE)
+```
+
+2. Frequency 
+
+```{r}
+library(dplyr)
+frequency<- onlineRetail_new %>%
+  filter(purchase.invoice == 1) %>%
+  select("CustomerID","InvoiceNo", "purchase.invoice") %>%
+  arrange(CustomerID)
+```
+
+```{r}
+frequency <- aggregate(purchase.invoice ~ CustomerID, data=frequency, FUN=sum, na.rm=TRUE)
+```
+
+```{r}
+colnames(frequency)[colnames(frequency)=="purchase.invoice"] <- "frequency"
+```
+
+3. Monetary Value of Customers 
+```{r}
+# Total spent on each item on an invoice
+annual.sales <- onlineRetail_new %>%
+  filter(purchase.invoice == 1) %>%
+  mutate(Amount = Quantity*UnitPrice)
+```
+
+```{r}
+# Aggregated total sales to customer
+annual.sales <- aggregate(Amount ~ CustomerID, data=annual.sales, FUN=sum, na.rm=TRUE)
+names(annual.sales)[names(annual.sales)=="Amount"] <- "monetary"
+```
+
+以CustomerID为纽带，合并三个数据框，得到以消费者为单位的新数据：
+```{r}
+# merge all three variables
+customers <- left_join(recency, frequency, by="CustomerID") %>%
+  left_join(.,annual.sales, by="CustomerID") 
+```
+
+将为负数的年消费额修改为0:
+```{r}
+summary(customers$monetary)
+customers$monetary <- ifelse(customers$monetary < 0, 0, customers$monetary)
+```
+
+* 我们用kmeans的方法来做集聚分析，可以把这个数据里的消费者分成几个组？
+
+* 从1到10都试一下，根据肘子法则，方差下降最大的k为最合适的。(Total within-cluster sum of squares, i.e. sum(withinss).)
+
+```{r}
+library(purrr)
+library(ggplot2)
+library(dplyr)
+  
+# Use map_dbl to run many models with varying value of k (centers)
+tot_withinss <- map_dbl(1:10,  function(k){
+  model <- kmeans(x = customers[,2:4], centers = k)
+  model$tot.withinss
+})
+
+# Generate a data frame containing both k and tot_withinss
+elbow_df <- data.frame(
+  k = 1:10,
+  tot_withinss = tot_withinss
+)
+
+# Plot the elbow plot
+ggplot(elbow_df, aes(x = k, y = tot_withinss)) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:10)
+```
+
+* 根据上面的结果，运用kmeans() 来聚类成2组，将结果合并到原数据，检查分组特征：
+
+```{r}
+# Build a kmeans model
+model_km <- kmeans(customers[,2:4], centers = 2)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km <- model_km$cluster
+
+# Create a new dataframe appending the cluster assignment
+customers_segment <- mutate(customers, cluster = clust_km)
+
+```
+
+```{r}
+customers_segment %>% 
+  group_by(cluster) %>% 
+  summarise_all(funs(mean(.)))
+```
+
+# 炫酷的3D图：
+```{r eval=FALSE}
+customers<-read.csv("https://www.dropbox.com/s/3bs78srrnjuwcmu/customers.csv?dl=1")
+library(purrr)
+library(car)
+library(rgl)
+library(dplyr)
+library(mgcv)
+
+# Plot clusters in 3D
+
+colors <- c('red','orange','green3','deepskyblue','blue','darkorchid4','violet','pink1','tan3','black')
+
+# Build a kmeans model
+model_km <- kmeans(customers[,2:4], centers = 4)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km <- model_km$cluster
+
+# Create a new dataframe appending the cluster assignment
+customers_segment <- mutate(customers, cluster = clust_km)
+
+scatter3d(x = log(customers_segment$frequency), 
+          y = log(customers_segment$monetary),
+          z = log(customers_segment$recency), 
+          groups = factor(customers_segment$cluster),
+          xlab = "Frequency (Log-transformed)", 
+          ylab = "Monetary Value (log-transformed)",
+          zlab = "Recency (Log-transformed)",
+          surface.col = colors,
+          axis.scales = FALSE,
+          surface = TRUE, # produces the horizonal planes through the graph at each level of monetary value
+          fit = "smooth",
+          #     ellipsoid = TRUE, # to graph ellipses uses this command and set "surface = " to FALSE
+          grid = TRUE,
+          axis.col = c("black", "black", "black"))
+
+remove(colors)
+```
+
+![](https://www.dropbox.com/s/hi0ts1v2mkc3p0v/3d_cluster.png?dl=1)
+
+完结撒花！
+
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)
+![](https://www.dropbox.com/s/9w3nxj755iqxnrz/sahua.gif?dl=1)
+

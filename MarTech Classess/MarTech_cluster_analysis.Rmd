@@ -1,0 +1,703 @@
+---
+title: "Cluster Analysis"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+![](https://www.dropbox.com/s/nvwvot6qh3hssyn/martechc_logo.JPG?dl=1){width=100px}
+
+![](https://www.dropbox.com/s/a5okpste5xhbglo/regression_joke.png?dl=1){width=600px}
+
+# Cluster Analysis:
+
+Clustering is an unsupervised learning algorithm that tries to cluster data based on their similarity. Thus, there is no outcome to be predicted, and the algorithm just tries to find patterns in the data.
+
+为什么要做聚类分析？
+根据相似度把样本分成不同的组，组内成员具有相似性，组间成员具有差异性。
+
+应用的例子：
+1. Using consumer behavior data to identify distinct segments within a market.
+2. Identifying distinct groups of stocks that follow similar trading patterns.
+
+Market segmentation（市场划分） and pattern grouping（按规律分组） are both good examples where clustering is appropriate.
+
+Market segmentation is the activity of dividing a broad consumer or business market, normally consisting of existing and potential customers, into sub-groups of consumers based on some type of shared characteristics.
+
+
+距离，相似性，差异性的度量。
+
+Euclidean distance formula：
+欧几里得距离：
+$$d(x, y) = \sqrt{(x_1-y_1)^2+(x_2-y_2)^2}$$
+例如有两个运动员，我们要计算他们之间的空间距离，使用函数`dist()`：
+```{r}
+players<-matrix(rbind(c(0,0), c(3,4)), nrow = 2,
+                dimnames = list(c("red", "blue"),
+                               c("x", "y")))
+players
+
+dist(players)
+```
+
+推而广之，如果我们要计算两个观测样本彼此之间的特征距离（不仅是空间上的x，y轴，还包括其它特征，速度，年龄，进球次数等），欧几里得距离的一般公式：
+
+$$d(x, y) = \sqrt{(x_1-y_1)^2+(x_2-y_2)^2+...+(x_n-y_n)^2}$$
+The `dist()` function makes life easier when working with many dimensions and observations: 得到距离矩阵：
+
+例子：。。。
+
+度量单位与标准化变量：
+
+身高与体重，厘米与米或者，怎么样他们之间的距离才有意义？
+标准化！
+
+$$X_{scaled}=\frac{X-mean(X)}{sd(X)}$$
+这样所有变量的均值是0，标准差是1.
+
+# Hierachical Clustering
+
+重要概念：
+  linkage - 计算某一个样本与其它群组的距离。例如在一群球员在场上，已知其中两名球员距离最近，那剩下的球员里，谁离他们俩最近？找出他！以此类推，把更多的人一层一层圈进来，就像一个石头扔进水里泛出的涟漪，或者金字塔的自上而下。
+
+![](https://www.dropbox.com/s/usu2tvym5ijzzkz/hrk.png?dl=1)
+
+
+# Hierachical Clustering 原理
+
+1. 找到两个距离最近的样本，将他们归为一组
+
+2. 计算其它样本与该组的距离，最近的样本与该组划在一起（linkage）
+  * 如何确定第三个样本与该组（组里有两个及以上样本）的距离：有 max, min, average三种方法，可以是第三者与两个的平均距离，最短距离，最大距离。不同的方法出来的聚类分析会有差异。
+  
+3. 如此不断推进，直到所有样本形成一个大组（类）。
+
+4. 根据我们的专业经验，确定要分几个组。
+
+5. 每个样本依据上一步的模型，被分配到不同的组。
+
+# Hierachical Clustering 实操步骤
+
+1. 预备数据，使用`dist()`函数得到distance_matrix。
+
+2. 将得到的函数得到distance_matrix传入hclust(distance_matrix, method = "complete")，并选定linkage的方式(complete, single, average)。
+
+  * 如果事先知道要分几个组，例如k=2，将从上述步骤得到的模型传入cutree(hc_players, k = 2)得到每个样本的分组。
+  
+  * 如果事先不知道要分几个组，我们就把上述结果plot()出来，然后选取一个高度，例如, h=40, 将从上述步骤得到的模型传入cutree(hc_players, h = 40)得到每个样本的分组
+
+4. 将分组结果与原数据合并。
+
+5. 分析聚类结果
+
+# Hierachical Clustering 实操
+
+install.packages("mclust")
+
+使用`hclust()`来计算linkage 与 使用`cutree`提取预测的分类结果：
+在后台，我们已经载入`lineup`的数据，是两队各6名球员在球场上的首发位置，我们来根据他们彼此间的距离来给他们分队，看看我们的分队（分类）结果与实际的分队有什么差距。
+
+我们已知是两个队在场上，所以K=2。
+
+`hclust()`的具体使用方法：
+ hclust(distance_matrix, method = "complete")。还可以是single, average。
+
+由上面的函数可知，我们还需要distance_matrix。我们之前讲到距离，每一个人与其它所有人的距离，由这些距离组成的矩阵就是distance_matrix。
+
+下面我们来实际操作：
+
+1. 计算场上运动员之间的distance matrix，命名为dist_players
+
+2. 使用`hclust`中的`complete` method 来做hierarchical clustering 并把结果命名为 hc_players。
+
+3. 将上面的结果按照k=2,也就是有两个组的情况，使用`cutree()`, 将得到的结果命名为 `clusters_k2`, 然后将其合并到原来的数据`lineup`中，形成新的数据框 lineup_k2_complete
+
+```{r ex="ex1", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+```
+
+```{r ex="ex1", type="sample-code"}
+library(mclust)
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- ___
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- ___
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- ___
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = ___)
+```
+
+```{r ex="ex1", type="solution"}
+library(mclust)
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- cutree(hc_players, k = 2)
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = clusters_k2)
+```
+
+# 检查我们的分类结果
+
+1. 数一下每一个cluster各有几名球员
+
+2. 将球员的位置绘制在图上，并用颜色区分两个cluster
+
+3. 观察我们的结果与实际情况是否一直？
+
+```{r ex="ex2", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(mclust)
+library(dplyr)
+
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+
+# Calculate the assignment vector with a k of 2
+clusters_k2 <- cutree(hc_players, k = 2)
+
+# Create a new dataframe storing these results
+lineup_k2_complete <- mutate(lineup, cluster = clusters_k2)
+```
+
+```{r ex="ex2", type="sample-code"}
+library(ggplot2)
+library(mclust)
+library(dplyr)
+
+# Count the cluster assignments
+count(lineup_k2_complete, ___)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_k2_complete, aes(x = ___, y = ___, color = factor(___))) +
+  geom_point()
+```
+
+```{r ex="ex2", type="solution"}
+library(ggplot2)
+library(mclust)
+library(dplyr)
+# Count the cluster assignments
+count(lineup_k2_complete$cluster)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_k2_complete, aes(x = x, y = y, color = factor(cluster))) +
+  geom_point()
+```
+
+组数正确？每组内数量正确？
+
+# dendrogram，可视化我们的分类结果！
+
+注意，不同的linkage方法可能会产生不同的结果
+
+
+```{r}
+library(ggplot2)
+library(mclust)
+library(dplyr)
+
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+# Calculate the Distance
+dist_players <- dist(lineup)
+
+# Perform the hierarchical clustering using the complete linkage
+hc_players <- hclust(dist_players, method = "complete")
+plot(hc_players)
+
+```
+
+# cutting the tree!
+根据dendrogram的高度来砍一刀，确定我们得到几个组？
+
+先安装这个
+install.packages("dendextend")
+
+这里我们来借用dendrogram，确定一个最高的高度(h)，砍一刀，在这一刀下面，我们得以把观测样本分成不同的组。
+
+我们会使用`dendextend`包里的`color_branches()`函数来将分组涂色。
+
+```{r ex="ex3", type="sample-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(mclust)
+library(dplyr)
+library(dendextend)
+
+dist_players <- dist(lineup, method = 'euclidean')
+hc_players <- hclust(dist_players, method = "complete")
+
+# Create a dendrogram object from the hclust variable
+dend_players <- as.dendrogram(___)
+
+# Plot the dendrogram
+
+
+# Color branches by cluster formed from the cut at a height of 20 & plot
+dend_20 <- color_branches(___, h = ___)
+
+# Plot the dendrogram with clusters colored below height 20
+
+
+# Color branches by cluster formed from the cut at a height of 40 & plot
+dend_40 <- ___
+
+# Plot the dendrogram with clusters colored below height 40
+
+```
+
+```{r ex="ex3", type="solution"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(ggplot2)
+library(mclust)
+library(dplyr)
+library(dendextend)
+
+dist_players <- dist(lineup, method = 'euclidean')
+hc_players <- hclust(dist_players, method = "complete")
+
+# Create a dendrogram object from the hclust variable
+dend_players <- as.dendrogram(hc_players)
+
+# Plot the dendrogram
+plot(dend_players)
+
+# Color branches by cluster formed from the cut at a height of 20 & plot
+dend_20 <- color_branches(dend_players, h = 20)
+
+# Plot the dendrogram with clusters colored below height 20
+plot(dend_20)
+
+# Color branches by cluster formed from the cut at a height of 40 & plot
+dend_40 <- color_branches(dend_players, h = 40)
+
+# Plot the dendrogram with clusters colored below height 40
+plot(dend_40)
+```
+
+
+# 是时候升级挑战了！clustering wholesale customers！
+
+Customer segmentation is a deceptively simple-sounding concept. Broadly speaking, the goal is to divide customers into groups that share certain characteristics. There are an almost-infinite number of characteristics upon which you could divide customers, however, and the optimal characteristics and analytic approach vary depending upon the business objective. This means that there is no single, correct way to perform customer segmentation.
+
+之前的球员展位在水平面上只有横纵两个方向的值来表示其位置特征。现在这个wholesale customers的数据一个customer的特征远远大于两个，所以我们最后不用作图来展示不同聚类的特征，我们用描述统计，具体的，我们下面就来看。
+
+步骤与前面的球员例子一模一样，除了在这里我们是要在height =15,000的地方砍一刀来确定分几个类（组），还有这里我们要查看每个组的消费者的平均特征。
+
+动手吧！
+
+```{r ex="ex4", type="pre-exercise-code"}
+customers_spend <- read.delim("https://www.dropbox.com/s/llrp0vxuteqkrmy/ws_customers.txt?dl=1")
+
+```
+
+```{r ex="ex4", type="sample-code"}
+library(ggplot2)
+library(mclust)
+library(dplyr)
+library(dendextend)
+
+dist_customers <- dist(customers_spend)
+hc_customers <- hclust(dist_customers)
+clust_customers <- cutree(hc_customers, h = 15000)
+segment_customers <- mutate(customers_spend, cluster = clust_customers)
+
+# Count the number of customers that fall into each cluster
+count(___, ___)
+
+# Color the dendrogram based on the height cutoff
+dend_customers <- as.dendrogram(hc_customers)
+dend_colored <- color_branches(___, ___)
+
+# Plot the colored dendrogram
+
+
+# Calculate the mean for each category
+segment_customers %>% 
+  group_by(cluster) %>% 
+  summarise_all(funs(mean(.)))
+```
+
+```{r ex="ex4", type="solution"}
+library(ggplot2)
+library(mclust)
+library(dplyr)
+library(dendextend)
+
+dist_customers <- dist(customers_spend)
+hc_customers <- hclust(dist_customers)
+clust_customers <- cutree(hc_customers, h = 15000)
+segment_customers <- mutate(customers_spend, cluster = clust_customers)
+
+# Count the number of customers that fall into each cluster
+count(segment_customers$cluster)
+
+# Color the dendrogram based on the height cutoff
+dend_customers <- as.dendrogram(hc_customers)
+dend_colored <- color_branches(dend_customers, h = 15000)
+
+# Plot the colored dendrogram
+plot(dend_colored)
+
+# Calculate the mean for each category
+segment_customers %>% 
+  group_by(cluster) %>% 
+  summarise_all(funs(mean(.)))
+```
+
+# 用k means 做聚类分析的原理：
+
+1. 确定 k 个中心点。
+
+2. 计算每个样本与中心点的距离。
+
+3. 样本与哪个中心点距离近就被分配到哪个组。
+
+4. 如此这般，我们把所有的样本分成了k组。
+
+5. 然后我们找到每一个组的中心点。
+
+6. 然后，我们再次计算每个样本与新的中心点的距离。
+
+7. 根据每个样本点与新的中心点的距离，再次把样本分组。
+
+8. 如此循环往复，直到再没有点改变它的分组。
+
+
+# 用k means 做聚类分析的步骤：
+
+1. 确定分组数量
+
+  * 如果事先知道要分几个组，例如k=2, 我们将数据传入 kmeans(lineup, centers = 2)，。
+  
+  * 如果事先不知道要分几个组，我们可以从1到n（样本总量）都试一下，当然太大太接近n也没意义。一般地，我们可以使用 肘子法则（elbow rule: k 从小到大，依次取值，计算组内的方差的平均值，组分得越多，这个方差就越小，我们取那个使得组内方差急剧坠落的k值。然后将数据和得到的k值传入 kmeans(lineup, centers = 2)。
+
+2. 从上述模型提取聚类结果。
+
+3. 将该结果与原数据合并。
+
+4. 分析每个组的特征。
+
+# k means 实操练习：
+
+跟之前一样，我们用`lineup` 这个数据，里面是开场前两个球队球员的场中位置。
+因为我们知道这是两个队的比赛，所以我们的K=2，没毛病。
+
+我们的目标是，把球员各归各队各找各妈。
+
+我们在`kmeans()` 这个函数中，将参数k的取值规定为2.
+
+
+```{r ex="ex5", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+```
+
+```{r ex="ex5", type="sample-code"}
+library(dplyr)
+library(ggplot2)
+
+# Build a kmeans model
+model_km2 <- kmeans(___, centers = ___)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km2 <- ___
+
+# Create a new dataframe appending the cluster assignment
+lineup_km2 <- mutate(___, cluster = ___)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(___, aes(x = ___, y = ___, color = factor(___))) +
+  geom_point()
+```
+
+```{r ex="ex5", type="solution"}
+library(dplyr)
+library(ggplot2)
+
+# Build a kmeans model
+model_km2 <- kmeans(lineup, centers = 2)
+
+# Extract the cluster assignment vector from the kmeans model
+clust_km2 <- model_km2$cluster
+
+# Create a new dataframe appending the cluster assignment
+lineup_km2 <- mutate(lineup, cluster = clust_km2)
+
+# Plot the positions of the players and color them using their cluster
+ggplot(lineup_km2, aes(x = x, y = y, color = factor(cluster))) +
+  geom_point()
+```
+
+
+注意我们需要使用`purrr` 包里的 `map_dbl()`来循环k从1到10运行函数`kmeans()`。
+
+INSTRUCTIONS 
+
+1. Use map_dbl() to run kmeans() using the lineup data for k values ranging from 1 to 10 and extract the total within-cluster sum of squares value from each model: model$tot.withinss
+2. Store the resulting vector as tot_withinss
+3. Build a new dataframe elbow_df containing the values of k and the vector of total within-cluster sum of squares
+4. Use the values in elbow_df to plot a line plot showing the relationship between k and total within-cluster sum of squares.
+
+
+map_dbl() lets you run any function for any vector or list, in this case the vector is 1:10 and the desired function is kmeans()
+For the elbow_df data frame you want to make sure to associate the tot_withinss with their associated values of k
+
+```{r ex="ex6", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(dplyr)
+library(purrr)
+library(ggplot2)
+```
+
+```{r ex="ex6", type="sample-code"}
+
+
+# Use map_dbl to run many models with varying value of k (centers)
+tot_withinss <- map_dbl(1:10,  function(k){
+  model <- kmeans(x = ___, centers = ___)
+  model$tot.withinss
+})
+
+# Generate a data frame containing both k and tot_withinss
+elbow_df <- data.frame(
+  k = ___ ,
+  tot_withinss = ___
+)
+
+# Plot the elbow plot
+ggplot(___, aes(x = ___, y = ___)) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:10)
+
+```
+
+```{r ex="ex6", type="solution"}
+library(purrr)
+library(ggplot2)
+library(dplyr)
+
+# Use map_dbl to run many models with varying value of k (centers)
+tot_withinss <- map_dbl(1:10,  function(k){
+  model <- kmeans(x = lineup, centers = k)
+  model$tot.withinss
+})
+
+# Generate a data frame containing both k and tot_withinss
+elbow_df <- data.frame(
+  k = 1:10,
+  tot_withinss = tot_withinss
+)
+
+# Plot the elbow plot
+ggplot(elbow_df, aes(x = k, y = tot_withinss)) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:10)
+
+```
+
+# Silhouette analysis
+另一种确定k取值的方法！
+
+具体是这样的：
+
+Silhouette analysis 计算每一个观测样本与它所在组的相似度和它与其它组的相似度，并比较二者的大小，然后得出一个[-1，1]的值，1表示这个样本确实分组分得对，即应该在现在的组，0表示它既可以在现在的组，也可以去别的组，-1表示该样本分组错大发了，它其实应该在别的组。
+
+在下面的练习中，我们使用`cluster`里面的`pam()`和`sihouette()`来做Silhouette analysis，然后比较k=2与k=3的模型的结果。注意观察k=3时的最后的图形，是否每一个观测量都是老老实实属于我们计算出的分组？
+
+
+```{r ex="ex7", type="pre-exercise-code"}
+lineup <- read.delim("https://www.dropbox.com/s/5olsxha9uam13uz/lineup.txt?dl=1")
+library(dplyr)
+```
+
+```{r ex="ex7", type="sample-code"}
+library(cluster)
+
+# Generate a k-means model using the pam() function with a k = 2
+pam_k2 <- pam(___, k = ___)
+
+# Plot the silhouette visual for the pam_k2 model
+plot(silhouette(___))
+
+# Generate a k-means model using the pam() function with a k = 3
+pam_k3 <- ___
+
+# Plot the silhouette visual for the pam_k3 model
+
+
+```
+
+```{r ex="ex7", type="solution"}
+library(cluster)
+
+# Generate a k-means model using the pam() function with a k = 2
+pam_k2 <- pam(lineup, k = 2)
+
+# Plot the silhouette visual for the pam_k2 model
+plot(silhouette(pam_k2))
+
+# Generate a k-means model using the pam() function with a k = 3
+pam_k3 <- pam(lineup, k = 3)
+
+# Plot the silhouette visual for the pam_k3 model
+plot(silhouette(pam_k3))
+```
+
+聪明的你，已经猜到我们下面要干什么了吧，对，就是要来在`ws_customers`数据上试一试我们的分组新方法！
+
+步骤如下：
+
+1. Use `map_dbl()` to run `pam()` using the customers_spend data for k values ranging from 2 to 10 and extract the average silhouette width value from each model: `model$silinfo$avg`.width Store the resulting vector as sil_width
+2. Build a new dataframe sil_df containing the values of k and the vector of average silhouette widths
+3. Use the values in sil_df to plot a line plot showing the relationship between k and average silhouette width
+
+HINT:
+If you are unsure about any of these steps I recommend you to revisit Exercise 5 of this chapter.
+
+```{r ex="ex6", type="pre-exercise-code"}
+customers_spend <- read.delim("https://www.dropbox.com/s/llrp0vxuteqkrmy/ws_customers.txt?dl=1")
+library(dplyr)
+library(purrr)
+library(ggplot2)
+```
+
+```{r ex="ex6", type="sample-code"}
+# Use map_dbl to run many models with varying value of k
+sil_width <- map_dbl(2:10,  function(k){
+  model <- pam(x = ___, k = ___)
+  model$silinfo$avg.width
+})
+
+# Generate a data frame containing both k and sil_width
+sil_df <- data.frame(
+  k = ___,
+  sil_width = ___
+)
+
+# Plot the relationship between k and sil_width
+ggplot(___, aes(x = ___, y = ___)) +
+  geom_line() +
+  scale_x_continuous(breaks = 2:10)
+```
+
+```{r ex="ex6", type="solution"}
+# Use map_dbl to run many models with varying value of k
+sil_width <- map_dbl(2:10,  function(k){
+  model <- pam(x = customers_spend, k = k)
+  model$silinfo$avg.width
+})
+
+# Generate a data frame containing both k and sil_width
+sil_df <- data.frame(
+  k = 2:10,
+  sil_width = sil_width
+)
+
+# Plot the relationship between k and sil_width
+ggplot(sil_df, aes(x = k, y = sil_width)) +
+  geom_line() +
+  scale_x_continuous(breaks = 2:10)
+```
+
+好，我们现在已经找到了k=2是最合适的，那我们就基于k=2来深入了解一下我们的消费者吧！
+
+1. Build a k-means model called model_customers for the customers_spend data using the kmeans() function with centers = 2.
+2. Extract the vector of cluster assignments from the model model_customers$cluster and store this in the variable clust_customers.
+3. Append the cluster assignments as a column cluster to the customers_spend data frame and save the results to a new dataframe called segment_customers.
+Calculate the size of each cluster using count().
+
+
+```{r ex="exx7", type="sample-code"}
+customers_spend <- read.delim("https://www.dropbox.com/s/llrp0vxuteqkrmy/ws_customers.txt?dl=1")
+library(purrr)
+library(cluster)
+library(dplyr)
+
+set.seed(42)
+
+# Build a k-means model for the customers_spend with a k of 2
+model_customers <- ___
+
+# Extract the vector of cluster assignments from the model
+clust_customers <- ___
+
+# Build the segment_customers dataframe
+segment_customers <- mutate(___, cluster = ___)
+
+# Calculate the size of each cluster
+count(___, ___)
+
+# Calculate the mean for each category
+segment_customers %>% 
+  group_by(cluster) %>% 
+  summarise_all(funs(mean(.)))
+```
+
+```{r ex="exx7", type="solution"}
+customers_spend <- read.delim("https://www.dropbox.com/s/llrp0vxuteqkrmy/ws_customers.txt?dl=1")
+library(purrr)
+library(cluster)
+library(dplyr)
+library(ggplot2)
+set.seed(42)
+
+# Build a k-means model for the customers_spend with a k of 2
+model_customers <- kmeans(customers_spend, centers = 2)
+
+# Extract the vector of cluster assignments from the model
+clust_customers <- model_customers$cluster
+
+# Build the segment_customers dataframe
+segment_customers <- mutate(customers_spend, cluster = clust_customers)
+
+# Calculate the size of each cluster
+count(segment_customers$cluster)
+
+# Calculate the mean for each category
+segment_customers %>% 
+  group_by(cluster) %>% 
+  summarise_all(funs(mean(.)))
+```
+
+Both of these results are valid, but which one is appropriate for this would require more subject matter expertise. Remember that: Generating clusters is a science, but interpreting them is an art.
+
+“最佳”K值的选择：
+1. 没有独立的最佳
+2. 取决于你要研究的问题
+3. 取决于你对数据的了解
+4. 取决于你的专业知识
+
+![](https://www.dropbox.com/s/qz3rfc343o13xao/clustercompare.png?dl=1)
+
+我们学习了：
+1. 什么是距离
+2. 为什么标准化很重要
+3. linkage是如何起作用的
+4. denfrogram是怎么绘制的
+5. 如何分析你的clusters
+6. k-means是如何工作的
+7. 如何估计k
+8. 如何分析一个观测量与一个cluster的契合程度
+

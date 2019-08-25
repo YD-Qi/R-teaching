@@ -1,0 +1,747 @@
+---
+title: "R 语言数据分析-入门1"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+![](/Users/yuandong/Dropbox/Public/logo.png){width=500px}
+
+# R 软件安装 
+
+要愉快地使用R, 我们需要走两步：
+
+* 到这个网站 CRAN（Comprehensive R Archive Network）[http://www.r-project.org/](http://www.r-project.org/) ，下载R程序。
+  * Linux、Mac OS X和Windows都有相应的版本，根据你的电脑系统，选择对应的安装包，下载安装即可。
+  * 如果你找不到程序位置，那么请看这里[http://ftp.ctex.org/mirrors/CRAN/](http://ftp.ctex.org/mirrors/CRAN/)
+
+* 到Rstudio官网[http://www.rstudio.com/ide/download/](http://www.rstudio.com/ide/download/)，下载Rstudio程序，选择desktop那种，免费的就够用了。
+
+  * 一般来说，我们不在R里面直接操作，在安装R以后，我们在安装Rstudio，在Rstudio里完成我们所有的工作。
+  * R 与 RStudio 是什么关系呢？你可以简单的理解为，RStudio 是话筒，而 R 则是沟通所用的语言。
+
+
+
+# 界面熟悉和基本操作
+
+
+![](https://www.dropbox.com/s/cy1ls5p6f4qqcya/rstudio.png?dl=1)
+
+
+R是一种区分大小写的解释型语言。你可以在命令提示符（>）后每次输入并执行一条命令，或者一次性执行写在脚本文件中的一组命令。R中有多种数据类型，包括向量、矩阵、数据框（与数据集类似）以及列表（各种对象的集合）。
+
+
+可以当作最基本的计算器来使用。
+
+
+# 基本运算
+* 加: `+`
+* 减: `-`
+* 乘: `*`
+* 除: `/`
+* 乘方: `^`
+* 均值：`mean()`
+* 方差：`var()`
+* 标准差：`sd()`
+* 中位数：`median()`
+* 百分位数: `quantile()`
+
+```{r}
+7+7
+7-7
+7*7
+7/7
+7^2
+sqrt(7)
+
+mean(mtcars$mpg)
+
+var(mtcars$mpg)
+
+sd(mtcars$mpg)
+
+mode(mtcars$mpg)
+
+quantile(mtcars$mpg)
+```
+
+
+
+# 赋值
+
+R使用<-作为赋值符号。
+
+* 简单说来，赋值就是给一些东西取个名字，这样以后方便叫它。
+* 然后你只需要输入my_var，R Console就将42输出来：
+* 是这么操作的：
+
+```{r}
+my_var<-42
+my_var
+```
+
+
+# 对象
+
+一个对象可以是任何能被赋值的东西。对于R来说，对象可以是任何东西（数据、函数、图形、分析结果，等等）
+
+
+# c() 这个函数
+
+我们也可以使用c() 这个函数 function（c 意指是 combine）来赋值，它把多个对象放到一起，组成向量。
+
+```{r}
+lucky_numbers <- c(7, 77)
+lucky_numbers
+```
+
+
+#注释
+
+* 注释由符号#开头。在#之后出现的任何文本都会被R忽略而不运行。
+
+```{r}
+# 2+3
+```
+
+# 帮助查询
+
+* 输入?c 或者help(c)，在RStudio 右下角的介面 召唤出帮助文件 Help。
+
+
+# 功能包
+
+* 上面的c()是我们遇到的第一个函数，我们以后还会遇到许许多多的函数。而功能包则是函数的有机组合，以实现更丰富的功能。
+
+* R自带了一系列默认包（包括base、datasets、utils、grDevices、graphics、stats以及methods），它们提供了种类繁多的默认函数和数据集。
+
+* 其他包则按需要调用：先安装，再载入，然后就可以使用啦！
+
+* 安装功能包的函数 `install.packages()`
+
+```{r eval=FALSE}
+install.packages("dplyr")
+install.packages("ggplot2")
+library(dplyr)
+library(ggplot2)
+```
+
+* 一个包仅需安装一次。但和其他软件类似，包经常被其作者更新。使用命令`update.packages()`可以更新已经安装的包。
+
+* 然后我们就可以愉快的使用包了，具体来说里面的各种函数和数据。包中往往提供了演示性的小型数据集和示例代码，能够让我们尝试这些新功能。
+
+* 使用 `help(package="package_name")`可以查看某个包的简短描述以及包中的函数名称和数据集名称的列表。使用函数`help()`可以查看其中任意函数或数据集的更多细节。
+
+
+# 查看路径和设置路径
+
+路径（工作路径）是我们读取数据和存贮结果的地方。
+
+在自己的RStuido的 concole 输入：
+`getwd()` 查看自己的当前路径。
+`setwd(yourpath)` 设置想要的路径。
+
+或者使用RStudio右下方,Files这个tab里的齿轮来查看和更改。
+
+
+# 数据类型
+
+* 数值型 numerics (1, 2.5)
+
+* 逻辑判断 logical (TRUE or FALSE)
+
+* 字符型 characters
+
+* 因子 factors
+
+```{r}
+# Change my_numeric to be 42
+my_numeric <- 42
+
+# Change my_character to be "universe"
+my_character <- "universe"
+
+# Change my_logical to be FALSE
+my_logical <- FALSE
+```
+
+
+* 使用 `class()` 函数判断数据类型
+
+--
+```{r}
+# Declare variables of different types:
+my_numeric <- 42
+my_character <- "universe"
+my_logical <- FALSE
+
+class(my_numeric)
+class(my_character)
+class(my_logical)
+
+```
+
+
+# 因子 factor
+
+* 因子 factor又叫分类变量，有两种：名义型、有序型。
+  * 名义型，例如，学生的名字，它们之间是没有顺序的。
+  * 有序型，例如，好评，中评，差评，它们之间有顺序关系，但是没有数量关系，得不出来不同级别之间的差异具体是多少。
+
+* 函数factor()以一个整数向量的形式存储类别值，整数的取值范围是[1...k]（其中 k 是名义型变量中唯一值的个数），同时一个由字符串（原始值）组成的内部向量将映射到这些整数上。
+
+是不是有点晕，不着急，我们看点例子：
+--
+```{r}
+excellence<- c("excellent", "bad", "good", "okay", "bad")
+excellence
+
+excellence<- factor(excellence)
+excellence
+
+excellence <- factor(excellence, order=TRUE,
+                     levels=c("bad", "okay","good","excellent"))
+excellence
+```
+
+这里我们成功的把字符型变量excellence，先转换成了无序因子变量，再转换成了有顺序的因子变量。
+
+* 数值型变量可以用levels和labels参数来编码成因子。如果男性被编码成1，女性被编码成2，则以下语句：
+
+--
+```{r}
+sex<-c(1,2,2,1,2,1,1,3) 
+sex
+
+sex <- factor(sex, levels=c(1, 2), labels=c("Male", "Female"))
+sex
+```
+
+* 在这个栗子里，性别被当成类别型变量，标签“Male”和“Female”替代了1和2在结果中输出，而且所有不是1或2的性别变量将被设为缺失值。
+
+
+
+# 数据结构
+
+有这么几个：
+
+* vector 向量
+
+* matrix 矩阵
+
+* dataframe 数据集
+
+* list 列表
+
+
+向量是用于存储数值型、字符型或逻辑型数据的一维数组。执行组合功能的函数c()可用来创建向量
+
+注意：同一向量中无法混杂不同模式的数据。
+```{r}
+a <- c(1, 2, 5, 3, 6, -2, 4)
+b <- c("apple", "pear", "orange")
+c <- c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE)
+```
+
+通过在方括号中给定元素所处位置的数值，我们可以访问向量中的元素。例如'a[c(2)]'用于访问向量a中的第二个元素。
+
+--
+```{r}
+a <- c(1, 2, 5, 3, 6, -2, 4)
+b <- c("apple", "pear", "orange")
+c <- c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE)
+
+a[3]
+
+a[-3]
+
+b[c(1,3)]
+
+c[2:4]
+```
+
+matrix 矩阵:
+
+* 矩阵是一个二维数组
+
+* 只是每个元素都拥有相同的模式（数值型、字符型或逻辑型）。
+
+* 可通过函数matrix()创建矩阵。
+
+* 一般使用格式为：
+
+```{r}
+myMatrix <- matrix(1:15, nrow=3, ncol=5)  
+myMatrix
+```
+
+* 我们可以使用下标和方括号来选择矩阵中的行、列或元素。 
+
+* X[i, ]指矩阵 X 中的第 i 行
+
+```{r}
+y <- matrix(1:18, nrow=2)
+
+y
+
+y[2,]
+
+y[,1]
+
+y[2, 3]
+
+y[2, c(3,5)]
+
+```
+
+* 矩阵都是二维的，和向量类似，矩阵中也仅能包含一种数据类型。
+
+
+# dataframe 数据框
+
+* 数据框将是你在R中最常处理的数据结构
+
+* 不同的列可以包含不同模式（数值型、字符型等）的数据
+
+* 下面的向量包含了数值型和字符型数据。由于数据有多种模式，无法将此数据集放入一个矩阵。
+
+```{r}
+students <- c("A", "B", "C", "D")
+students
+math_score<-c(100, 80, 70, 95)
+math_score
+english_score<-c(96, 86, 77, 99)
+english_score
+```
+
+在这种情况下，使用数据框是最佳选择。
+```{r}
+students <- c("A", "B", "C", "D")
+students
+math_score<-c(100, 80, 70, 95)
+math_score
+english_score<-c(96, 86, 77, 99)
+english_score
+
+students_scores<-data.frame(students, math_score, english_score)
+```
+
+* 在数据框里，列与列之间数据类型可以不一样，但是每一列数据类型必须一致。
+
+* 我们在讨论数据框时将交替使用列和变量。
+
+* 选取数据框中元素的方式：可以使用前述（如矩阵中的）下标记号，亦可直接指定列名，例如：
+
+```{r}
+students <- c("A", "B", "C", "D")
+math_score<-c(100, 80, 70, 95)
+english_score<-c(96, 86, 77, 99)
+
+students_scores<-data.frame(students, math_score, english_score)
+
+students_scores[,2]
+
+students_scores[,"math_score"]
+
+students_scores$math_score
+
+```
+
+* 如果你想生成学生名字变量students和数学成绩变量math的新数据框，使用以下代码即可：
+
+```{r}
+students <- c("A", "B", "C", "D")
+math_score<-c(100, 80, 70, 95)
+english_score<-c(96, 86, 77, 99)
+students_scores<-data.frame(students, math_score, english_score)
+
+data.frame(students_scores$students, students_scores$math_score)
+
+```
+
+
+
+# list 列表
+
+* 列表（list）是R的数据类型中最为复杂的一种。一般来说，列表就是一些对象（或成分，component）的有序集合。
+
+* 列表允许你整合若干（可能无关的）对象到单个对象名下。例如，某个列表中可能是若干向量、矩阵、数据框，甚至其他列表的组合。
+
+* 可以使用函数list()创建列表：
+
+```{r}
+a <- "My First List"
+b <- c(25, 26, 18, 39)
+c <- matrix(1:10, nrow=5)
+d <- c("one", "two", "three")
+
+mylist <- list(title=a ,b,c,d)
+mylist
+
+```
+
+本例创建了一个列表，其中有四个成分：一个字符串、一个数值型向量、一个矩阵以及一个字符型向量。可以组合任意多的对象，并将它们保存为一个列表。
+
+```{r}
+cars <- lm(formula = wt~mpg, data = mtcars)
+summary(cars)
+```
+
+
+# 常用函数
+
+* `length(object)` ：显示对象中元素的数量
+* `dim(object)`： 显示某个对象的维度
+* `str(object)` ：显示某个对象的结构
+* `class(object)`： 显示某个对象的类或类型
+* `names(object)`：显示某对象中各成分的名称
+
+
+```{r}
+length(mtcars)
+
+length(mtcars$mpg)
+
+dim(mtcars)
+
+str(mtcars)
+
+class(mtcars)
+
+names(mtcars)
+```
+
+* `c(object, object,...)`： 将对象合并入一个向量
+* `cbind(object, object, ...)`： 按列合并对象
+* `rbind(object, object, ...)`： 按行合并对象
+* `head(object)`：列出某个对象的开始部分
+* `tail(object)`：列出某个对象的最后部分
+* `ls()`： 显示当前的对象列表
+* `rm(object, object, ...)`： 删除一个或更多个对象。
+* `rm(list = ls())`：将删除当前工作环境中的几乎所有对象4
+
+```{r}
+c(2, 20)
+
+cbind(students, math_score)
+
+rbind(students, math_score)
+
+head(mtcars)
+
+tail(mtcars)
+
+ls()
+
+rm(a, b, c)
+
+ls()
+```
+
+
+# 课后练习一：
+
+请计算半径为5的圆的面积，pi取值3.14:
+
+```{r ex="circle", type="sample-code"}
+3.14*
+```
+
+```{r ex="circle", type="solution"}
+3.14*5^2
+```
+
+请用`<-` 创建变量 my_height，并输出:
+```{r ex="create_height", type="sample-code"}
+# Create a variable my_height, equal to whatever your height is,
+
+# Print out my_height
+
+```
+
+```{r ex="create_height", type="solution"}
+# Create a variable my_height, equal to whatever your height is,
+my_height<-175
+  
+# Print out my_height
+my_height
+```
+
+请以两位导师的名字创建向量my_teachers（提示，character的向量里面的元素需要用双引号）：
+```{r ex="teacher", type="sample-code"}
+my_teachers<-
+```
+
+```{r ex="teacher", type="solution"}
+my_teachers<-c("Chris", "Jason")
+my_teachers
+```
+
+
+请把Jason 从 my_teachers里面召唤出来：
+```{r ex="teacher1", type="pre-exercise-code"}
+my_teachers<-c("Chris", "Jason")
+```
+
+```{r ex="teacher1", type="sample-code"}
+# Jason:
+
+```
+
+```{r ex="teacher1", type="solution"}
+# Jason:
+my_teachers[2]
+
+```
+
+
+请提取矩阵 my_data 第3行第5列的元素, my_data已在后台给出：
+```{r ex="matrix", type="pre-exercise-code"}
+my_data<-matrix(1:100, nrow=10)
+```
+
+```{r ex="matrix", type="sample-code"}
+my_data
+```
+
+```{r ex="matrix", type="solution"}
+my_data[3, 5]
+```
+
+
+请提取矩阵 my_data 第3行第5列到8列的元素, my_data已在后台给出：
+```{r ex="matrix1", type="pre-exercise-code"}
+my_data<-matrix(1:100, nrow=10)
+```
+
+```{r ex="matrix1", type="sample-code"}
+my_data
+```
+
+```{r ex="matrix1", type="solution"}
+my_data[3, c(5:8)]
+```
+
+在自己本地电脑上的RStudio Console里用 `?` 查看`plot()`这个函数的帮助文档，拉到最下面，赋值黏贴第一个例子，并运行：
+```{r ex="plot", type="sample-code"}
+#plot
+```
+
+```{r ex="plot", type="solution"}
+require(stats) # for lowess, rpois, rnorm
+plot(cars)
+lines(lowess(cars))
+
+```
+
+最后一题：
+
+在自己电脑上建立一个文件夹R_learning, 使用setwd("mypath"), 建立指向该文件夹的工作路径。
+
+完结撒花～
+
+
+# 基本作图
+
+```{r include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+一图胜千言
+
+* 人类非常善于从视觉呈现中洞察关系。
+
+* 一幅精心绘制的图形能够帮助你在数以千计的零散信 息中做出有意义的比较，提炼出使用其他方法时不那么容易发现的模式。
+
+* R是一个惊艳的图形构建平台。在通常的交互式会话中，我们可 以通过逐条输入语句构建图形，逐渐完善图形特征，直至得到想要的效果。
+
+* `plot()`是R中为对象作图的一个泛型函数(它的输出将根据所绘制对象类型的不同而变化)。 
+
+`plot(x, y)`,
+将x置于横轴，将y置于纵轴，绘制点集(x, y)，散点图。使用help(plot)可以查看其他选项。
+
+下面的代码打开一个图形窗口并生成了一幅散点图，横轴表 示车身重量，纵轴为每加仑汽油行驶的英里数。
+
+```{r}
+
+plot(mtcars$wt, mtcars$mpg)
+
+```
+
+添加横坐标标签，添加纵坐标标签
+
+```{r}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+```
+
+添加回归曲线
+
+```{r}
+plot(mtcars$wt, mtcars$mpg,
+     xlab="Miles Per Gallon",
+     ylab="Car Weight")
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+
+改变点的颜色和形状
+
+```{r}
+plot(mtcars$wt, mtcars$mpg,
+         xlab="Miles Per Gallon",
+         ylab="Car Weight",
+     col=4,
+     pch=16)
+abline(lm(mtcars$mpg~mtcars$wt))
+title("Regression of MPG on Weight")
+```
+
+有这些形状可以选择：
+
+![](https://www.dropbox.com/s/d8dz3hhq36wx1es/r-basic-plotting-tools-pch-1.png?dl=1)
+
+
+总是用美元符号，是不是太麻烦？换一种方式：
+
+```{r}
+with(mtcars,{
+plot(wt, mpg)
+abline(lm(mpg~wt))
+title("Regression of MPG on Weight")
+}
+)
+```
+
+全局参数设定，多图同列, 例如设置2列2行，
+四个直方图：
+
+```{r echo=FALSE}
+par(mfrow=c(3,1))
+with(mtcars,{
+  par(mfrow=c(2,2))
+  hist(wt)
+  hist(mpg)
+  hist(disp)
+  hist(hp)
+})
+```
+
+上面的图是这么实现的：
+```{r}
+par(mfrow=c(3,1))
+with(mtcars,{
+  par(mfrow=c(2,2))
+  hist(wt)
+  hist(mpg)
+  hist(disp)
+  hist(hp)
+})
+```
+
+箱线图：
+
+```{r}
+boxplot(mtcars$mpg)
+```
+
+
+# 保存图形：
+
+* 通过代码
+
+* 通过图形用户界面。
+
+* 要通过代码保存图形，将绘图语句夹在开启目标图形设备的语句和关闭目标图形设备的语句之间即可。
+
+* 例如，以下代码会将图形保存到当前工作 目录中名为mygraph.pdf的PDF文件中:
+
+```{r}
+pdf("mygraph.pdf")
+      attach(mtcars)
+      plot(wt, mpg)
+      abline(lm(mpg~wt))
+      title("Regression of MPG on Weight")
+      detach(mtcars)
+dev.off()
+```
+
+除了pdf()，还可以使用函数win.metafile()、png()、jpeg()、bmp()等将图形保存为其他格式。
+
+* 通过图形用户界面保存图形，在RStudio的右下角，"Export"即可。
+
+
+# 课后练习二：
+
+请使用`str()`, `names()`函数来观察`airquality`这个数据的变量:
+```{r ex="ex2_1", type="sample-code"}
+str()
+```
+
+```{r ex="ex2_1", type="solution"}
+str(airquality)
+names(airquality)
+```
+
+
+用`summary`来计算`airquality`数据里所有变量各自的平均值，最小值，最大值:
+```{r ex="ex2_2", type="sample-code"}
+# choose any functions you like:
+```
+
+```{r ex="ex2_2", type="solution"}
+summary(airquality)
+```
+
+
+请用`plot()`函数创建风速与风度的散点图：
+```{r ex="ex2_3", type="sample-code"}
+plot()
+```
+
+```{r ex="ex2_3", type="solution"}
+with(airquality,{
+       plot(x=Wind, y=Temp,
+            xlab="wind speed",
+            ylab = "Temperature")
+    })
+```
+
+
+请在上图的基础上，添加回归曲线和标题"Weather in NYC"：
+```{r ex="ex2_4", type="sample-code"}
+# in addition, you may try to implement with function:
+```
+
+```{r ex="ex2_4", type="solution"}
+with(airquality,{
+       plot(x=Wind, y=Temp,
+            xlab="wind speed",
+            ylab = "Temperature")
+  abline(lm(Wind~Temp))
+  title("Weather in NYC")
+    })
+
+```
+
+最后一题，请使用`pdf("mygraph.pdf")` 和 `pdf("mygraph.pdf")`将上面的图形保存到你的作业文件夹（本地硬盘）。
+
+```{r }
+with(airquality,{
+       plot(x=Wind, y=Temp,
+            xlab="wind speed",
+            ylab = "Temperature")
+  abline(lm(Wind~Temp))
+  title("Weather in NYC")
+    })
+
+```
+
+

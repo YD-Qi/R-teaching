@@ -1,0 +1,69 @@
+---
+title: "R ggplot2 作图入门"
+author: "Chris Qi"
+date: "2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tutorial::go_interactive()
+```
+
+
+ggplot2, R语言最为强大的作图软件包，没有之一
+
+* 由Hadley Wickham于2005 年创建
+* 经过多次优化改进, 现在成为最流行的数据可视化工具
+
+
+# 层 (Layer)
+
+* data: 感兴趣的变量 (data frame)
+
+* Aesthetics: x-axis/ y-axis/ color/ fill/ size/ label/ alpha/ shape
+
+* Geometrics: point/ line/ histogram/ bar/ boxplot
+
+* Facets: columns/ rows
+
+* Statistics: binning/ smoothing/ descriptive/ inferential 
+
+* Coordinates: cartesian/ fixed/ polar/ limits
+
+* Themes: non-data ink
+
+
+ggplot2 功能包的两大函数：
+
+* qplot()
+
+  * 类似于base基本系统的plot, 参数包含了 aesthetics/ geom/ facets
+  
+  * 隐藏了绘图细节
+
+* ggplot()
+
+  * 是核心，可以实现qplot()无法实现的功能
+  
+  * 调用ggplot()本身并不能实现绘图，要在其基础上添加层（如geom_point()）
+才可以
+
+
+使用`airquality`的数据，运用`qplot()`绘图：
+
+
+qplot():最基本的散点图,它默认 `geom = "point"`
+
+```{r}
+library(ggplot2)
+qplot(Wind, Temp, data=airquality)
+```
+
+qplot(): 添加颜色，每个月一种颜色
+```{r}
+library(ggplot2)
+airquality$Month<-as.factor(airquality$Month)
+qplot(Wind, Temp, data=airquality, color=Month)
+```
+

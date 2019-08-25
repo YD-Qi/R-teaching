@@ -1,2 +1,0 @@
-"0","# Create a normalized histogram with truehist()"
-"0","truehist(Cars93$Horsepower,main=""hist() plot"")"
